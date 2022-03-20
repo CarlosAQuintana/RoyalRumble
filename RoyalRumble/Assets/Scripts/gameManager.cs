@@ -2,28 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// I reworked the game manager from the bottom as the old manager's
+// functions are no longer needed with the current system.
+
 public class gameManager : MonoBehaviour
 {
-    public roundManager roundManager;
-    void Start()
-    {
+    // Determines if game is being played.
+    public bool playGame = false;
 
-    }
-    void Update()
-    {
 
-    }
+    // Initiated when "Play" button is pressed.
     public void beginPlay()
     {
-        GameObject playerPre = roundManager.playerPrefab;
-        for (int i = roundManager.currentPlayers; i < roundManager.maxPlayerCount; i++)
-        {
-            Instantiate(playerPre);
-            playerPre.GetComponent<player>().isCPU = true;
-        }
-    }
-    public void OnPlayerJoin()
-    {
-        roundManager.currentPlayers++;
+        playGame = true;
     }
 }

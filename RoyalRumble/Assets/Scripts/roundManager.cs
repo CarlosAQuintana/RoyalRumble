@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class roundManager : MonoBehaviour
 {
+    
     public enum roundState { roundStart, roundPlay, roundEnd } // Each state a round can be in.
 
     [Header("Round Variables")]
@@ -14,19 +14,36 @@ public class roundManager : MonoBehaviour
 
     [Header("Player Variables")]
     public GameObject playerPrefab;
-    public int currentPlayers;
+    public int playerCount;
     public int maxPlayerCount;
     public int[] playerScore;
     public bool[] playerIsDead;
+
+    // I took the loop away from player spawn because it
+    // was causing some issues with debugging; Spawns
+    // are now added manually via the Unity Editor.
     public Transform[] playerSpawns;
+
+    // I added a few script references.
+    public PlayerInputManager playerManager;
+    public gameManager manager;
+
     void Start()
     {
-        findPlayerSpawns();
+        // I referenced the Game Manager script.
+        manager = FindObjectOfType<gameManager>();
     }
+
     void Update()
     {
-
+        // I added the ability to prevent players from joining
+        // while the game is being played.
+        if (manager.playGame)
+        {
+           playerManager.DisableJoining(); 
+        }
     }
+
     public void roundStateController()
     {
         switch (currentRoundState)
@@ -43,12 +60,19 @@ public class roundManager : MonoBehaviour
                 break;
         }
     }
-    public void findPlayerSpawns()
-    {
-        playerSpawns = new Transform[4];
-        for (int i = 0; i < playerSpawns.Length; i++)
-        {
-            playerSpawns[i] = GameObject.Find("spawn" + i).GetComponent<Transform>();
-        }
+
+    // I added a function that is called whenever a new player joins.
+    void OnPlayerJoined(PlayerInput playerInput) 
+    {   
+        // I added the ability to give each player a unique ID based on the order in 
+        // which they joined.
+        playerInput.gameObject.GetComponent<PlayerController>().playerID = playerInput.playerIndex;
+        // I added the ability for players to spawn in unique spawn points depending on 
+        // the order in which they joined.
+        playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawns[playerInput.playerIndex].position;
+
+        // I added the ability to update the current player count based on
+        // how many players have joined (+ 1 due to array index starting at 0).
+        playerCount = playerInput.playerIndex + 1;
     }
 }
