@@ -7,9 +7,9 @@ public class combatController : MonoBehaviour
 {
     [SerializeField] PlayerController player;
     [SerializeField] CharacterController controller;
-    public weaponData currentWeapon;
 
-    [Header("Weapons")]
+
+    [Header("Weapons")] // Each weapon GameObject.
     public GameObject spear;
     public GameObject shield;
     public GameObject sword;
@@ -17,20 +17,17 @@ public class combatController : MonoBehaviour
     public GameObject magicWand;
 
     [Header("Combat Variables")]
-    public Transform hand;
-    public bool currentWeaponUsable;
-    public bool hasWeapon;
+    public weaponData currentWeapon; // Data for current weapon.
+    public Transform hand; // Player hand location.
+    public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Spear Variables")]
-    public float spearSmoothTime = .65f;
     public bool goSpearDash;
     float spearSmoothVelocityHolder;
     void Start()
     {
         hand = transform.Find("Hand");
         player = GetComponent<PlayerController>();
-        //controller.GetComponent<CharacterController>();
-        //spear.SetActive(false);
     }
     void Update()
     {
@@ -38,25 +35,40 @@ public class combatController : MonoBehaviour
     }
     public void attack(InputAction.CallbackContext context)
     {
-        if (!currentWeapon || !player.canMove)
+        if (!player.canMove) // Prevent atacking if movement is disabled.
         {
             return;
         }
-        if (context.performed && currentWeaponUsable)
+        if (context.performed && currentWeaponUsable && currentWeapon != null) // Do a weapon attack when a weapon is equipped.
         {
             Debug.Log("Attack!");
-            switch (currentWeapon.thisWeaponType)
+            switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapoon equipped.
             {
                 case weaponData.weaponType.spear:
                     StartCoroutine("spearAttack");
                     break;
+                case weaponData.weaponType.sword:
+
+                    break;
+                case weaponData.weaponType.gun:
+
+                    break;
+                case weaponData.weaponType.shield:
+
+                    break;
+                case weaponData.weaponType.magicWand:
+
+                    break;
             }
+        }
+        else if (context.performed && currentWeaponUsable && currentWeapon == null) // Do a punch attack when a weapon is not equipped.
+        {
+
         }
     }
     public IEnumerator spearAttack()
     {
         player.canMove = false;
-        //float moveTime = Mathf.SmoothDamp(0f, 50f, ref spearSmoothVelocityHolder, spearSmoothTime);
         goSpearDash = true;
         yield return new WaitForSeconds(.35f);
         goSpearDash = false;
