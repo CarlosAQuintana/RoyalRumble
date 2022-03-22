@@ -22,7 +22,6 @@ public class weapon : MonoBehaviour
         {
             isEquippable = false;
             combatController combatController = other.GetComponent<combatController>();
-            combatController.hasWeapon = true;
             combatController.currentWeaponUsable = true;
             combatController.currentWeapon = weaponData;
             combatController.equipWeapon();

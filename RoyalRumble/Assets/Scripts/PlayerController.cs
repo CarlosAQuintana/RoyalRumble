@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // If the game is being played, players can move.
-        if(manager.playGame)
-            canMove = true;
+        //if(manager.playGame)
+        //canMove = true;
     }
 }

@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class roundManager : MonoBehaviour
 {
-    
+
     public enum roundState { roundStart, roundPlay, roundEnd } // Each state a round can be in.
+    [Header("Game Variables")]
+    public PlayerController[] players;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
@@ -13,6 +15,7 @@ public class roundManager : MonoBehaviour
     [SerializeField] private float roundTimeElapsed; // Time elapsed from beginning of round.
 
     [Header("Player Variables")]
+
     public GameObject playerPrefab;
     public int playerCount;
     public int maxPlayerCount;
@@ -32,6 +35,7 @@ public class roundManager : MonoBehaviour
     {
         // I referenced the Game Manager script.
         manager = FindObjectOfType<gameManager>();
+        players = new PlayerController[4];
     }
 
     void Update()
@@ -40,7 +44,7 @@ public class roundManager : MonoBehaviour
         // while the game is being played.
         if (manager.playGame)
         {
-           playerManager.DisableJoining(); 
+            playerManager.DisableJoining();
         }
     }
 
@@ -62,8 +66,8 @@ public class roundManager : MonoBehaviour
     }
 
     // I added a function that is called whenever a new player joins.
-    void OnPlayerJoined(PlayerInput playerInput) 
-    {   
+    void OnPlayerJoined(PlayerInput playerInput)
+    {
         // I added the ability to give each player a unique ID based on the order in 
         // which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().playerID = playerInput.playerIndex;
@@ -74,5 +78,7 @@ public class roundManager : MonoBehaviour
         // I added the ability to update the current player count based on
         // how many players have joined (+ 1 due to array index starting at 0).
         playerCount = playerInput.playerIndex + 1;
+
+        players[playerInput.playerIndex] = playerInput.gameObject.GetComponent<PlayerController>();
     }
 }

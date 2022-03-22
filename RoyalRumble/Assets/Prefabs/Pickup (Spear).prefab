@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 372391579861391398}
   - component: {fileID: 372391579861391399}
   - component: {fileID: 372391579861391384}
+  - component: {fileID: 372391579861391385}
   - component: {fileID: 372391579861391397}
   m_Layer: 0
-  m_Name: Weapon (Spear)
+  m_Name: Pickup (Spear)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,6 +85,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &372391579861391385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372391579861391386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83117165f3d6494a9549d327a3646b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponData: {fileID: 11400000, guid: bb3af979fe315e64f8862623b8cbd37f, type: 2}
+  isEquippable: 0
 --- !u!64 &372391579861391397
 MeshCollider:
   m_ObjectHideFlags: 0

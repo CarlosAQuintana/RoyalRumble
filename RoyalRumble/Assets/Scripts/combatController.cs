@@ -17,17 +17,22 @@ public class combatController : MonoBehaviour
     public GameObject magicWand;
 
     [Header("Combat Variables")]
+    [SerializeField] LayerMask playerLayer;
+    public bool isDead;
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
+    public Transform attackPointOne; // Attack point.
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Spear Variables")]
+    public float hitboxRadius;
     public bool goSpearDash;
     float spearSmoothVelocityHolder;
     void Start()
     {
         hand = transform.Find("Hand");
         player = GetComponent<PlayerController>();
+        attackPointOne = transform.Find("AttackPoint01");
     }
     void Update()
     {
@@ -78,7 +83,18 @@ public class combatController : MonoBehaviour
     private void spearDash()
     {
         if (goSpearDash)
+        {
             controller.Move(transform.forward * Time.fixedDeltaTime * 5f);
+            Collider[] spearCol = Physics.OverlapSphere(attackPointOne.position, hitboxRadius, playerLayer);
+            if (spearCol.Length != 0)
+                for (int i = 0; i < spearCol.Length; i++)
+                {
+                    Debug.Log("Hit something!");
+                    combatController enemyCombat = spearCol[i].GetComponent<combatController>();
+                    enemyCombat.isDead = true;
+                    enemyCombat.player.canMove = false;
+                }
+        }
     }
     public void equipWeapon()
     {
@@ -88,5 +104,10 @@ public class combatController : MonoBehaviour
                 spear.SetActive(true);
                 break;
         }
+    }
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(attackPointOne.position, hitboxRadius);
     }
 }
