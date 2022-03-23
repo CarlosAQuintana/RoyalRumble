@@ -15,12 +15,12 @@ public class gameManager : MonoBehaviour
     // Initiated when "Play" button is pressed.
     public void beginPlay()
     {
+        if (roundManager.playerCount == 0 || playGame)
+            return;
         playGame = true;
-        for (int i = 0; i < roundManager.players.Length; i++)
-        {
-            if (roundManager.players[i] == null)
-                return;
-            roundManager.players[i].canMove = true;
-        }
+        roundManager.playerIsDead = new bool[roundManager.playerCount];
+        roundManager.playerScore = new int[roundManager.playerCount];
+        roundManager.currentRoundState = roundManager.roundState.gameBegin;
+        roundManager.roundStateController();
     }
 }

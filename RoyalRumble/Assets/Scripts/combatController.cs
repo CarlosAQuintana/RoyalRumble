@@ -25,6 +25,8 @@ public class combatController : MonoBehaviour
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Spear Variables")]
+    [SerializeField] private float thrustPower;
+    [SerializeField] private float thrustDuration;
     public float hitboxRadius;
     public bool goSpearDash;
     float spearSmoothVelocityHolder;
@@ -71,31 +73,46 @@ public class combatController : MonoBehaviour
 
         }
     }
+
+    #region Spear Combat
     public IEnumerator spearAttack()
     {
+        currentWeaponUsable = false;
         player.canMove = false;
         goSpearDash = true;
         yield return new WaitForSeconds(.35f);
+        currentWeaponUsable = true; // UNTIL THROWING IS IMPLEMENTED, MAKE SPEAR ATTACK RE-USABLE!
         goSpearDash = false;
-        currentWeaponUsable = false;
         player.canMove = true;
     }
     private void spearDash()
     {
         if (goSpearDash)
         {
-            controller.Move(transform.forward * Time.fixedDeltaTime * 5f);
+            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
             Collider[] spearCol = Physics.OverlapSphere(attackPointOne.position, hitboxRadius, playerLayer);
             if (spearCol.Length != 0)
-                for (int i = 0; i < spearCol.Length; i++)
-                {
-                    Debug.Log("Hit something!");
-                    combatController enemyCombat = spearCol[i].GetComponent<combatController>();
-                    enemyCombat.isDead = true;
-                    enemyCombat.player.canMove = false;
-                }
+            {
+                goSpearDash = false;
+                StopCoroutine("spearAttack");
+                player.canMove = true;
+            }
+            for (int i = 0; i < spearCol.Length; i++)
+            {
+                Debug.Log("Hit " + spearCol.Length + " players!");
+                combatController enemyCombat = spearCol[i].GetComponent<combatController>(); // Fetch the enemy's combatController,
+                PlayerController enemyControl = spearCol[i].GetComponent<PlayerController>(); // enemy's PlayerController,
+                roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+                rManager.numOfPlayersAlive -= spearCol.Length;
+                rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
+                enemyCombat.player.canMove = false; // and disable their movement.
+                rManager.checkForRoundWin();
+                //enemyCombat.isDead = true;
+            }
         }
     }
+    #endregion
+
     public void equipWeapon()
     {
         switch (currentWeapon.thisWeaponType)
@@ -104,6 +121,16 @@ public class combatController : MonoBehaviour
                 spear.SetActive(true);
                 break;
         }
+    }
+    public void unEquipWeapon()
+    {
+        spear.SetActive(false);
+        //shield.SetActive(false);
+        //sword.SetActive(false);
+        //gun.SetActive(false);
+        //magicWand.SetActive(false);
+        currentWeapon = null;
+        currentWeaponUsable = false;
     }
     void OnDrawGizmosSelected()
     {

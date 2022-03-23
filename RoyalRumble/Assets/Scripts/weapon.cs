@@ -10,8 +10,6 @@ public class weapon : MonoBehaviour
     {
         isEquippable = true;
     }
-
-    // Update is called once per frame
     void Update()
     {
 
