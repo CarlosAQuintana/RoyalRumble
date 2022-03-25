@@ -92,9 +92,5 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
         }
-
-        // If the game is being played, players can move.
-        //if(manager.playGame)
-        //canMove = true;
     }
 }

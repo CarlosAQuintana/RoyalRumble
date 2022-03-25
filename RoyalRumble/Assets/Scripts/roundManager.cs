@@ -30,11 +30,21 @@ public class roundManager : MonoBehaviour
     // I took the loop away from player spawn because it
     // was causing some issues with debugging; Spawns
     // are now added manually via the Unity Editor.
-    public Transform[] playerSpawns;
+    public Transform[] playerSpawnsRound1;
+    public Transform[] playerSpawnsRound2;
 
     // I added a few script references.
     public PlayerInputManager playerManager;
     public gameManager manager;
+
+    // Added boolean values which determine whether it is the first round, second round,
+    // or if we need to reset the game.
+    private bool isRoundTwo = false;
+    private bool firstRound = true;
+    private bool resetGame = false;
+
+    // Added an animator for the state-driven camera.
+    public Animator Cameras;
 
     void Start()
     {
@@ -77,12 +87,8 @@ public class roundManager : MonoBehaviour
                 {
                     playerIsDead[p] = false;
                 }
-                for (int p = 0; p < playerCount; p++)
-                {
-                    players[p].transform.position = playerSpawns[p].position;
-                    if (players[p] == null)
-                        break;
-                }
+                // I removed the loop which respawns players at the first spawn
+                // locations, as there is now a new round with new spawn locations.
                 StartCoroutine("resetRound");
                 FindObjectOfType<weapon>().isEquippable = true;
                 currentRoundState = roundState.roundPlay;
@@ -97,16 +103,62 @@ public class roundManager : MonoBehaviour
     {
         trackRoundTime = false;
         roundTimeElapsed = 0;
-        for (int c = 0; c < combatControllers.Length; c++) // Uenequip every weapon.
+        for (int c = 0; c < combatControllers.Length; c++) // Unequip every weapon.
         {
             if (combatControllers[c] == null)
                 break;
             combatControllers[c].unEquipWeapon();
         }
-        controlAllMovement(false, true);
-        yield return new WaitForSeconds(2f);
-        controlAllMovement(true, false);
-        trackRoundTime = true;
+
+        // If it is time for the second round, move the camera to face the
+        // second level, prevent movement to teleport players to new spawn
+        // points, teleport players to that point, then give players control
+        // again. Next, allow for reseting the game when round 2 is over.
+        // (Later we will have more rounds and no need to reset, but for now we have 
+        // to switch back and forth between the first and second).
+        if (isRoundTwo)
+        {
+            Cameras.SetBool("isRoundTwo", true);
+
+            controlAllMovement(false, true);
+            for (int p = 0; p < players.Length+1; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound2[p].position;
+            }
+            yield return new WaitForSeconds(0.5f);
+            controlAllMovement(true, false);
+
+            yield return new WaitForSeconds(2f);
+            trackRoundTime = true;
+            
+            isRoundTwo = false;
+            resetGame = true;
+        }
+
+        // If it is only the first round, set camera to face the first level, 
+        // prevent movement to move players to level 1 spawn points,
+        // move them to those points, then give them their control back.
+        // Next, allow for round 2 to begin when the first round is over.
+        else if (firstRound)
+        {
+            Cameras.SetBool("isRoundTwo", false);
+            controlAllMovement(false, true);
+            for (int p = 0; p < players.Length+1; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound1[p].position;
+            }
+
+            yield return new WaitForSeconds(2f);
+            controlAllMovement(true, false);
+            trackRoundTime = true;
+
+            firstRound = false;
+            isRoundTwo = true;
+        }
         //currentRoundState = roundState.roundPlay;
     }
     public void checkForRoundWin() // If one player is left, find their index, give them a point and advance the round.
@@ -126,6 +178,17 @@ public class roundManager : MonoBehaviour
             Debug.Log("Player " + winnerIndex + " won the round!");
             currentRound++;
             playerScore[winnerIndex]++;
+
+            // If it is time to loop back around to the first level
+            // (which is what happens until we can incorporate more than 2)
+            // we will allow for allow for level 1 to load when the current
+            // round is over.
+            if (resetGame)
+            {
+                firstRound = true;
+                resetGame = false;
+            }
+
             currentRoundState = roundState.roundStart;
             roundStateController();
         }
@@ -188,7 +251,7 @@ public class roundManager : MonoBehaviour
 
         // I added the ability for players to spawn in unique spawn points depending on 
         // the order in which they joined.
-        playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawns[playerInput.playerIndex].position;
+        playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawnsRound1[playerInput.playerIndex].position;
 
         // I added the ability to update the current player count based on
         // how many players have joined (+ 1 due to array index starting at 0).
