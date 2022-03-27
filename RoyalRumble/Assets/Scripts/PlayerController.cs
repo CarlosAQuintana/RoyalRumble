@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
     // Called once per frame.
     private void Update()
     {
+
         // Gives the ability to freeze players if needed.
         if (canMove)
         {

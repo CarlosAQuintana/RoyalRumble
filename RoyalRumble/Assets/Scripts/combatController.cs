@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class combatController : MonoBehaviour
 {
-    [SerializeField] PlayerController player;
+    [SerializeField] public PlayerController player;
     [SerializeField] CharacterController controller;
 
 
@@ -52,7 +52,7 @@ public class combatController : MonoBehaviour
             switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapoon equipped.
             {
                 case weaponData.weaponType.spear:
-                    StartCoroutine("spearAttack");
+                    StartCoroutine("spearAttack"); // Start the spear attack coroutine.
                     break;
                 case weaponData.weaponType.sword:
 

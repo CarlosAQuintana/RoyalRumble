@@ -120,19 +120,19 @@ public class roundManager : MonoBehaviour
         {
             Cameras.SetBool("isRoundTwo", true);
 
-            controlAllMovement(false, true);
-            for (int p = 0; p < players.Length+1; p++)
+            //controlAllMovement(false, true);
+            for (int p = 0; p < players.Length + 1; p++)
             {
                 if (players[p] == null)
                     break;
                 players[p].transform.position = playerSpawnsRound2[p].position;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(3f);
             controlAllMovement(true, false);
 
             yield return new WaitForSeconds(2f);
             trackRoundTime = true;
-            
+
             isRoundTwo = false;
             resetGame = true;
         }
@@ -145,7 +145,7 @@ public class roundManager : MonoBehaviour
         {
             Cameras.SetBool("isRoundTwo", false);
             controlAllMovement(false, true);
-            for (int p = 0; p < players.Length+1; p++)
+            for (int p = 0; p < players.Length + 1; p++)
             {
                 if (players[p] == null)
                     break;
@@ -190,6 +190,7 @@ public class roundManager : MonoBehaviour
             }
 
             currentRoundState = roundState.roundStart;
+            controlAllMovement(false, true);
             roundStateController();
         }
     }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 372391579861391397}
   m_Layer: 0
   m_Name: Pickup (Spear)
-  m_TagString: Untagged
+  m_TagString: Weapon Pickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
