@@ -51,10 +51,10 @@ public class combatController : MonoBehaviour
         if (context.performed && currentWeaponUsable && currentWeapon != null) // Do a weapon attack when a weapon is equipped.
         {
             Debug.Log("Attack!");
-            switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapoon equipped.
+            switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapon equipped.
             {
                 case weaponData.weaponType.spear:
-                    StartCoroutine("spearAttack"); // Start the spear attack coroutine.
+                    StartCoroutine("spearAttack");
                     break;
                 case weaponData.weaponType.sword:
 

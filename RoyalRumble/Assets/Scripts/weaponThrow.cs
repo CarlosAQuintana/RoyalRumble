@@ -20,13 +20,11 @@ public class weaponThrow : MonoBehaviour
         player = GetComponent<PlayerController>();
         combat = GetComponent<combatController>();
     }
-
-    // Update is called once per frame
     void Update()
     {
 
     }
-    public void tossWeapon(InputAction.CallbackContext context)
+    public void tossWeapon(InputAction.CallbackContext context) // Select a throwing action based on type of weapon.
     {
         if (context.performed)
         {
@@ -39,7 +37,7 @@ public class weaponThrow : MonoBehaviour
                 }
         }
     }
-    public void spearThrow()
+    public void spearThrow() // Spawn the projectile and set it's speed.
     {
         Vector3 modSpawn = new Vector3(combat.attackPointOne.position.x, combat.attackPointOne.position.y, combat.attackPointOne.position.z + 2f);
         GameObject temp = spearProjectilePrefab;
