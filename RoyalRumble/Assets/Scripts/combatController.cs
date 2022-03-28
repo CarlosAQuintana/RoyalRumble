@@ -22,6 +22,7 @@ public class combatController : MonoBehaviour
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
     public Transform attackPointOne; // Attack point.
+    public Transform attackPointTwo;
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Spear Variables")]
@@ -35,6 +36,7 @@ public class combatController : MonoBehaviour
         hand = transform.Find("Hand");
         player = GetComponent<PlayerController>();
         attackPointOne = transform.Find("AttackPoint01");
+        attackPointTwo = transform.Find("AttackPoint02");
     }
     void Update()
     {
@@ -68,11 +70,33 @@ public class combatController : MonoBehaviour
                     break;
             }
         }
-        else if (context.performed && currentWeaponUsable && currentWeapon == null) // Do a punch attack when a weapon is not equipped.
+        else if (context.performed && currentWeapon == null) // Do a punch attack when a weapon is not equipped.
         {
-
+            StartCoroutine("punch");
         }
     }
+    #region unarmed Combat
+    public IEnumerator punch()
+    {
+        player.canMove = false;
+        RaycastHit ray;
+        Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, hitboxRadius);
+        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, hitboxRadius, playerLayer))
+        {
+            combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+            PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+            roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+            rManager.numOfPlayersAlive--;
+            rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
+            enemyCombat.player.canMove = false; // and disable their movement.
+            rManager.checkForRoundWin();
+            StopCoroutine("punch");
+            //enemyCombat.isDead = true;
+        }
+        yield return new WaitForSeconds(.5f);
+        player.canMove = true;
+    }
+    #endregion
 
     #region Spear Combat
     public IEnumerator spearAttack()
@@ -90,20 +114,16 @@ public class combatController : MonoBehaviour
         if (goSpearDash)
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
-            Collider[] spearCol = Physics.OverlapSphere(attackPointOne.position, hitboxRadius, playerLayer);
-            if (spearCol.Length != 0)
+            RaycastHit ray;
+            if (Physics.Raycast(attackPointOne.position, transform.forward, out ray, hitboxRadius, playerLayer))
             {
                 goSpearDash = false;
                 StopCoroutine("spearAttack");
                 player.canMove = true;
-            }
-            for (int i = 0; i < spearCol.Length; i++)
-            {
-                Debug.Log("Hit " + spearCol.Length + " players!");
-                combatController enemyCombat = spearCol[i].GetComponent<combatController>(); // Fetch the enemy's combatController,
-                PlayerController enemyControl = spearCol[i].GetComponent<PlayerController>(); // enemy's PlayerController,
+                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
                 roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                rManager.numOfPlayersAlive -= spearCol.Length;
+                rManager.numOfPlayersAlive--;
                 rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
                 enemyCombat.player.canMove = false; // and disable their movement.
                 rManager.checkForRoundWin();
@@ -136,5 +156,7 @@ public class combatController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(attackPointOne.position, hitboxRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPointTwo.position, hitboxRadius / 2f);
     }
 }
