@@ -123,8 +123,8 @@ MonoBehaviour:
   attackPointOne: {fileID: 5737276464411600953}
   attackPointTwo: {fileID: 0}
   currentWeaponUsable: 0
-  thrustPower: 5
-  thrustDuration: 0
+  thrustPower: 7.5
+  thrustDuration: 0.25
   hitboxRadius: 1
   goSpearDash: 0
 --- !u!114 &1379613811039087539

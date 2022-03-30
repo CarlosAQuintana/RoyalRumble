@@ -104,7 +104,7 @@ public class combatController : MonoBehaviour
         currentWeaponUsable = false;
         player.canMove = false;
         goSpearDash = true;
-        yield return new WaitForSeconds(.35f);
+        yield return new WaitForSeconds(thrustDuration);
         currentWeaponUsable = true; // UNTIL THROWING IS IMPLEMENTED, MAKE SPEAR ATTACK RE-USABLE!
         goSpearDash = false;
         player.canMove = true;

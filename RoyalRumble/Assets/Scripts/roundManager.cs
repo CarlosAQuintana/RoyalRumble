@@ -90,7 +90,6 @@ public class roundManager : MonoBehaviour
                 // I removed the loop which respawns players at the first spawn
                 // locations, as there is now a new round with new spawn locations.
                 StartCoroutine("resetRound");
-                FindObjectOfType<weapon>().isEquippable = true;
                 currentRoundState = roundState.roundPlay;
                 break;
             case roundState.roundPlay:
@@ -109,6 +108,7 @@ public class roundManager : MonoBehaviour
                 break;
             combatControllers[c].unEquipWeapon();
         }
+        debugResetAllWeapons(); // For now find each weapon and reset their equipable status.
 
         // If it is time for the second round, move the camera to face the
         // second level, prevent movement to teleport players to new spawn
@@ -242,6 +242,14 @@ public class roundManager : MonoBehaviour
                     break;
                 players[i].canMove = false;
             }
+    }
+    public void debugResetAllWeapons()
+    {
+        weapon[] allActiveWeapons = FindObjectsOfType<weapon>();
+        foreach (weapon userweapon in allActiveWeapons)
+        {
+            userweapon.isEquippable = true;
+        }
     }
     // I added a function that is called whenever a new player joins.
     void OnPlayerJoined(PlayerInput playerInput)

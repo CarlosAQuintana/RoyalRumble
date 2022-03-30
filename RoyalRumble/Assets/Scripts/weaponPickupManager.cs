@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class weaponPool : MonoBehaviour
+public class weaponPickupManager : MonoBehaviour
 {
-    public static weaponPool sharedPool;
-    public List<GameObject> pooledObjects;
-    public GameObject[] weaponsToSpawn;
+    // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }
