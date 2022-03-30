@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1643,6 +1643,7 @@ GameObject:
   - component: {fileID: 1189131347}
   - component: {fileID: 1189131346}
   - component: {fileID: 1189131345}
+  - component: {fileID: 1189131349}
   m_Layer: 0
   m_Name: deathHole test
   m_TagString: deathHole
@@ -1658,11 +1659,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189131344}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 4.911486, y: 1, z: 4.8323374}
+  m_Center: {x: -0.44400668, y: 0, z: -0.19035769}
 --- !u!23 &1189131346
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1670,7 +1671,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189131344}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1721,13 +1722,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189131344}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.47, y: 0.69, z: 0.16}
+  m_LocalPosition: {x: -0.06, y: 0.69, z: -0.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1189131349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189131344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d513259a765774af9adc0191d0c44fb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1239940432 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3349851370349583441, guid: 93fdc599dfe247a47a53be943d33de40, type: 3}
@@ -3145,7 +3158,7 @@ GameObject:
   - component: {fileID: 5157990819319264092}
   m_Layer: 0
   m_Name: Game Manager
-  m_TagString: Untagged
+  m_TagString: gameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3289,4 +3302,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93228cad8f59a49f7b2229785758528e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holeDeath: 0

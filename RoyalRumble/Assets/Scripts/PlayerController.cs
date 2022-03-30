@@ -94,15 +94,4 @@ public class PlayerController : MonoBehaviour
             controller.Move(playerVelocity * Time.deltaTime);
         }
     }
-
-    void OnCollision(Collision collision)
-    {   
-        //Checks for collision with pit hazard, kills player if so
-        if(collision.collider.tag == "deathHole")
-        {
-            GameObject gameManager = GameObject.Find("Game Manager");
-            hazardManager hManager = gameManager.GetComponent<hazardManager>();
-            hManager.holeDeath = false;
-        }
-    }
 }
