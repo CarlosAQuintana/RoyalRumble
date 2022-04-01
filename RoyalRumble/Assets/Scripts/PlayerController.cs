@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     // Player boolean variables.
     private bool groundedPlayer;
     public bool canMove = false;
+    public bool canControl = false;
 
     // Called once at the beginning of the game.
     private void Start()
@@ -58,14 +59,18 @@ public class PlayerController : MonoBehaviour
     // keyboard & controller.
     public void OnMove(InputAction.CallbackContext context)
     {
-        // Reads movement input based on input device.
-        movementInput = context.ReadValue<Vector2>();
+        if (canControl)
+        {
+            // Reads movement input based on input device.
+            movementInput = context.ReadValue<Vector2>();
+        }
+        else
+            movementInput = new Vector2(0, 0);
     }
 
     // Called once per frame.
-    private void Update()
+    private void FixedUpdate()
     {
-
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
@@ -78,20 +83,28 @@ public class PlayerController : MonoBehaviour
                 playerVelocity.y = 0f;
             }
 
-            // Receives movement input and smoothly applies it to player.
-            currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
-            move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
-            controller.Move(move * Time.deltaTime * playerSpeed);
-
-            // Stops player when there is no input.
-            if (move != Vector3.zero)
+            if (canControl)
             {
-                gameObject.transform.forward = move;
+                // Receives movement input and smoothly applies it to player.
+                currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
+                move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
+                controller.Move(move * Time.deltaTime * playerSpeed);
+
+                // Players moves towards input.
+                if (move != Vector3.zero)
+                {
+                    gameObject.transform.forward = move;
+                }
+            }
+            else
+            {
+                move = Vector3.zero;
+                currentInputVector = Vector2.zero;
             }
 
             // Applies gravity to player.
             playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
+            controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
         }
     }
 }
