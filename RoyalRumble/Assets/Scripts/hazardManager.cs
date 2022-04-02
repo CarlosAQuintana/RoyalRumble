@@ -11,6 +11,8 @@ public class hazardManager : MonoBehaviour
     public float blinkTimer;
     public float blinkCounter;
 
+    public bool arrowBlinking;
+
     public float arrowPosSet;
     public Transform arrowPos1;
     public Transform arrowPos2;
@@ -21,8 +23,9 @@ public class hazardManager : MonoBehaviour
     void Start()
     {
         fireArrow.SetActive(false);
-        blinkTimer = 0.25f;
-        blinkResetTimer = 0.25f;
+        arrowBlinking = true;
+        blinkTimer = 0.5f;
+        blinkResetTimer = 0.5f;
         
         GenerateArrowPos();
     }
@@ -34,9 +37,10 @@ public class hazardManager : MonoBehaviour
         roundManager rManager = roundManager.GetComponent<roundManager>();
 
         hazardTimer += Time.deltaTime;
+
         if(hazardTimer > 3)
         {
-            ArrowBlink();
+           ArrowBlink();
         }
     }
 
@@ -44,37 +48,49 @@ public class hazardManager : MonoBehaviour
     
     void ArrowBlink()  //Function that makes the arrow indicator before the fire blast blink
     {
-        if(blinkTimer == 0.25f);  //Makes arrow active
+        if(arrowBlinking == true)
         {
-            fireArrow.SetActive(true);  //Sets arrow to active
-            blinkTimer -= Time.deltaTime;  //Begins countdown to inactive
-        }
-
-        if(blinkTimer < 0) //Makes arrow inactive
-        {
-            fireArrow.SetActive(false);  //Sets arrow to inactive
-            blinkResetTimer -= Time.deltaTime;  //Begins countdown to active
-
-            if(blinkResetTimer < 0)  //Resets both timers to make arrow active again
+            if(blinkTimer < 0.55f)  //Makes arrow active
             {
-                blinkTimer = 0.25f; 
-                blinkResetTimer = 0.25f;
-                blinkCounter += 1;  //Adds one to the amount of times the arrow has blinked
+                fireArrow.SetActive(true);  //Sets arrow to active
+                blinkTimer -= Time.deltaTime;  //Begins countdown to inactive
             }
 
-        }
-
-        if(blinkCounter == 5)  //Tracks amount of times arrow has blinked
-        {
-            //Put fire blast code here eventually
-            blinkTimer = 0.6f;  //Stops the arrow loop from happening
-            if(blinkTimer == 0.6f)
+            if(blinkTimer < 0) //Makes arrow inactive
             {
-                fireArrow.SetActive(false);  //Keeps the arrow inactive until needed again 
+                fireArrow.SetActive(false);  //Sets arrow to inactive
+                blinkResetTimer -= Time.deltaTime;  //Begins countdown to active
+
+                if(blinkResetTimer < 0)  //Resets both timers to make arrow active again
+                {
+                    blinkTimer = 0.5f; 
+                    blinkResetTimer = 0.5f;
+                    blinkCounter += 1;  //Adds one to the amount of times the arrow has blinked
+                }
             }
 
+            if(blinkCounter == 5)  //Tracks amount of times arrow has blinked
+            {
+                //Put fire blast code here eventually
+                blinkTimer = 0.6f;  //Stops the arrow loop from happening
+                if(blinkTimer == 0.6f)
+                {
+                    fireArrow.SetActive(false);  //Keeps the arrow inactive until needed again
+                    arrowBlinking = false;
+                }
+            }
+        }
+
+        if(arrowBlinking == false)
+        {
+            GenerateArrowPos();
+            blinkTimer = 0.5f;
+            blinkResetTimer = 0.5f;
+            blinkCounter = 0;
+            arrowBlinking = true;
         }
     }
+
 
 
 
