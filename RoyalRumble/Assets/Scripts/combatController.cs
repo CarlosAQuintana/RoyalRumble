@@ -99,16 +99,6 @@ public class combatController : MonoBehaviour
     #endregion
 
     #region Spear Combat
-    public IEnumerator spearAttack()
-    {
-        currentWeaponUsable = false;
-        player.canMove = false;
-        goSpearDash = true;
-        yield return new WaitForSeconds(thrustDuration);
-        currentWeaponUsable = true; // UNTIL THROWING IS IMPLEMENTED, MAKE SPEAR ATTACK RE-USABLE!
-        goSpearDash = false;
-        player.canMove = true;
-    }
     private void spearDash()
     {
         if (goSpearDash)
@@ -130,6 +120,15 @@ public class combatController : MonoBehaviour
                 //enemyCombat.isDead = true;
             }
         }
+    }
+    public IEnumerator spearAttack()
+    {
+        currentWeaponUsable = false;
+        player.canMove = false;
+        goSpearDash = true;
+        yield return new WaitForSeconds(thrustDuration);
+        goSpearDash = false;
+        player.canMove = true;
     }
     #endregion
 

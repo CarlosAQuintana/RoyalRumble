@@ -5,10 +5,12 @@ using UnityEngine;
 public class weapon : MonoBehaviour
 {
     public weaponData weaponData;
+    public MeshRenderer mRenderer;
     public bool isEquippable;
     void Start()
     {
         isEquippable = true;
+        mRenderer = GetComponent<MeshRenderer>();
     }
     void Update()
     {
@@ -18,11 +20,20 @@ public class weapon : MonoBehaviour
     {
         if (other.CompareTag("Player") && isEquippable)
         {
+            disableMesh();
             isEquippable = false;
             combatController combatController = other.GetComponent<combatController>();
             combatController.currentWeaponUsable = true;
             combatController.currentWeapon = weaponData;
             combatController.equipWeapon();
         }
+    }
+    public void enableMesh()
+    {
+        mRenderer.enabled = true;
+    }
+    public void disableMesh()
+    {
+        mRenderer.enabled = false;
     }
 }

@@ -7,17 +7,17 @@ public class roundManager : MonoBehaviour
 {
 
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
-    
+
     [Header("Game Variables")]
-    public PlayerController[] players;
-    public combatController[] combatControllers;
+    [HideInInspector] public PlayerController[] players;
+    [HideInInspector] public combatController[] combatControllers;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
     public int currentRound = 1; // Current round.
     public int maxRounds; // Set the max number of rounds wanted for gameplay.
     public int numOfPlayersAlive;
-    public bool trackRoundTime;
+    private bool trackRoundTime;
     [SerializeField] private float roundTimeElapsed; // Time elapsed from beginning of round.
 
     [Header("Player Variables")]
@@ -102,7 +102,7 @@ public class roundManager : MonoBehaviour
                 break;
 
             // When round is over.
-            case roundState.roundEnd: 
+            case roundState.roundEnd:
                 break;
         }
     }
@@ -262,7 +262,7 @@ public class roundManager : MonoBehaviour
     }
 
     // Quick disable all player movement.
-    public void controlAllMovement(bool enable, bool disable) 
+    public void controlAllMovement(bool enable, bool disable)
     {
         if (enable)
             for (int i = 0; i <= players.Length; i++)
@@ -282,7 +282,7 @@ public class roundManager : MonoBehaviour
     }
 
     // Quick disable all player control.
-    public void freezeControl(bool enable) 
+    public void freezeControl(bool enable)
     {
         if (enable)
             for (int i = 0; i <= players.Length; i++)
@@ -306,6 +306,7 @@ public class roundManager : MonoBehaviour
         foreach (weapon userweapon in allActiveWeapons)
         {
             userweapon.isEquippable = true;
+            userweapon.enableMesh();
         }
     }
     // I added a function that is called whenever a new player joins.
