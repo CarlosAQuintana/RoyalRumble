@@ -10,6 +10,7 @@ public class hazardManager : MonoBehaviour
     public float blinkResetTimer;
     public float blinkTimer;
     public float blinkCounter;
+    public float fireAgain;
 
     public bool arrowBlinking;
 
@@ -26,6 +27,7 @@ public class hazardManager : MonoBehaviour
         arrowBlinking = true;
         blinkTimer = 0.5f;
         blinkResetTimer = 0.5f;
+        fireAgain = 2f;
         
         GenerateArrowPos();
     }
@@ -50,6 +52,8 @@ public class hazardManager : MonoBehaviour
     {
         if(arrowBlinking == true)
         {
+            fireAgain = 2f;
+            
             if(blinkTimer < 0.55f)  //Makes arrow active
             {
                 fireArrow.SetActive(true);  //Sets arrow to active
@@ -87,7 +91,12 @@ public class hazardManager : MonoBehaviour
             blinkTimer = 0.5f;
             blinkResetTimer = 0.5f;
             blinkCounter = 0;
-            arrowBlinking = true;
+            fireAgain -= Time.deltaTime;
+
+            if(fireAgain < 0)
+            {
+                arrowBlinking = true;
+            }
         }
     }
 
