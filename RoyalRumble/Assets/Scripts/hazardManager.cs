@@ -5,6 +5,7 @@ using UnityEngine;
 public class hazardManager : MonoBehaviour
 {
     public GameObject fireArrow;
+    public GameObject breathEffect;
 
     public float hazardTimer;
     public float blinkResetTimer;
@@ -75,7 +76,23 @@ public class hazardManager : MonoBehaviour
 
             if(blinkCounter == 5)  //Tracks amount of times arrow has blinked
             {
-                //Put fire blast code here eventually
+                if(arrowPosSet == 1)
+                {
+                    Instantiate(breathEffect, arrowPos1.position, arrowPos1.rotation);
+                }
+                if(arrowPosSet == 2)
+                {
+                    Instantiate(breathEffect, arrowPos2.position, arrowPos2.rotation);
+                }
+                if(arrowPosSet == 3)
+                {
+                    Instantiate(breathEffect, arrowPos3.position, arrowPos3.rotation);
+                }
+                if(arrowPosSet == 4)
+                {
+                    Instantiate(breathEffect, arrowPos4.position, arrowPos4.rotation);
+                }
+
                 blinkTimer = 0.6f;  //Stops the arrow loop from happening
                 if(blinkTimer == 0.6f)
                 {
