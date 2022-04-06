@@ -20,12 +20,16 @@ public class weapon : MonoBehaviour
     {
         if (other.CompareTag("Player") && isEquippable)
         {
-            disableMesh();
-            isEquippable = false;
             combatController combatController = other.GetComponent<combatController>();
-            combatController.currentWeaponUsable = true;
-            combatController.currentWeapon = weaponData;
-            combatController.equipWeapon();
+            if (combatController.currentWeapon == null)
+            {
+
+                disableMesh();
+                isEquippable = false;
+                combatController.currentWeaponUsable = true;
+                combatController.currentWeapon = weaponData;
+                combatController.equipWeapon();
+            }
         }
     }
     public void enableMesh()
