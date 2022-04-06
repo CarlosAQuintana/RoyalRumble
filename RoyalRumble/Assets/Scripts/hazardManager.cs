@@ -29,7 +29,7 @@ public class hazardManager : MonoBehaviour
         arrowBlinking = true;
         blinkTimer = 0.5f;
         blinkResetTimer = 0.5f;
-        fireAgain = 2f;
+        fireAgain = 5f;
         
         GenerateArrowPos();
     }
@@ -37,12 +37,9 @@ public class hazardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject roundManager = GameObject.FindWithTag("gameManager");
-        roundManager rManager = roundManager.GetComponent<roundManager>();
-
         hazardTimer += Time.deltaTime;
 
-        if(hazardTimer > 3)
+        if(hazardTimer > 10)
         {
            ArrowBlink();
         }
@@ -52,9 +49,9 @@ public class hazardManager : MonoBehaviour
     
     void ArrowBlink()  //Function that makes the arrow indicator before the fire blast blink
     {
-        if(arrowBlinking == true)
+        if(arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            fireAgain = 2f;
+            fireAgain = 5f;  //Sets timer for the break in between blasts
             
             if(blinkTimer < 0.55f)  //Makes arrow active
             {
@@ -77,7 +74,7 @@ public class hazardManager : MonoBehaviour
 
             if(blinkCounter == 5)  //Tracks amount of times arrow has blinked
             {
-                if(arrowPosSet == 1)
+                if(arrowPosSet == 1)   //Orients the hitbox to the direction of the arrow, and plays the fire particle effect
                 {
                     Instantiate(breathEffect, arrowPos1.position, arrowPos1.rotation);
                     Instantiate(fireHitbox, arrowPos1.position, arrowPos1.rotation);
@@ -107,17 +104,17 @@ public class hazardManager : MonoBehaviour
             }
         }
 
-        if(arrowBlinking == false)
+        if(arrowBlinking == false)  //Gets all the timers and counters ready for the next blast
         {
-            GenerateArrowPos();
             blinkTimer = 0.5f;
             blinkResetTimer = 0.5f;
             blinkCounter = 0;
-            fireAgain -= Time.deltaTime;
+            fireAgain -= Time.deltaTime;  //Begins countdown for the break inbetween blasts
 
             if(fireAgain < 0)
             {
-                arrowBlinking = true;
+                GenerateArrowPos();  //Sets new arrow position
+                arrowBlinking = true;  //Begins loop cycle again
             }
         }
     }
@@ -152,7 +149,4 @@ public class hazardManager : MonoBehaviour
 
         Debug.Log("arrow is at position" + arrowPosSet);
     }
-
-
-
 }
