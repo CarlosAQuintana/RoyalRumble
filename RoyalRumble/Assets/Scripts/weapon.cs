@@ -23,11 +23,11 @@ public class weapon : MonoBehaviour
             combatController combatController = other.GetComponent<combatController>();
             if (combatController.currentWeapon == null)
             {
-
                 disableMesh();
                 isEquippable = false;
                 combatController.currentWeaponUsable = true;
                 combatController.currentWeapon = weaponData;
+                combatController.weaponEquipped = true;
                 combatController.equipWeapon();
             }
         }

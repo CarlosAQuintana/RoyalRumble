@@ -25,6 +25,7 @@ public class projectile : MonoBehaviour
     }
     void Update()
     {
+        rb.velocity = (transform.forward * speed);
         liveLife();
         lookForHit();
     }

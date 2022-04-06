@@ -21,8 +21,10 @@ public class combatController : MonoBehaviour
     public bool isDead;
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
+    public Transform leftHand;
     public Transform attackPointOne; // Attack point.
     public Transform attackPointTwo;
+    public bool weaponEquipped;
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Spear Variables")]
@@ -34,6 +36,7 @@ public class combatController : MonoBehaviour
     void Start()
     {
         hand = transform.Find("Hand");
+        leftHand = transform.Find("Left Hand");
         player = GetComponent<PlayerController>();
         attackPointOne = transform.Find("AttackPoint01");
         attackPointTwo = transform.Find("AttackPoint02");
@@ -149,6 +152,7 @@ public class combatController : MonoBehaviour
         //gun.SetActive(false);
         //magicWand.SetActive(false);
         currentWeapon = null;
+        weaponEquipped = false;
         currentWeaponUsable = false;
     }
     void OnDrawGizmosSelected()

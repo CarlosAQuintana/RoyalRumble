@@ -16,10 +16,11 @@ public class playerAnimController : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         characterController = GetComponent<CharacterController>();
+        combat.GetComponent<combatController>();
     }
     void Update()
     {
-
+        setWeaponBlend();
     }
     public void moveAnim(InputAction.CallbackContext context)
     {
@@ -44,9 +45,21 @@ public class playerAnimController : MonoBehaviour
     }
     public void punchAnim(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && combat.currentWeaponUsable || context.started && combat.currentWeapon == null)
         {
-            anim.Play("Punch");
+            //anim.Play("Punch");
+            anim.Play("Attack Tree");
+        }
+    }
+    public void setWeaponBlend()
+    {
+        if (!combat.weaponEquipped)
+        {
+            anim.SetFloat("Weapon Blend", 0f);
+        }
+        else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.spear)
+        {
+            anim.SetFloat("Weapon Blend", .2f);
         }
     }
 }
