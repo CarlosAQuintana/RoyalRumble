@@ -19,7 +19,9 @@ public class roundManager : MonoBehaviour
     public int scoreToWin = 3;
     public int numOfPlayersAlive;
     private bool trackRoundTime;
-    [SerializeField] private float roundTimeElapsed; // Time elapsed from beginning of round.
+    [SerializeField] private float roundTransitionDelay = 5f;
+    [SerializeField] private float _roundTimeElapsed; // Time elapsed from beginning of round.
+    public float RoundTimeElasped { get => _roundTimeElapsed; }
 
     [Header("Player Variables")]
 
@@ -66,7 +68,7 @@ public class roundManager : MonoBehaviour
         // Counts the length of a single round.
         if (trackRoundTime)
         {
-            roundTimeElapsed += Time.deltaTime;
+            _roundTimeElapsed += Time.deltaTime;
         }
     }
 
@@ -108,7 +110,7 @@ public class roundManager : MonoBehaviour
     {
         checkGameWin(); // Check to see if a winner is present.
         trackRoundTime = false; // Reset round timer.
-        roundTimeElapsed = 0;
+        _roundTimeElapsed = 0;
         for (int c = 0; c <= combatControllers.Length; c++) // Unequip every weapon.
         {
             if (combatControllers[c] == null)
@@ -127,7 +129,7 @@ public class roundManager : MonoBehaviour
             players[p].transform.position = playerSpawnsRound1[p].position;
         }
         // Wait until spawned before giving players control & tracking time.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(roundTransitionDelay);
         controlAllMovement(true, false);
         freezeControl(false);
         trackRoundTime = true;

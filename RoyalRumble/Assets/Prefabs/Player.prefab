@@ -155,7 +155,7 @@ MonoBehaviour:
   hand: {fileID: 0}
   leftHand: {fileID: 0}
   attackPointOne: {fileID: 5737276464411600953}
-  attackPointTwo: {fileID: 0}
+  attackPointTwo: {fileID: 2528888339402719837}
   weaponEquipped: 0
   currentWeaponUsable: 0
   thrustPower: 7.5
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ce62fa199a4e445ae483b6b9beb7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 0}
+  anim: {fileID: 5086633268268924645}
   characterController: {fileID: 0}
   combat: {fileID: 5115828099214224361}
   input: {fileID: 0}
