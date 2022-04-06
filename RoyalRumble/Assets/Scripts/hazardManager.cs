@@ -6,6 +6,7 @@ public class hazardManager : MonoBehaviour
 {
     public GameObject fireArrow;
     public GameObject breathEffect;
+    public GameObject fireHitbox;
 
     public float hazardTimer;
     public float blinkResetTimer;
@@ -79,18 +80,22 @@ public class hazardManager : MonoBehaviour
                 if(arrowPosSet == 1)
                 {
                     Instantiate(breathEffect, arrowPos1.position, arrowPos1.rotation);
+                    Instantiate(fireHitbox, arrowPos1.position, arrowPos1.rotation);
                 }
                 if(arrowPosSet == 2)
                 {
                     Instantiate(breathEffect, arrowPos2.position, arrowPos2.rotation);
+                    Instantiate(fireHitbox, arrowPos2.position, arrowPos2.rotation);
                 }
                 if(arrowPosSet == 3)
                 {
                     Instantiate(breathEffect, arrowPos3.position, arrowPos3.rotation);
+                    Instantiate(fireHitbox, arrowPos3.position, arrowPos3.rotation);
                 }
                 if(arrowPosSet == 4)
                 {
                     Instantiate(breathEffect, arrowPos4.position, arrowPos4.rotation);
+                    Instantiate(fireHitbox, arrowPos4.position, arrowPos4.rotation);
                 }
 
                 blinkTimer = 0.6f;  //Stops the arrow loop from happening
@@ -123,7 +128,7 @@ public class hazardManager : MonoBehaviour
 
     void GenerateArrowPos()  //Function that randomly generates the arrow position randomly
     {
-        arrowPosSet = Random.Range(0, 5);
+        arrowPosSet = Random.Range(1, 5);
 
         if(arrowPosSet == 1)
         {
