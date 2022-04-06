@@ -23,19 +23,19 @@ public class fireHitboxScript : MonoBehaviour
 
         if(hM.arrowPosSet == 1)                      //Moves the hitbox in the direction of the arrow
         {
-            rb.velocity = new Vector3 (25, 0, 0);
+            
         }
         if(hM.arrowPosSet == 2)
         {
-            rb.velocity = new Vector3 (0, 0, -25);
+            
         }
         if(hM.arrowPosSet == 3)
         {
-            rb.velocity = new Vector3 (-25, 0, 0);
+            
         }
         if(hM.arrowPosSet == 4)
         {
-            rb.velocity = new Vector3 (0, 0, 25);
+            
         }
 
         timeActive -= Time.deltaTime;
