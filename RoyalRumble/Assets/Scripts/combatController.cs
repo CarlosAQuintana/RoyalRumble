@@ -8,7 +8,6 @@ public class combatController : MonoBehaviour
     [SerializeField] public PlayerController player;
     [SerializeField] CharacterController controller;
 
-
     [Header("Weapons")] // Each weapon GameObject.
     public GameObject spear;
     public GameObject shield;
@@ -44,6 +43,18 @@ public class combatController : MonoBehaviour
     void Update()
     {
         spearDash();
+    }
+    public void killPlayer(combatController targetCombatant, PlayerController targetPlayerControl)
+    {
+        if (!targetCombatant.isDead)
+        {
+            roundManager rManager = FindObjectOfType<roundManager>();
+            targetCombatant.isDead = true; // Set the the target to dead to prevent killing twice
+            targetPlayerControl.canMove = false; // and disable their movement.
+            rManager.numOfPlayersAlive--;
+            rManager.playerIsDead[targetPlayerControl.playerID] = true; // Set the playerIndex hit as dead...
+            rManager.checkForRoundWin();
+        }
     }
     public void attack(InputAction.CallbackContext context)
     {
@@ -84,29 +95,30 @@ public class combatController : MonoBehaviour
         player.canMove = false;
         RaycastHit ray;
         Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, hitboxRadius);
-        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, hitboxRadius, playerLayer))
+        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, .75f, playerLayer))
         {
+            StopCoroutine("punch");
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+            killPlayer(enemyCombat, enemyControl);
+            /*
             roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
             rManager.numOfPlayersAlive--;
             rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
             enemyCombat.player.canMove = false; // and disable their movement.
             rManager.checkForRoundWin();
-            StopCoroutine("punch");
-            //enemyCombat.isDead = true;
+            */
         }
         yield return new WaitForSeconds(.5f);
         player.canMove = true;
     }
     #endregion
-
     #region Spear Combat
     private void spearDash()
     {
         if (goSpearDash)
         {
-            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
+            controller.Move(transform.forward * Time.deltaTime * thrustPower);
             RaycastHit ray;
             if (Physics.Raycast(attackPointOne.position, transform.forward, out ray, hitboxRadius, playerLayer))
             {
@@ -115,12 +127,7 @@ public class combatController : MonoBehaviour
                 player.canMove = true;
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                rManager.numOfPlayersAlive--;
-                rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
-                enemyCombat.player.canMove = false; // and disable their movement.
-                rManager.checkForRoundWin();
-                //enemyCombat.isDead = true;
+                killPlayer(enemyCombat, enemyControl);
             }
         }
     }
@@ -134,7 +141,6 @@ public class combatController : MonoBehaviour
         player.canMove = true;
     }
     #endregion
-
     public void equipWeapon()
     {
         switch (currentWeapon.thisWeaponType)

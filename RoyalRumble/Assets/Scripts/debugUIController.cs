@@ -28,15 +28,18 @@ public class debugUIController : MonoBehaviour
     void Update()
     {
         roundNumber.text = ("Round - " + roundManager.currentRound);
-        if (roundManager.playerScore.Length > 1)
+        if (gameManager.playGame)
         {
             playerScoreTexts[0].text = ("Player 01 Score - " + roundManager.playerScore[0]);
             playerScoreTexts[1].text = ("Player 02 Score - " + roundManager.playerScore[1]);
-            if (roundManager.playerScore.Length == 3)
+            if (roundManager.playerScore.Length >= 3)
+            {
                 playerScoreTexts[2].text = ("Player 03 Score - " + roundManager.playerScore[2]);
-            if (roundManager.playerScore.Length == 4)
-                playerScoreTexts[3].text = ("Player 04 Score - " + roundManager.playerScore[3]);
+                if (roundManager.playerScore.Length == 4)
+                {
+                    playerScoreTexts[3].text = ("Player 04 Score - " + roundManager.playerScore[3]);
+                }
+            }
         }
-
     }
 }

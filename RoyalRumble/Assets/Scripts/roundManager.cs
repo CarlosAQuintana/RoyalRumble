@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class roundManager : MonoBehaviour
 {
-
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
 
-    [Header("Game Variables")]
-    [HideInInspector] public PlayerController[] players;
-    [HideInInspector] public combatController[] combatControllers;
+    [Header("Compoonent and Script Variables")]
+    public PlayerInputManager playerManager;
+    public gameManager manager;
+    // [Header("Game Variables")]
+    public PlayerController[] players;
+    public combatController[] combatControllers;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
@@ -18,13 +20,13 @@ public class roundManager : MonoBehaviour
     public int maxRounds; // Set the max number of rounds wanted for gameplay.
     public int scoreToWin = 3;
     public int numOfPlayersAlive;
+    public bool gameOver;
     private bool trackRoundTime;
     [SerializeField] private float roundTransitionDelay = 5f;
     [SerializeField] private float _roundTimeElapsed; // Time elapsed from beginning of round.
     public float RoundTimeElasped { get => _roundTimeElapsed; }
 
     [Header("Player Variables")]
-
     public GameObject playerPrefab;
     public int playerCount;
     public int maxPlayerCount;
@@ -34,60 +36,41 @@ public class roundManager : MonoBehaviour
     // Level spawns added manually via the Unity Editor.
     public Transform[] playerSpawnsRound1;
     public Transform[] playerSpawnsRound2;
-
     //public Transform[] playerSpawnsRound3;
-
     //public Transform[] playerSpawnsRound4;
 
-    // Script references.
-    public PlayerInputManager playerManager;
-    public gameManager manager;
-
-    // Added an animator for the state-driven camera.
-    public Animator Cameras;
-
+    public Animator Cameras; // Animator for the state-driven camera.
 
     void Start()
     {
         // Find controllers and scripts.
         manager = FindObjectOfType<gameManager>();
-        players = new PlayerController[4];
-        combatControllers = new combatController[4];
-
+        //players = new PlayerController[4];
+        //combatControllers = new combatController[4];
+        gameOver = false;
     }
-
     void Update()
     {
-        // Prevent players from joining
-        // while the game is being played.
         if (manager.playGame)
         {
-            playerManager.DisableJoining();
+            playerManager.DisableJoining(); // Prevent players from joining while the game is being played.
         }
-
-        // Counts the length of a single round.
         if (trackRoundTime)
         {
-            _roundTimeElapsed += Time.deltaTime;
+            _roundTimeElapsed += Time.deltaTime; // Counts the length of a single round.
         }
     }
-
     // Controls what the current state that the round or game is in from beginning to end.
     public void roundStateController()
     {
         switch (currentRoundState)
         {
-            // Only call this at the beginning of game.
-            case roundState.gameBegin:
-                // All players are alive; start a round.
+            case roundState.gameBegin: // Only call this at the beginning of game.
                 currentRound = 1;
                 numOfPlayersAlive = playerCount;
                 StartCoroutine("resetRound");
                 break;
-
-            // Everytime a round needs to start.
-            case roundState.roundStart:
-                // Set each player to be alive; start a round.
+            case roundState.roundStart: // Set each player to be alive then start the round.
                 numOfPlayersAlive = playerCount;
                 for (int p = 0; p < playerIsDead.Length; p++)
                 {
@@ -96,33 +79,28 @@ public class roundManager : MonoBehaviour
                 StartCoroutine("resetRound");
                 currentRoundState = roundState.roundPlay;
                 break;
-
-            // When round is in play.
-            case roundState.roundPlay:
+            case roundState.roundPlay: // When round is in play.
                 break;
 
-            // When round is over.
-            case roundState.roundEnd:
+            case roundState.roundEnd: // When round is over.
                 break;
         }
     }
     public IEnumerator resetRound()
     {
-        checkGameWin(); // Check to see if a winner is present.
+        yield return new WaitForSeconds(.25f);
+        controlAllMovement(false, true);
+        freezeControl(true);
         trackRoundTime = false; // Reset round timer.
         _roundTimeElapsed = 0;
-        for (int c = 0; c <= combatControllers.Length; c++) // Unequip every weapon.
+        for (int c = 0; c < combatControllers.Length; c++) // Unequip every weapon.
         {
-            if (combatControllers[c] == null)
-                break;
             combatControllers[c].unEquipWeapon();
         }
         debugResetAllWeapons(); // For now find each weapon and reset their equipable status.
-
         Cameras.SetBool("isRoundTwo", false);
-
         // Spawn players into level 1.
-        for (int p = 0; p <= players.Length; p++)
+        for (int p = 0; p < players.Length; p++)
         {
             if (players[p] == null)
                 break;
@@ -134,55 +112,54 @@ public class roundManager : MonoBehaviour
         freezeControl(false);
         trackRoundTime = true;
 
-        // if (currentRound == 1)
-        // {
-        //     // Set camera to face the level 1.
-        //     Cameras.SetBool("isRoundTwo", false);
+        /*if (currentRound == 1)
+        {
+            // Set camera to face the level 1.
+            Cameras.SetBool("isRoundTwo", false);
 
-        //     // Spawn players into level 1.
-        //     for (int p = 0; p <= players.Length; p++)
-        //     {
-        //         if (players[p] == null)
-        //             break;
-        //         players[p].transform.position = playerSpawnsRound1[p].position;
-        //     }
+            // Spawn players into level 1.
+            for (int p = 0; p <= players.Length; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound1[p].position;
+            }
 
-        //     // Wait until spawned before giving players control & tracking time.
-        //     yield return new WaitForSeconds(2f);
-        //     controlAllMovement(true, false);
-        //     freezeControl(false);
-        //     trackRoundTime = true;
-        // }
+            // Wait until spawned before giving players control & tracking time.
+            yield return new WaitForSeconds(2f);
+            controlAllMovement(true, false);
+            freezeControl(false);
+            trackRoundTime = true;
+        }
 
-        // // From here movement is disabled automatically in
-        // // 'checkForRoundWin()' until the next round starts.
-        // if (currentRound == 2)
-        // {
-        //     // Set camera to face the level 2.
-        //     Cameras.SetBool("isRoundTwo", true);
+        // From here movement is disabled automatically in
+        // 'checkForRoundWin()' until the next round starts.
+        if (currentRound == 2)
+        {
+            // Set camera to face the level 2.
+            Cameras.SetBool("isRoundTwo", true);
 
-        //     // Disable movement until game starts.
-        //     controlAllMovement(false, true);
-        //     freezeControl(true);
+            // Disable movement until game starts.
+            controlAllMovement(false, true);
+            freezeControl(true);
 
-        //     // Spawn players into level 2.
-        //     for (int p = 0; p <= players.Length; p++)
-        //     {
-        //         if (players[p] == null)
-        //             break;
-        //         players[p].transform.position = playerSpawnsRound2[p].position;
-        //     }
+            // Spawn players into level 2.
+            for (int p = 0; p <= players.Length; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound2[p].position;
+            }
 
-        //     // Wait until spawned before giving players control.
-        //     yield return new WaitForSeconds(0.5f);
-        //     controlAllMovement(true, false);
+            // Wait until spawned before giving players control.
+            yield return new WaitForSeconds(0.5f);
+            controlAllMovement(true, false);
 
-        //     // Wait until players drop to start tracking time again.
-        //     yield return new WaitForSeconds(1.5f);
-        //     freezeControl(false);
-        //     trackRoundTime = true;
-        // }
-
+            // Wait until players drop to start tracking time again.
+            yield return new WaitForSeconds(1.5f);
+            freezeControl(false);
+            trackRoundTime = true;
+        }*/
         if (currentRound == 3)
         {
             // Reset camera to face level 3.
@@ -190,7 +167,6 @@ public class roundManager : MonoBehaviour
             // Unfreeze players to allow them to drop into the map.
             // Start timer once players land on the map.
         }
-
         if (currentRound == 4)
         {
             // Reset camera to face level 4.
@@ -199,7 +175,6 @@ public class roundManager : MonoBehaviour
             // Start timer once players land on the map.
         }
     }
-
     // Executes when player potentially won a round.
     public void checkForRoundWin()
     {
@@ -207,8 +182,7 @@ public class roundManager : MonoBehaviour
         int winnerIndex = 0;
         if (numOfPlayersAlive == 1)
         {
-            Debug.Log("One player left!");
-            for (int p = 0; p <= playerIsDead.Length; p++)
+            for (int p = 0; p < playerIsDead.Length; p++)
             {
                 if (playerIsDead[p] == false)
                 {
@@ -216,7 +190,11 @@ public class roundManager : MonoBehaviour
                     break;
                 }
             }
-
+            combatController[] combatants = FindObjectsOfType<combatController>();
+            foreach (combatController combat in combatants)
+            {
+                combat.isDead = false;
+            }
             // Procede to next round and increase winning player's score.
             Debug.Log("Player " + winnerIndex + " won the round!");
             currentRound++;
@@ -226,103 +204,74 @@ public class roundManager : MonoBehaviour
             {
                 // Game is over; cut to win screen.
             }
-
+            checkGameWin();
             // Begin round and freeze player movement until players
             // spawn in and round starts.
-            currentRoundState = roundState.roundStart;
-            controlAllMovement(false, true);
-            roundStateController();
+            if (!gameOver)
+            {
+                currentRoundState = roundState.roundStart;
+                controlAllMovement(false, true);
+                roundStateController();
+            }
         }
     }
-    public void checkGameWin() // Needs major reworking don't use for now!
+    public void checkGameWin()
     {
         int winnerIndex = 0;
         if (playerScore[0] == scoreToWin)
         {
             winnerIndex = 0;
-            for (int score = 0; score < playerScore.Length; score++)
-            {
-                playerScore[score] = 0;
-            }
-            StopCoroutine("resetRound");
-            currentRoundState = roundState.gameBegin;
-            roundStateController();
             Debug.Log("Player " + winnerIndex + " won the game!");
+            gameOver = true;
         }
         if (playerScore[1] == scoreToWin)
         {
             winnerIndex = 1;
-            for (int score = 0; score < playerScore.Length; score++)
-            {
-                playerScore[score] = 0;
-            }
-            StopCoroutine("resetRound");
-            currentRoundState = roundState.gameBegin;
-            roundStateController();
             Debug.Log("Player " + winnerIndex + " won the game!");
+            gameOver = true;
         }
         if (playerScore.Length == 2)
             return;
         if (playerScore[2] == scoreToWin)
         {
             winnerIndex = 2;
-            for (int score = 0; score < playerScore.Length; score++)
-            {
-                playerScore[score] = 0;
-            }
-            StopCoroutine("resetRound");
-            currentRoundState = roundState.gameBegin;
-            roundStateController();
             Debug.Log("Player " + winnerIndex + " won the game!");
+            gameOver = true;
         }
         if (playerScore.Length == 3)
             return;
         if (playerScore[3] == scoreToWin)
         {
             winnerIndex = 3;
-            for (int score = 0; score < playerScore.Length; score++)
-            {
-                playerScore[score] = 0;
-            }
-            StopCoroutine("resetRound");
-            currentRoundState = roundState.gameBegin;
-            roundStateController();
             Debug.Log("Player " + winnerIndex + " won the game!");
+            gameOver = true;
         }
     }
-
-    // Quick disable all player movement.
-    public void controlAllMovement(bool enable, bool disable)
+    public void controlAllMovement(bool enable, bool disable) // Quick disable all player movement.
     {
         if (enable)
-            for (int i = 0; i <= players.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
-                if (players[i] == null)
-                    break;
                 players[i].canMove = true;
             }
 
         else if (disable)
-            for (int i = 0; i <= players.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
-                if (players[i] == null)
-                    break;
                 players[i].canMove = false;
             }
     }
-
-    // Quick disable all player control.
-    public void freezeControl(bool enable)
+    public void freezeControl(bool enable) // Quick disable all player control.
     {
         if (enable)
-            for (int i = 0; i <= players.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
                 if (players[i] == null)
                     break;
                 players[i].canControl = false;
             }
         else if (!enable)
-            for (int i = 0; i <= players.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
                 if (players[i] == null)
                     break;
@@ -338,26 +287,52 @@ public class roundManager : MonoBehaviour
             userweapon.enableMesh();
         }
     }
-    // I added a function that is called whenever a new player joins.
-    void OnPlayerJoined(PlayerInput playerInput)
+    public void replayGame()
+    {
+        if (gameOver)
+        {
+            gameOver = false;
+            for (int score = 0; score < playerScore.Length; score++)
+            {
+                playerScore[score] = 0;
+            }
+            StopCoroutine("resetRound");
+            currentRoundState = roundState.gameBegin;
+            roundStateController();
+        }
+    }
+    void OnPlayerJoined(PlayerInput playerInput) // Called whenever a new player joins.
     {
         // Give each player a unique ID based on the order in 
         // which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().playerID = playerInput.playerIndex;
-
         // Players spawn in unique spawn points depending on 
         // the order in which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawnsRound1[playerInput.playerIndex].position;
-
         // Update the current player count based on
         // how many players have joined (+ 1 due to array index starting at 0).
         playerCount = playerInput.playerIndex + 1;
-
         // Add the PlayerController and combatController of the current player being spawned to a list.
-        players[playerInput.playerIndex] = playerInput.gameObject.GetComponent<PlayerController>();
-        combatControllers[playerInput.playerIndex] = playerInput.gameObject.GetComponent<combatController>();
+
+        //players[playerInput.playerIndex] = playerInput.gameObject.GetComponent<PlayerController>();
+        //combatControllers[playerInput.playerIndex] = playerInput.gameObject.GetComponent<combatController>();
 
         // Name GameObject based on player index.
         playerInput.gameObject.name = ("Player " + playerInput.playerIndex);
+    }
+    public void addDummy()
+    {
+        if (playerCount < 4)
+        {
+            GameObject dummyPlayer = Instantiate(playerPrefab);
+            PlayerInput pInput = dummyPlayer.GetComponent<PlayerInput>();
+            PlayerController pController = dummyPlayer.GetComponent<PlayerController>();
+            pController.playerID = pInput.playerIndex;
+            pController.startPos = playerSpawnsRound1[pInput.playerIndex].position;
+            playerCount = pInput.playerIndex + 1;
+
+            //players[pInput.playerIndex] = pController;
+            //combatControllers[pInput.playerIndex] = dummyPlayer.GetComponent<combatController>();
+        }
     }
 }
