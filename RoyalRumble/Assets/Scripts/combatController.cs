@@ -30,9 +30,14 @@ public class combatController : MonoBehaviour
     [Header("Spear Variables")]
     [SerializeField] private float thrustPower;
     [SerializeField] private float thrustDuration;
-    public float hitboxRadius;
+    public float spearHitRadius;
     public bool goSpearDash;
     float spearSmoothVelocityHolder;
+
+    [Header("Shield Variables")]
+    [SerializeField] private float blitzPower;
+    [SerializeField] private float blitzDuration;
+
     void Start()
     {
         hand = transform.Find("Hand");
@@ -83,8 +88,8 @@ public class combatController : MonoBehaviour
     {
         player.canMove = false;
         RaycastHit ray;
-        Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, hitboxRadius);
-        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, hitboxRadius, playerLayer))
+        Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, spearHitRadius);
+        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, spearHitRadius, playerLayer))
         {
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
@@ -108,7 +113,7 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
             RaycastHit ray;
-            if (Physics.Raycast(attackPointOne.position, transform.forward, out ray, hitboxRadius, playerLayer))
+            if (Physics.Raycast(attackPointOne.position, transform.forward, out ray, spearHitRadius, playerLayer))
             {
                 goSpearDash = false;
                 StopCoroutine("spearAttack");
@@ -135,6 +140,11 @@ public class combatController : MonoBehaviour
     }
     #endregion
 
+    #region Shield Combat
+
+
+    #endregion
+
     public void equipWeapon()
     {
         switch (currentWeapon.thisWeaponType)
@@ -158,8 +168,8 @@ public class combatController : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(attackPointOne.position, hitboxRadius);
+        Gizmos.DrawWireSphere(attackPointOne.position, spearHitRadius);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPointTwo.position, hitboxRadius / 2f);
+        Gizmos.DrawWireSphere(attackPointTwo.position, spearHitRadius / 2f);
     }
 }

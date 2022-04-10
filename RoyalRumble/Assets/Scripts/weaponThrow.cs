@@ -13,12 +13,14 @@ public class weaponThrow : MonoBehaviour
     [SerializeField] private GameObject spearProjectilePrefab;
 
     [Header("Throwing Variables")]
+    private bool throwStarted;
     [SerializeField] private float throwPower;
     [SerializeField] private float throwScale;
     void Start()
     {
         player = GetComponent<PlayerController>();
         combat = GetComponent<combatController>();
+        throwStarted = false;
     }
     void Update()
     {
@@ -26,16 +28,20 @@ public class weaponThrow : MonoBehaviour
     }
     public void tossWeapon(InputAction.CallbackContext context) // Select a throwing action based on type of weapon.
     {
-        if (context.performed)
+        if (context.started && combat.currentWeapon != null)
         {
-            if (combat.currentWeapon != null)
-                switch (combat.currentWeapon.thisWeaponType)
-                {
-                    case weaponData.weaponType.spear:
-                        spearThrow();
-                        break;
-                }
+            switch (combat.currentWeapon.thisWeaponType)
+            {
+                case weaponData.weaponType.spear:
+                    spearThrow();
+                    break;
+            }
         }
+        if (context.canceled && throwStarted)
+        {
+            throwStarted = false;
+        }
+
     }
     public void spearThrow() // Spawn the projectile and set it's speed.
     {
