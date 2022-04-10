@@ -14,10 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float smoothInputSpeed = 0.2f;
 
-    [SerializeField] 
+    [SerializeField]
     private float controllerDeadzone = 0.1f;
 
-    [SerializeField] 
+    [SerializeField]
     private float gamepadRotateSmoothing = 1000f;
 
 
@@ -47,10 +47,11 @@ public class PlayerController : MonoBehaviour
 
     // Player boolean variables.
     private bool groundedPlayer;
+    public bool isBot;
     public bool canMove = false;
     public bool canControl = false;
 
-    [SerializeField] 
+    [SerializeField]
     private bool isGamepad;
 
 
@@ -112,7 +113,7 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
- 
+
         // Receives movement input and smoothly applies it to player.
         currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
         move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
@@ -122,7 +123,7 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
     }
-    
+
     // Takes input to control where the player will rotate depending on control scheme.
     private void HandleRotationInput()
     {
@@ -178,6 +179,6 @@ public class PlayerController : MonoBehaviour
     {
         isGamepad = true;
     }
-    
-    
+
+
 }

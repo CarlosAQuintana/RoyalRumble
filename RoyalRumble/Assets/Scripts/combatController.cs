@@ -37,7 +37,10 @@ public class combatController : MonoBehaviour
     [Header("Shield Variables")]
     [SerializeField] private float blitzPower;
     [SerializeField] private float blitzDuration;
+    void Awake()
+    {
 
+    }
     void Start()
     {
         hand = transform.Find("Hand");
@@ -49,6 +52,15 @@ public class combatController : MonoBehaviour
     void Update()
     {
         spearDash();
+    }
+    public void killPlayer(combatController targetCombat, PlayerController targetController)
+    {
+        roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+        rManager.numOfPlayersAlive--;
+        rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
+        targetCombat.isDead = true;
+        targetCombat.player.canMove = false; // and disable their movement.
+        rManager.checkForRoundWin();
     }
     public void attack(InputAction.CallbackContext context)
     {
@@ -94,10 +106,7 @@ public class combatController : MonoBehaviour
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
             roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-            rManager.numOfPlayersAlive--;
-            rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
-            enemyCombat.player.canMove = false; // and disable their movement.
-            rManager.checkForRoundWin();
+            killPlayer(enemyCombat, enemyControl);
             StopCoroutine("punch");
             //enemyCombat.isDead = true;
         }
@@ -121,9 +130,7 @@ public class combatController : MonoBehaviour
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
                 roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                rManager.numOfPlayersAlive--;
-                rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
-                enemyCombat.player.canMove = false; // and disable their movement.
+                killPlayer(enemyCombat, enemyControl);
                 rManager.checkForRoundWin();
                 //enemyCombat.isDead = true;
             }
