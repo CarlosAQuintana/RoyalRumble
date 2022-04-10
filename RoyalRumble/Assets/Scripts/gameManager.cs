@@ -2,24 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// I reworked the game manager from the bottom as the old manager's
-// functions are no longer needed with the current system.
-
 public class gameManager : MonoBehaviour
 {
     public roundManager roundManager;
-
-    // Determines if game is being played.
-    public bool playGame = false;
-
-    // Initiated when "Play" button is pressed.
-    public void beginPlay()
+    public bool playGame = false; // Determines if game is being played.
+    public void beginPlay() // Initiated when "Play" button is pressed.
     {
-        if (roundManager.playerCount == 0 || playGame)
+        if (roundManager.playerCount < 2 || playGame)
             return;
         playGame = true;
         roundManager.playerIsDead = new bool[roundManager.playerCount];
         roundManager.playerScore = new int[roundManager.playerCount];
+
+        roundManager.players = new PlayerController[roundManager.playerCount];
+        for (int p = 0; p < roundManager.players.Length; p++)
+        {
+            roundManager.players[p] = GameObject.Find("Player " + p).GetComponent<PlayerController>();
+        }
+
+        roundManager.combatControllers = new combatController[roundManager.playerCount];
+        for (int c = 0; c < roundManager.combatControllers.Length; c++)
+        {
+            roundManager.combatControllers[c] = GameObject.Find("Player " + c).GetComponent<combatController>();
+        }
+
         roundManager.currentRoundState = roundManager.roundState.gameBegin;
         roundManager.roundStateController();
     }

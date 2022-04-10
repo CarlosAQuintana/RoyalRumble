@@ -4,10 +4,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    // Script references.
-    public gameManager manager;
-
-
     // Player float values.
     [SerializeField]
     private float playerSpeed = 2.0f;
@@ -18,25 +14,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float smoothInputSpeed = 0.2f;
 
+    [SerializeField] 
+    private float controllerDeadzone = 0.1f;
+
+    [SerializeField] 
+    private float gamepadRotateSmoothing = 1000f;
+
 
     // Player int values.
     public int playerID;
 
 
-    // Player controller reference.
+    // Player controller / input references.
     private CharacterController controller;
+    private PlayerControls playerControls;
+    public PlayerInput playerInput;
 
 
     // Player Vector3 variables.
     private Vector3 playerVelocity;
     public Vector3 startPos;
     private Vector3 move;
+    private Vector3 mouseAim;
 
 
     // Player Vector2 variables.
     private Vector2 movementInput = Vector2.zero;
     private Vector2 currentInputVector;
     private Vector2 smoothInputVelocity;
+    private Vector2 aim;
 
 
     // Player boolean variables.
@@ -44,21 +50,36 @@ public class PlayerController : MonoBehaviour
     public bool canMove = false;
     public bool canControl = false;
 
+    [SerializeField] 
+    private bool isGamepad;
+
+
     // Called once at the beginning of the game.
     private void Start()
     {
-        // Finds References.
+        // Reference player controls.
         controller = gameObject.GetComponent<CharacterController>();
-        manager = FindObjectOfType<gameManager>();
+        playerControls = new PlayerControls();
+
+        // Enable player controls / input.
+        playerControls.Enable();
+        playerControls.Player.Enable();
 
         // Places player as spawn location.
         transform.position = startPos;
+    }
+    private void Awake()
+    {
+        // Reference player input and determine control scheme.
+        playerInput = gameObject.GetComponent<PlayerInput>();
+        isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
     }
 
     // This function allows movement input to be accessible via 
     // keyboard & controller.
     public void OnMove(InputAction.CallbackContext context)
     {
+        // Give ability to take control from player and zero-out movement input if needed.
         if (canControl)
         {
             // Reads movement input based on input device.
@@ -68,43 +89,95 @@ public class PlayerController : MonoBehaviour
             movementInput = new Vector2(0, 0);
     }
 
-    // Called once per frame.
+    // Called once between frames.
     private void FixedUpdate()
     {
+        HandleRotationInput();
+
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
-            // This code makes sure the player stays level to the ground
-            // as long as they are ground. Though this code is not too 
-            // useful currently, it could be used later for knockback effect(s).
-            groundedPlayer = controller.isGrounded;
-            if (groundedPlayer && playerVelocity.y < 0)
-            {
-                playerVelocity.y = 0f;
-            }
-
-            if (canControl)
-            {
-                // Receives movement input and smoothly applies it to player.
-                currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
-                move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
-                controller.Move(move * Time.deltaTime * playerSpeed);
-
-                // Players moves towards input.
-                if (move != Vector3.zero)
-                {
-                    gameObject.transform.forward = move;
-                }
-            }
-            else
-            {
-                move = Vector3.zero;
-                currentInputVector = Vector2.zero;
-            }
-
-            // Applies gravity to player.
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
+            HandleMovement();
+            HandleRotation();
         }
     }
+
+    private void HandleMovement()
+    {
+        // This code makes sure the player stays level to the ground
+        // as long as they are ground. Though this code is not too 
+        // useful currently, it could be used later for knockback effect(s).
+        groundedPlayer = controller.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
+ 
+        // Receives movement input and smoothly applies it to player.
+        currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
+        move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
+        controller.Move(move * Time.deltaTime * playerSpeed);
+
+        // Applies gravity to player.
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
+    }
+    
+    // Takes input to control where the player will rotate depending on control scheme.
+    private void HandleRotationInput()
+    {
+        aim = playerControls.Player.Aim.ReadValue<Vector2>();
+        mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
+    }
+
+    // Rotates player depending on control scheme.
+    private void HandleRotation()
+    {
+        // If player is using controller, rotate with the right stick.
+        if (isGamepad)
+        {
+            if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
+            {
+                Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
+
+                if (playerDirection.sqrMagnitude > 0.0f)
+                {
+                    Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
+                }
+            }
+        }
+        // If the player is using keyboard & mouse, rotate using the mouse.
+        else
+        {
+            Ray ray = Camera.main.ScreenPointToRay(mouseAim);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            float rayDistance;
+
+            if (groundPlane.Raycast(ray, out rayDistance))
+            {
+                Vector3 point = ray.GetPoint(rayDistance);
+                LookAt(point);
+            }
+        }
+    }
+
+    // Corrects player look direction for mouse so that player doesn't look above an object if the mouse is not pointing at a flat object.
+    private void LookAt(Vector3 lookPoint)
+    {
+        Vector3 heightCorrectedPoint = new Vector3(lookPoint.x, transform.position.y, lookPoint.z);
+        transform.LookAt(heightCorrectedPoint);
+    }
+
+    // Functions to ensure players are using the correct aiming mechanic based on their control scheme.
+    public void isMouseAim()
+    {
+        isGamepad = false;
+    }
+    public void isGamepadAim()
+    {
+        isGamepad = true;
+    }
+    
+    
 }
