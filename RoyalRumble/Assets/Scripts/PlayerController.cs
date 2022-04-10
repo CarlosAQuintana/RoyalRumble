@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
         playerControls = new PlayerControls();
 
         // Enable player controls / input.
+
         playerControls.Enable();
         playerControls.Player.Enable();
 
@@ -94,7 +95,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         HandleRotationInput();
-
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
@@ -130,6 +130,11 @@ public class PlayerController : MonoBehaviour
         aim = playerControls.Player.Aim.ReadValue<Vector2>();
         mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
     }
+
+    /*public void getStickRotVector(InputAction.CallbackContext context)
+    {
+        aim = playerControls.Player.Aim.ReadValue<Vector2>();
+    }*/
 
     // Rotates player depending on control scheme.
     private void HandleRotation()
