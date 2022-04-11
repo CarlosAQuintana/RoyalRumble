@@ -21,6 +21,11 @@ public class hazardManager : MonoBehaviour
     public Transform arrowPos2;
     public Transform arrowPos3;
     public Transform arrowPos4;
+    public Transform firePos1;
+    public Transform firePos2;
+    public Transform firePos3;
+    public Transform firePos4;
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,22 +81,22 @@ public class hazardManager : MonoBehaviour
             {
                 if(arrowPosSet == 1)   //Orients the hitbox to the direction of the arrow, and plays the fire particle effect
                 {
-                    Instantiate(breathEffect, arrowPos1.position, arrowPos1.rotation);
+                    Instantiate(breathEffect, firePos3.position, firePos3.rotation);
                     Instantiate(fireHitbox, arrowPos1.position, arrowPos1.rotation);
                 }
                 if(arrowPosSet == 2)
                 {
-                    Instantiate(breathEffect, arrowPos2.position, arrowPos2.rotation);
+                    Instantiate(breathEffect, firePos4.position, firePos4.rotation);
                     Instantiate(fireHitbox, arrowPos2.position, arrowPos2.rotation);
                 }
                 if(arrowPosSet == 3)
                 {
-                    Instantiate(breathEffect, arrowPos3.position, arrowPos3.rotation);
+                    Instantiate(breathEffect, firePos1.position, firePos1.rotation);
                     Instantiate(fireHitbox, arrowPos3.position, arrowPos3.rotation);
                 }
                 if(arrowPosSet == 4)
                 {
-                    Instantiate(breathEffect, arrowPos4.position, arrowPos4.rotation);
+                    Instantiate(breathEffect, firePos2.position, firePos2.rotation);
                     Instantiate(fireHitbox, arrowPos4.position, arrowPos4.rotation);
                 }
 
