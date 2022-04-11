@@ -127,6 +127,8 @@ MonoBehaviour:
   playerID: 0
   playerInput: {fileID: 0}
   startPos: {x: 0, y: 0, z: 0}
+  mouseAim: {x: 0, y: 0, z: 0}
+  aim: {x: 0, y: 0}
   isBot: 0
   canMove: 0
   canControl: 0
@@ -317,7 +319,19 @@ MonoBehaviour:
     m_ActionId: 5cf77fb3-73ea-45c0-9536-b79498b083b7
     m_ActionName: Player/Aim[/DualShock4GamepadHID/rightStick,/DualShock4GamepadHID1/rightStick]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7164256037502983404}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: getMouseRotVector
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 26060fe9-48b1-4ae5-8984-82f1667ad207
     m_ActionName: Player/MouseAim[/Mouse/position]
   m_NeverAutoSwitchControlSchemes: 0

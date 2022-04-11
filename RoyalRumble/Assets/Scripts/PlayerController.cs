@@ -35,14 +35,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     public Vector3 startPos;
     private Vector3 move;
-    private Vector3 mouseAim;
+    public Vector3 mouseAim;
 
 
     // Player Vector2 variables.
     private Vector2 movementInput = Vector2.zero;
     private Vector2 currentInputVector;
     private Vector2 smoothInputVelocity;
-    private Vector2 aim;
+    public Vector2 aim;
 
 
     // Player boolean variables.
@@ -60,12 +60,12 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player controls.
         controller = gameObject.GetComponent<CharacterController>();
-        playerControls = new PlayerControls();
+        //playerControls = new PlayerControls();
 
         // Enable player controls / input.
 
-        playerControls.Enable();
-        playerControls.Player.Enable();
+        //playerControls.Enable();
+        //playerControls.Player.Enable();
 
         // Places player as spawn location.
         transform.position = startPos;
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player input and determine control scheme.
         playerInput = gameObject.GetComponent<PlayerInput>();
-        isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
+        //isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
     }
 
     // This function allows movement input to be accessible via 
@@ -94,7 +94,8 @@ public class PlayerController : MonoBehaviour
     // Called once between frames.
     private void FixedUpdate()
     {
-        HandleRotationInput();
+        InputSystem.Update();
+        //HandleRotationInput();
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
@@ -130,11 +131,14 @@ public class PlayerController : MonoBehaviour
         aim = playerControls.Player.Aim.ReadValue<Vector2>();
         mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
     }
-
-    /*public void getStickRotVector(InputAction.CallbackContext context)
+    public void getMouseRotVector(InputAction.CallbackContext context)
     {
-        aim = playerControls.Player.Aim.ReadValue<Vector2>();
-    }*/
+        mouseAim = context.ReadValue<Vector2>();
+    }
+    public void getStickRotVector(InputAction.CallbackContext context)
+    {
+        aim = context.ReadValue<Vector2>();
+    }
 
     // Rotates player depending on control scheme.
     private void HandleRotation()
