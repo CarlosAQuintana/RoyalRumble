@@ -14,10 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float smoothInputSpeed = 0.2f;
 
-    [SerializeField] 
+    [SerializeField]
     private float controllerDeadzone = 0.1f;
 
-    [SerializeField] 
+    [SerializeField]
     private float gamepadRotateSmoothing = 1000f;
 
 
@@ -35,22 +35,23 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     public Vector3 startPos;
     private Vector3 move;
-    private Vector3 mouseAim;
+    public Vector3 mouseAim;
 
 
     // Player Vector2 variables.
     private Vector2 movementInput = Vector2.zero;
     private Vector2 currentInputVector;
     private Vector2 smoothInputVelocity;
-    private Vector2 aim;
+    public Vector2 aim;
 
 
     // Player boolean variables.
     private bool groundedPlayer;
+    public bool isBot;
     public bool canMove = false;
     public bool canControl = false;
 
-    [SerializeField] 
+    [SerializeField]
     private bool isGamepad;
 
 
@@ -59,11 +60,12 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player controls.
         controller = gameObject.GetComponent<CharacterController>();
-        playerControls = new PlayerControls();
+        //playerControls = new PlayerControls();
 
         // Enable player controls / input.
-        playerControls.Enable();
-        playerControls.Player.Enable();
+
+        //playerControls.Enable();
+        //playerControls.Player.Enable();
 
         // Places player as spawn location.
         transform.position = startPos;
@@ -72,7 +74,7 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player input and determine control scheme.
         playerInput = gameObject.GetComponent<PlayerInput>();
-        isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
+        //isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
     }
 
     // This function allows movement input to be accessible via 
@@ -92,8 +94,8 @@ public class PlayerController : MonoBehaviour
     // Called once between frames.
     private void FixedUpdate()
     {
-        HandleRotationInput();
-
+        InputSystem.Update();
+        //HandleRotationInput();
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
@@ -112,7 +114,7 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y = 0f;
         }
- 
+
         // Receives movement input and smoothly applies it to player.
         currentInputVector = Vector2.SmoothDamp(currentInputVector, movementInput, ref smoothInputVelocity, smoothInputSpeed);
         move = new Vector3(currentInputVector.x, 0, currentInputVector.y);
@@ -122,12 +124,20 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
     }
-    
+
     // Takes input to control where the player will rotate depending on control scheme.
     private void HandleRotationInput()
     {
         aim = playerControls.Player.Aim.ReadValue<Vector2>();
         mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
+    }
+    public void getMouseRotVector(InputAction.CallbackContext context)
+    {
+        mouseAim = context.ReadValue<Vector2>();
+    }
+    public void getStickRotVector(InputAction.CallbackContext context)
+    {
+        aim = context.ReadValue<Vector2>();
     }
 
     // Rotates player depending on control scheme.
@@ -178,6 +188,6 @@ public class PlayerController : MonoBehaviour
     {
         isGamepad = true;
     }
-    
-    
+
+
 }

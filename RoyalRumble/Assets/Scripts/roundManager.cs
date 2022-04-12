@@ -312,10 +312,6 @@ public class roundManager : MonoBehaviour
         // Update the current player count based on
         // how many players have joined (+ 1 due to array index starting at 0).
         playerCount = playerInput.playerIndex + 1;
-        // Add the PlayerController and combatController of the current player being spawned to a list.
-
-        //players[playerInput.playerIndex] = playerInput.gameObject.GetComponent<PlayerController>();
-        //combatControllers[playerInput.playerIndex] = playerInput.gameObject.GetComponent<combatController>();
 
         // Name GameObject based on player index.
         playerInput.gameObject.name = ("Player " + playerInput.playerIndex);

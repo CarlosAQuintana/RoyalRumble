@@ -25,7 +25,7 @@ public class deathPitScript : MonoBehaviour
             combatController pCombat = player.GetComponent<combatController>(); // Get the combat controller.
             GameObject roundmanager = GameObject.FindWithTag("gameManager");
             roundManager rManager = FindObjectOfType<roundManager>(); //And gets the Round Manager
-            pCombat.StopCoroutine("spearAttack"); // If player is mid spear attack, stop the attack.
+            pCombat.StopAllCoroutines(); // If player is mid attack, stop the attack.
             pCombat.goSpearDash = false;
             pCombat.killPlayer(pCombat, pController);
         }
