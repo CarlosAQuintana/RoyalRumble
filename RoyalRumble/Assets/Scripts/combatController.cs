@@ -37,6 +37,7 @@ public class combatController : MonoBehaviour
     [Header("Shield Variables")]
     [SerializeField] private float blitzPower;
     [SerializeField] private float blitzDuration;
+    public bool goShieldBlitz;
     void Awake()
     {
 
@@ -52,6 +53,7 @@ public class combatController : MonoBehaviour
     void Update()
     {
         spearDash();
+        shieldBlitz();
     }
     public void killPlayer(combatController targetCombat, PlayerController targetController)
     {
@@ -76,16 +78,13 @@ public class combatController : MonoBehaviour
                 case weaponData.weaponType.spear:
                     StartCoroutine("spearAttack");
                     break;
-                case weaponData.weaponType.sword:
-
+                case weaponData.weaponType.shield:
+                    StartCoroutine("shieldAttack");
                     break;
                 case weaponData.weaponType.gun:
 
                     break;
-                case weaponData.weaponType.shield:
-
-                    break;
-                case weaponData.weaponType.magicWand:
+                case weaponData.weaponType.sword:
 
                     break;
             }
@@ -101,7 +100,7 @@ public class combatController : MonoBehaviour
         player.canMove = false;
         RaycastHit ray;
         Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, spearHitRadius);
-        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, spearHitRadius, playerLayer))
+        if (Physics.Raycast(attackPointTwo.position, transform.forward, out ray, .5f, playerLayer))
         {
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
@@ -148,8 +147,35 @@ public class combatController : MonoBehaviour
     #endregion
 
     #region Shield Combat
-
-
+    private void shieldBlitz()
+    {
+        if (goShieldBlitz)
+        {
+            controller.Move(transform.forward * Time.fixedDeltaTime * blitzPower);
+            RaycastHit ray;
+            if (Physics.Raycast(attackPointOne.position, transform.forward, out ray, spearHitRadius, playerLayer))
+            {
+                goShieldBlitz = false;
+                StopCoroutine("shieldAttack");
+                player.canMove = true;
+                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+                roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+                killPlayer(enemyCombat, enemyControl);
+                rManager.checkForRoundWin();
+                //enemyCombat.isDead = true;
+            }
+        }
+    }
+    public IEnumerator shieldAttack()
+    {
+        currentWeaponUsable = false;
+        player.canMove = false;
+        goShieldBlitz = true;
+        yield return new WaitForSeconds(blitzDuration);
+        goShieldBlitz = false;
+        player.canMove = true;
+    }
     #endregion
 
     public void equipWeapon()
@@ -159,12 +185,15 @@ public class combatController : MonoBehaviour
             case weaponData.weaponType.spear:
                 spear.SetActive(true);
                 break;
+            case weaponData.weaponType.shield:
+                shield.SetActive(true);
+                break;
         }
     }
     public void unEquipWeapon()
     {
         spear.SetActive(false);
-        //shield.SetActive(false);
+        shield.SetActive(false);
         //sword.SetActive(false);
         //gun.SetActive(false);
         //magicWand.SetActive(false);

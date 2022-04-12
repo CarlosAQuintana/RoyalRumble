@@ -74,7 +74,9 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player input and determine control scheme.
         playerInput = gameObject.GetComponent<PlayerInput>();
-        //isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
+
+
+        isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
     }
 
     // This function allows movement input to be accessible via 
@@ -133,32 +135,38 @@ public class PlayerController : MonoBehaviour
     }
     public void getMouseRotVector(InputAction.CallbackContext context)
     {
-        mouseAim = context.ReadValue<Vector2>();
+        if (context.performed)
+        {
+            mouseAim = context.ReadValue<Vector3>();
+            //Debug.Log(mouseAim);
+        }
+
     }
     public void getStickRotVector(InputAction.CallbackContext context)
     {
-        aim = context.ReadValue<Vector2>();
+        if (context.performed)
+        {
+            aim = context.ReadValue<Vector2>();
+            //Debug.Log(aim);
+        }
     }
 
     // Rotates player depending on control scheme.
     private void HandleRotation()
     {
         // If player is using controller, rotate with the right stick.
-        if (isGamepad)
+        if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
         {
-            if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
-            {
-                Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
+            Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
 
-                if (playerDirection.sqrMagnitude > 0.0f)
-                {
-                    Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
-                }
+            if (playerDirection.sqrMagnitude > 0.0f)
+            {
+                Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
             }
         }
         // If the player is using keyboard & mouse, rotate using the mouse.
-        else
+        /*else
         {
             Ray ray = Camera.main.ScreenPointToRay(mouseAim);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -169,7 +177,7 @@ public class PlayerController : MonoBehaviour
                 Vector3 point = ray.GetPoint(rayDistance);
                 LookAt(point);
             }
-        }
+        }*/
     }
 
     // Corrects player look direction for mouse so that player doesn't look above an object if the mouse is not pointing at a flat object.

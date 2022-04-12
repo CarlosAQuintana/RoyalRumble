@@ -59,6 +59,10 @@ public class playerAnimController : MonoBehaviour
         }
         else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.spear)
         {
+            anim.SetFloat("Weapon Blend", .1f);
+        }
+        else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.shield)
+        {
             anim.SetFloat("Weapon Blend", .2f);
         }
     }

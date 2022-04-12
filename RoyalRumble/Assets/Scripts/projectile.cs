@@ -16,12 +16,21 @@ public class projectile : MonoBehaviour
     public float hitRadius = 1;
     public float speed;
     public bool isDanger;
+    public bool canBounce;
+    [SerializeField] private int maxBounces;
+    [SerializeField] private int bouncesLeft;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            rb = GetComponentInParent<Rigidbody>();
         hitPoint = transform.Find("hitPoint");
-        rb.velocity = (transform.forward * speed);
+
         isDanger = true;
+
+        bouncesLeft = maxBounces;
+
+        rb.velocity = (transform.forward * Time.fixedDeltaTime * speed * 1.5f);
     }
     void Update()
     {
@@ -30,7 +39,7 @@ public class projectile : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.velocity = (transform.forward * Time.deltaTime * speed);
+
     }
     public void lookForHit()
     {
@@ -54,12 +63,27 @@ public class projectile : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Environment")
+        if (other.tag == "Environment" && !canBounce)
         {
             // Zero our speed, disable dynamic physics, and set threat to zero.
             rb.velocity = (Vector3.zero);
             isDanger = false;
             rb.isKinematic = true;
+        }
+
+    }
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.CompareTag("Environment") && canBounce)
+        {
+            Debug.Log("Wall!");
+            if (bouncesLeft == 0)
+            {
+                rb.velocity = (Vector3.zero);
+                isDanger = false;
+                rb.isKinematic = true;
+            }
+            bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
         }
     }
     public void liveLife()
