@@ -48,6 +48,7 @@ public class weaponThrow : MonoBehaviour
         if (context.canceled && throwStarted && combat.currentWeapon != null)
         {
             throwStarted = false;
+            GetComponent<playerAnimController>().anim.SetTrigger("release");
             switch (combat.currentWeapon.thisWeaponType)
             {
                 case weaponData.weaponType.spear:
