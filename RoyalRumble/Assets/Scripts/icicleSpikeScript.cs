@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fireHitboxScript : MonoBehaviour
+public class icicleSpikeScript : MonoBehaviour
 {
-    public float timeActive;
+    Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        timeActive = 1.5f;  //Sets the time the hitbox will be active to 1.5 seconds
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -19,16 +19,36 @@ public class fireHitboxScript : MonoBehaviour
         hazardManager hM = gameManager.GetComponent<hazardManager>();
         roundManager rM = gameManager.GetComponent<roundManager>();
 
-        timeActive -= Time.deltaTime;
-        if(timeActive < 0)
+        if(hM.iceLaneSet == 1)
         {
-            Destroy(gameObject);  //Destroys the hitbox after the timer has expired
+            rb.velocity = new Vector3 (-20, 0, 0);
+        }
+        if(hM.iceLaneSet == 2)
+        {
+            rb.velocity = new Vector3 (20, 0, 0);
+        }
+        if(hM.iceLaneSet == 3)
+        {
+            rb.velocity = new Vector3 (-20, 0, 0);
+        }
+        if(hM.iceLaneSet == 4)
+        {
+            rb.velocity = new Vector3 (20, 0, 0);
+        }
+        if(hM.iceLaneSet == 5)
+        {
+            rb.velocity = new Vector3 (0, 0, -20);
+        }
+
+        if(transform.position.magnitude > 750.0f)
+        {
+            Destroy(gameObject);
         }
     }
 
-    void OnTriggerEnter (Collider hit)   //Checks to see if a player is hit by the blast, kills them if so
+    void OnCollisionEnter (Collision collision)
     {
-        if(hit.tag == ("Player"))
+        if(collision.collider.tag == "Player")
         {
             GameObject player = GameObject.FindWithTag("Player");
             PlayerController pController = player.GetComponent<PlayerController>();     //Gets the controller of the player who fell'
@@ -45,4 +65,6 @@ public class fireHitboxScript : MonoBehaviour
             rManager.checkForRoundWin();  //Checks for the end of the round
         }
     }
+
+
 }

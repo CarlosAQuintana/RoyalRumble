@@ -22,6 +22,23 @@ public class hazardManager : MonoBehaviour
     public Transform arrowPos3;
     public Transform arrowPos4;
 
+    public GameObject iceLane;
+    public GameObject icicleSpike;
+
+    public float iceLaneSet;
+    public Transform iceLane1;
+    public Transform iceLane2;
+    public Transform iceLane3;
+    public Transform iceLane4;
+    public Transform iceLane5;
+
+    public Transform iceLaunch1;
+    public Transform iceLaunch2;
+    public Transform iceLaunch3;
+    public Transform iceLaunch4;
+    public Transform iceLaunch5;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +47,11 @@ public class hazardManager : MonoBehaviour
         blinkTimer = 0.5f;
         blinkResetTimer = 0.5f;
         fireAgain = 5f;
+
+        iceLane.SetActive(false);
         
-        GenerateArrowPos();
+        GenerateFireBreathPos();
+        GenerateIceLanePos();
     }
 
     // Update is called once per frame
@@ -41,13 +61,14 @@ public class hazardManager : MonoBehaviour
 
         if(hazardTimer > 10)
         {
-           ArrowBlink();
+           
+           IcicleShot();
         }
     }
 
     
     
-    void ArrowBlink()  //Function that makes the arrow indicator before the fire blast blink
+    void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
     {
         if(arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
@@ -113,7 +134,80 @@ public class hazardManager : MonoBehaviour
 
             if(fireAgain < 0)
             {
-                GenerateArrowPos();  //Sets new arrow position
+                GenerateFireBreathPos();  //Sets new arrow position
+                arrowBlinking = true;  //Begins loop cycle again
+            }
+        }
+    }
+
+    void IcicleShot()  //Fires the icicle from a random point on the Ice Stage
+    {
+        if(arrowBlinking == true)  //Begins the loop for the lane blinking
+        {
+            fireAgain = 5f;  //Sets timer for the break in between blasts
+            
+            if(blinkTimer < 0.55f)  //Makes lane active
+            {
+                iceLane.SetActive(true);  //Sets lane to active
+                blinkTimer -= Time.deltaTime;  //Begins countdown to inactive
+            }
+
+            if(blinkTimer < 0) //Makes arrow inactive
+            {
+                iceLane.SetActive(false);  //Sets lane to inactive
+                blinkResetTimer -= Time.deltaTime;  //Begins countdown to active
+
+                if(blinkResetTimer < 0)  //Resets both timers to make arrow active again
+                {
+                    blinkTimer = 0.5f; 
+                    blinkResetTimer = 0.5f;
+                    blinkCounter += 1;  //Adds one to the amount of times the lane has blinked
+                }
+            }
+
+            if(blinkCounter == 5)  //Tracks amount of times lane has blinked
+            {
+                if(iceLaneSet == 1)
+                {
+                    Instantiate(icicleSpike, iceLaunch1.position, iceLaunch1.rotation);
+                }
+                if(iceLaneSet == 2)
+                {
+                    Instantiate(icicleSpike, iceLaunch2.position, iceLaunch2.rotation);
+                }
+                if(iceLaneSet == 3)
+                {
+                    Instantiate(icicleSpike, iceLaunch3.position, iceLaunch3.rotation);
+                }
+                if(iceLaneSet == 4)
+                {
+                    Instantiate(icicleSpike, iceLaunch4.position, iceLaunch4.rotation);
+                }
+                if(iceLaneSet == 5)
+                {
+                    Instantiate(icicleSpike, iceLaunch5.position, iceLaunch5.rotation);
+                }
+               
+
+                blinkTimer = 0.6f;  //Stops the arrow loop from happening
+                if(blinkTimer == 0.6f)
+                {
+                    iceLane.SetActive(false);  //Keeps the arrow inactive until needed again
+                    arrowBlinking = false;
+                }
+            }
+        }
+
+        if(arrowBlinking == false)  //Gets all the timers and counters ready for the next blast
+        {
+            blinkTimer = 0.5f;
+            blinkResetTimer = 0.5f;
+            blinkCounter = 0;
+            fireAgain -= Time.deltaTime;  //Begins countdown for the break inbetween blasts
+
+            if(fireAgain < 0)
+            {
+                GenerateIceLanePos();  //Sets new arrow position
                 arrowBlinking = true;  //Begins loop cycle again
             }
         }
@@ -123,7 +217,7 @@ public class hazardManager : MonoBehaviour
 
 
 
-    void GenerateArrowPos()  //Function that randomly generates the arrow position randomly
+    void GenerateFireBreathPos()  //Function that randomly generates the arrow position randomly
     {
         arrowPosSet = Random.Range(1, 5);
 
@@ -148,5 +242,33 @@ public class hazardManager : MonoBehaviour
         }
 
         Debug.Log("arrow is at position" + arrowPosSet);
+    }
+
+    void GenerateIceLanePos() //Functions that generates and sets where the next icicle is going to come from
+    {
+        iceLaneSet = Random.Range(1, 6);
+
+        if(iceLaneSet == 1)
+        {
+            iceLane.transform.position = iceLane1.transform.position;
+        }
+        if(iceLaneSet == 2)
+        {
+            iceLane.transform.position = iceLane2.transform.position;
+        }
+        if(iceLaneSet == 3)
+        {
+            iceLane.transform.position = iceLane3.transform.position;
+        }
+        if(iceLaneSet == 4)
+        {
+            iceLane.transform.position = iceLane4.transform.position;
+        }
+        if(iceLaneSet == 5)
+        {
+            iceLane.transform.position = iceLane5.transform.position;
+        }
+
+        Debug.Log("icicle will come from pos" + iceLaneSet);
     }
 }
