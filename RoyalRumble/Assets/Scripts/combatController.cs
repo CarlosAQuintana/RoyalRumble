@@ -14,7 +14,6 @@ public class combatController : MonoBehaviour
     public GameObject shield;
     public GameObject sword;
     public GameObject gun;
-    public GameObject magicWand;
 
     [Header("Combat Variables")]
     [SerializeField] LayerMask playerLayer;
@@ -40,11 +39,16 @@ public class combatController : MonoBehaviour
     public bool goShieldBlitz;
 
     [Header("Sword Variables")]
-    [SerializeField] private GameObject bladeBeam;
     public float slashDuration;
     public float swordStepPower;
     public float slashRange;
     public bool goSwordSlash;
+
+    [Header("Gun Variables")]
+    public GameObject bulletPrefab;
+    public float shotDuration;
+    public int maxShots;
+    public int shotsLeft;
 
     void Awake()
     {
@@ -91,7 +95,7 @@ public class combatController : MonoBehaviour
                     StartCoroutine("shieldAttack");
                     break;
                 case weaponData.weaponType.gun:
-
+                    StartCoroutine("gunAttack");
                     break;
                 case weaponData.weaponType.sword:
                     StartCoroutine("swordAttack");
@@ -215,6 +219,19 @@ public class combatController : MonoBehaviour
         player.canMove = true;
     }
     #endregion
+    #region Gun Attack
+    public IEnumerator gunAttack()
+    {
+        currentWeaponUsable = false;
+        player.canMove = false;
+        yield return new WaitForSeconds(shotDuration);
+        player.canMove = true;
+    }
+    public void fireShot()
+    {
+        GameObject bullet = Instantiate(bulletPrefab);
+    }
+    #endregion
     public void equipWeapon()
     {
         switch (currentWeapon.thisWeaponType)
@@ -229,6 +246,7 @@ public class combatController : MonoBehaviour
                 sword.SetActive(true);
                 break;
             case weaponData.weaponType.gun:
+                shotsLeft = maxShots;
                 gun.SetActive(true);
                 break;
         }
@@ -238,8 +256,7 @@ public class combatController : MonoBehaviour
         spear.SetActive(false);
         shield.SetActive(false);
         sword.SetActive(false);
-        //gun.SetActive(false);
-        //magicWand.SetActive(false);
+        gun.SetActive(false);
         currentWeapon = null;
         weaponEquipped = false;
         currentWeaponUsable = false;

@@ -12,6 +12,8 @@ public class weaponThrow : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject spearProjectilePrefab;
     [SerializeField] private GameObject shieldProjectilePrefab;
+    [SerializeField] private GameObject gunProjectilePrefab;
+    [SerializeField] private GameObject swordProjectilePrefab;
 
     [Header("Throwing Variables")]
     [SerializeField] private bool throwStarted;
@@ -57,6 +59,12 @@ public class weaponThrow : MonoBehaviour
                 case weaponData.weaponType.shield:
                     shieldthrow();
                     break;
+                case weaponData.weaponType.gun:
+                    gunThrow();
+                    break;
+                case weaponData.weaponType.sword:
+                    swordThrow();
+                    break;
             }
         }
     }
@@ -64,6 +72,26 @@ public class weaponThrow : MonoBehaviour
     {
         Vector3 modSpawn = new Vector3(combat.attackPointOne.position.x, combat.attackPointOne.position.y, combat.attackPointOne.position.z + 2f);
         GameObject temp = spearProjectilePrefab;
+        Instantiate(temp, modSpawn, transform.rotation);
+        projectile proj = temp.GetComponent<projectile>();
+        proj.owner = player;
+        proj.speed = throwPower * throwScale;
+        combat.unEquipWeapon();
+    }
+    public void gunThrow()
+    {
+        Vector3 modSpawn = new Vector3(combat.attackPointOne.position.x, combat.attackPointOne.position.y, combat.attackPointOne.position.z + 2f);
+        GameObject temp = gunProjectilePrefab;
+        Instantiate(temp, modSpawn, transform.rotation);
+        projectile proj = temp.GetComponent<projectile>();
+        proj.owner = player;
+        proj.speed = throwPower * throwScale;
+        combat.unEquipWeapon();
+    }
+    public void swordThrow()
+    {
+        Vector3 modSpawn = new Vector3(combat.attackPointOne.position.x, combat.attackPointOne.position.y, combat.attackPointOne.position.z + 2f);
+        GameObject temp = swordProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
         proj.owner = player;
