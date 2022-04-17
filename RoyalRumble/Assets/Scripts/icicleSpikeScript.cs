@@ -5,11 +5,13 @@ using UnityEngine;
 public class icicleSpikeScript : MonoBehaviour
 {
     Rigidbody rb;
+    private float activeTime;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        activeTime = 1f;
     }
 
     // Update is called once per frame
@@ -21,26 +23,27 @@ public class icicleSpikeScript : MonoBehaviour
 
         if(hM.iceLaneSet == 1)
         {
-            rb.velocity = new Vector3 (-20, 0, 0);
+            rb.velocity = new Vector3 (-50, 0, 0);
         }
         if(hM.iceLaneSet == 2)
         {
-            rb.velocity = new Vector3 (20, 0, 0);
+            rb.velocity = new Vector3 (50, 0, 0);
         }
         if(hM.iceLaneSet == 3)
         {
-            rb.velocity = new Vector3 (-20, 0, 0);
+            rb.velocity = new Vector3 (-50, 0, 0);
         }
         if(hM.iceLaneSet == 4)
         {
-            rb.velocity = new Vector3 (20, 0, 0);
+            rb.velocity = new Vector3 (50, 0, 0);
         }
         if(hM.iceLaneSet == 5)
         {
-            rb.velocity = new Vector3 (0, 0, -20);
+            rb.velocity = new Vector3 (0, 0, -50);
         }
 
-        if(transform.position.magnitude > 750.0f)
+        activeTime -= Time.deltaTime;
+        if(activeTime < 0)
         {
             Destroy(gameObject);
         }

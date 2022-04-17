@@ -44,8 +44,8 @@ public class hazardManager : MonoBehaviour
     {
         fireArrow.SetActive(false);
         arrowBlinking = true;
-        blinkTimer = 0.5f;
-        blinkResetTimer = 0.5f;
+        blinkTimer = 0.25f;
+        blinkResetTimer = 0.25f;
         fireAgain = 5f;
 
         iceLane.SetActive(false);
@@ -57,11 +57,18 @@ public class hazardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        hazardTimer += Time.deltaTime;
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
 
-        if(hazardTimer > 10)
+        if(rM.RoundTimeElasped > 30)  //Gets the time since the round started, starts hazard if longer than 30 seconds
         {
-           
+            FireBlast();
+        }
+        
+        hazardTimer += Time.deltaTime;  //Uses internal hazard timer, switch to rM timer eventually
+        if(hazardTimer > 5)
+        {  
            IcicleShot();
         }
     }
@@ -72,8 +79,23 @@ public class hazardManager : MonoBehaviour
     {
         if(arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            fireAgain = 5f;  //Sets timer for the break in between blasts
-            
+           if(hazardTimer < 25)
+            {
+                fireAgain = 5f;
+            }
+            else if (hazardTimer < 35)
+            {
+                fireAgain = 2.5f;
+            }
+            else if (hazardTimer < 45)
+            {
+                fireAgain = 1.15f;
+            }
+            else
+            {
+                fireAgain = 1;
+            }
+
             if(blinkTimer < 0.55f)  //Makes arrow active
             {
                 fireArrow.SetActive(true);  //Sets arrow to active
@@ -144,9 +166,24 @@ public class hazardManager : MonoBehaviour
     {
         if(arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            fireAgain = 5f;  //Sets timer for the break in between blasts
+            if(hazardTimer < 25)
+            {
+                fireAgain = 5f;
+            }
+            else if (hazardTimer < 35)
+            {
+                fireAgain = 2.5f;
+            }
+            else if (hazardTimer < 45)
+            {
+                fireAgain = 1.15f;
+            }
+            else
+            {
+                fireAgain = 1;
+            }
             
-            if(blinkTimer < 0.55f)  //Makes lane active
+            if(blinkTimer < 0.26f)  //Makes lane active
             {
                 iceLane.SetActive(true);  //Sets lane to active
                 blinkTimer -= Time.deltaTime;  //Begins countdown to inactive
@@ -159,8 +196,8 @@ public class hazardManager : MonoBehaviour
 
                 if(blinkResetTimer < 0)  //Resets both timers to make arrow active again
                 {
-                    blinkTimer = 0.5f; 
-                    blinkResetTimer = 0.5f;
+                    blinkTimer = 0.25f; 
+                    blinkResetTimer = 0.25f;
                     blinkCounter += 1;  //Adds one to the amount of times the lane has blinked
                 }
             }
@@ -200,8 +237,8 @@ public class hazardManager : MonoBehaviour
 
         if(arrowBlinking == false)  //Gets all the timers and counters ready for the next blast
         {
-            blinkTimer = 0.5f;
-            blinkResetTimer = 0.5f;
+            blinkTimer = 0.25f;
+            blinkResetTimer = 0.25f;
             blinkCounter = 0;
             fireAgain -= Time.deltaTime;  //Begins countdown for the break inbetween blasts
 
