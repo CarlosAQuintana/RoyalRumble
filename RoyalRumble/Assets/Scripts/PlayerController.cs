@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     // Player float values.
     [SerializeField]
-    private float playerSpeed = 2.0f;
+    public float playerSpeed = 2.0f;  //Made this public so it can be accessed by the Sand Hazard
 
     [SerializeField]
     private float gravityValue = -9.81f;

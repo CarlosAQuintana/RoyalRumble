@@ -38,6 +38,12 @@ public class hazardManager : MonoBehaviour
     public Transform iceLaunch4;
     public Transform iceLaunch5;
 
+    public GameObject sandHazard;
+    public Transform sandRise1;
+    public Transform sandRise2;
+    public Transform sandRise3;
+    public Transform sandRise4;
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +76,7 @@ public class hazardManager : MonoBehaviour
         if(hazardTimer > 5)
         {  
            IcicleShot();
+           SandRising();
         }
     }
 
@@ -166,7 +173,7 @@ public class hazardManager : MonoBehaviour
     {
         if(arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if(hazardTimer < 25)
+            if(hazardTimer < 25)  //Sets the speed of the hazard based on how long the round has gone on for
             {
                 fireAgain = 5f;
             }
@@ -180,7 +187,7 @@ public class hazardManager : MonoBehaviour
             }
             else
             {
-                fireAgain = 1;
+                fireAgain = 1;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
             }
             
             if(blinkTimer < 0.26f)  //Makes lane active
@@ -203,8 +210,8 @@ public class hazardManager : MonoBehaviour
             }
 
             if(blinkCounter == 5)  //Tracks amount of times lane has blinked
-            {
-                if(iceLaneSet == 1)
+            { 
+                if(iceLaneSet == 1)  //Fires an icicle at the appropriate position
                 {
                     Instantiate(icicleSpike, iceLaunch1.position, iceLaunch1.rotation);
                 }
@@ -247,6 +254,26 @@ public class hazardManager : MonoBehaviour
                 GenerateIceLanePos();  //Sets new arrow position
                 arrowBlinking = true;  //Begins loop cycle again
             }
+        }
+    }
+
+    void SandRising()
+    {
+        if(hazardTimer > 15)
+        {
+            sandHazard.transform.position = sandRise4.transform.position;
+        }
+        if(hazardTimer > 30)
+        {
+            sandHazard.transform.position = sandRise3.transform.position;
+        }
+        if(hazardTimer > 40)
+        {
+            sandHazard.transform.position = sandRise2.transform.position;
+        }
+        if(hazardTimer > 50)
+        {
+            sandHazard.transform.position = sandRise1.transform.position;
         }
     }
 
