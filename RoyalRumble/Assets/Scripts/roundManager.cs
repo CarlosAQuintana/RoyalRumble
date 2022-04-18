@@ -6,16 +6,16 @@ using UnityEngine.InputSystem;
 public class roundManager : MonoBehaviour
 {
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
-
+    public enum level { castle, ice, jungle, fire }
     [Header("Compoonent and Script Variables")]
     public PlayerInputManager playerManager;
     public gameManager manager;
-    // [Header("Game Variables")]
     public PlayerController[] players;
     public combatController[] combatControllers;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
+    public level currentLevel;
     public int currentRound = 1; // Current round.
     public int maxRounds; // Set the max number of rounds wanted for gameplay.
     public int scoreToWin = 3;
@@ -97,21 +97,9 @@ public class roundManager : MonoBehaviour
         {
             combatControllers[c].unEquipWeapon();
         }
-        /*Cameras.SetBool("isRoundTwo", false);
-        // Spawn players into level 1.
-        for (int p = 0; p < players.Length; p++)
-        {
-            if (players[p] == null)
-                break;
-            players[p].transform.position = playerSpawnsRound1[p].position;
-        }
-        // Wait until spawned before giving players control & tracking time.
-        yield return new WaitForSeconds(roundTransitionDelay);
-        controlAllMovement(true, false);
-        freezeControl(false);
-        trackRoundTime = true;*/
         if (currentRound == 1 || currentRound == 5)
         {
+            currentLevel = level.castle;
             debugResetAllWeapons();
             Cameras.Play("Level 1 Camera");
             for (int p = 0; p < players.Length; p++)
@@ -127,6 +115,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 2 || currentRound == 6)
         {
+            currentLevel = level.ice;
             debugResetAllWeapons();
             Cameras.Play("Level 2 Camera");
             for (int p = 0; p < players.Length; p++)
@@ -142,6 +131,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 3 || currentRound == 7)
         {
+            currentLevel = level.jungle;
             debugResetAllWeapons();
             Cameras.Play("Level 3 Camera");
             for (int p = 0; p < players.Length; p++)
@@ -157,6 +147,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 4 || currentRound == 8)
         {
+            currentLevel = level.fire;
             debugResetAllWeapons();
             Cameras.Play("Level 4 Camera");
             for (int p = 0; p < players.Length; p++)
@@ -189,20 +180,13 @@ public class roundManager : MonoBehaviour
             {
                 combat.isDead = false;
             }
-            // Procede to next round and increase winning player's score.
-            Debug.Log("Player " + winnerIndex + " won the round!");
-            currentRound++;
             playerScore[winnerIndex]++;
-
-            if (currentRound > 4)
-            {
-                // Game is over; cut to win screen.
-            }
             checkGameWin();
             // Begin round and freeze player movement until players
             // spawn in and round starts.
             if (!gameOver)
             {
+                currentRound++;
                 currentRoundState = roundState.roundStart;
                 controlAllMovement(false, true);
                 roundStateController();

@@ -10,7 +10,7 @@ public class weapon : MonoBehaviour
     void Start()
     {
         isEquippable = true;
-        mRenderer = GetComponent<MeshRenderer>();
+        //mRenderer = GetComponent<MeshRenderer>();
     }
     void Update()
     {

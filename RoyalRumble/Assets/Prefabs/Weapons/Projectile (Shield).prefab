@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1201464638634133394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2290016331205308347}
+  m_Layer: 0
+  m_Name: hitPoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2290016331205308347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201464638634133394}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.35, y: 0, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7730117015681254679}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3181608787464883668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8561616163321739740}
+  m_Layer: 0
+  m_Name: hitPoint (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8561616163321739740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3181608787464883668}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.35, y: 0, z: 0.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7730117015681254679}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4045697536925386392
 GameObject:
   m_ObjectHideFlags: 0
@@ -24,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4045697536925386392}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0013259649, z: 0.6854887}
+  m_LocalPosition: {x: 0, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,6 +106,7 @@ GameObject:
   - component: {fileID: 1445919789922480558}
   - component: {fileID: 5653343164087575491}
   - component: {fileID: 599157120229151296}
+  - component: {fileID: 9045475495389155200}
   m_Layer: 0
   m_Name: Projectile (Shield)
   m_TagString: Untagged
@@ -65,6 +128,8 @@ Transform:
   m_Children:
   - {fileID: 9168895988182845329}
   - {fileID: 768353425127446948}
+  - {fileID: 2290016331205308347}
+  - {fileID: 8561616163321739740}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -97,8 +162,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  rb: {fileID: 0}
-  hitPoint: {fileID: 0}
+  rb: {fileID: 8352218535912027063}
+  hitPoint: {fileID: 768353425127446948}
+  hitPointTwo: {fileID: 2290016331205308347}
+  hitPointThree: {fileID: 8561616163321739740}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -129,12 +196,25 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6108677651536103296}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 3227b52a7d3f6ea47a78af54be2085d0, type: 2}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.69
   m_Height: 1
   m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &9045475495389155200
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6108677651536103296}
+  m_Material: {fileID: 13400000, guid: 3227b52a7d3f6ea47a78af54be2085d0, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.67
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8391797091006209323
 GameObject:
@@ -252,6 +332,8 @@ MonoBehaviour:
   owner: {fileID: 0}
   rb: {fileID: 0}
   hitPoint: {fileID: 0}
+  hitPointTwo: {fileID: 0}
+  hitPointThree: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8

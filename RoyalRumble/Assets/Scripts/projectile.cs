@@ -8,6 +8,8 @@ public class projectile : MonoBehaviour
     public PlayerController owner;
     public Rigidbody rb;
     public Transform hitPoint;
+    public Transform hitPointTwo;
+    public Transform hitPointThree;
     public LayerMask playerLayer;
 
     [Header("Variables")]
@@ -21,15 +23,8 @@ public class projectile : MonoBehaviour
     [SerializeField] private int bouncesLeft;
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        if (rb == null)
-            rb = GetComponentInParent<Rigidbody>();
-        hitPoint = transform.Find("hitPoint");
-
         isDanger = true;
-
         bouncesLeft = maxBounces;
-
         rb.velocity = (transform.forward * Time.fixedDeltaTime * speed * 1.5f);
     }
     void Update()
@@ -51,14 +46,25 @@ public class projectile : MonoBehaviour
                 isDanger = false;
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                rManager.numOfPlayersAlive -= 1;
-                rManager.playerIsDead[enemyControl.playerID] = true; // Set any player hit as dead...
-                enemyCombat.player.canMove = false; // and disable their movement.
-                rManager.checkForRoundWin();
-                //enemyCombat.isDead = true;
+                enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
+            /*if (Physics.Raycast(hitPointTwo.position, transform.forward, out ray, hitRadius, playerLayer))
+            {
+                isDanger = false;
+                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+                enemyCombat.killPlayer(enemyCombat, enemyControl);
+                Destroy(this.gameObject);
+            }
+            if (Physics.Raycast(hitPointThree.position, transform.forward, out ray, hitRadius, playerLayer))
+            {
+                isDanger = false;
+                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+                enemyCombat.killPlayer(enemyCombat, enemyControl);
+                Destroy(this.gameObject);
+            }*/
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -91,10 +97,5 @@ public class projectile : MonoBehaviour
         elaspedLife += Time.deltaTime;
         if (elaspedLife > lifetime)
             Destroy(this.gameObject);
-    }
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(hitPoint.position, hitRadius);
     }
 }

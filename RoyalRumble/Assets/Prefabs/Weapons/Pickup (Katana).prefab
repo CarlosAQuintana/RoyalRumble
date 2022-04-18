@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: daf59836b7bf920499e6a7d21958cc65, type: 2}
-  mRenderer: {fileID: 0}
+  mRenderer: {fileID: 6290606962320247483}
   isEquippable: 0
 --- !u!64 &8381914080049104438
 MeshCollider:

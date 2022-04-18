@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 97becf9395e16ad41a7b133fb65e8cac, type: 2}
-  mRenderer: {fileID: 0}
+  mRenderer: {fileID: 8031425077125545214}
   isEquippable: 0

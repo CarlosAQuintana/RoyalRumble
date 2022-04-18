@@ -8,6 +8,7 @@ public class weaponThrow : MonoBehaviour
     [Header("Script and Component References")]
     [SerializeField] private PlayerController player;
     [SerializeField] private combatController combat;
+    public GameObject aimPointer;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject spearProjectilePrefab;
@@ -46,10 +47,13 @@ public class weaponThrow : MonoBehaviour
         if (context.started && combat.currentWeapon != null)
         {
             throwStarted = true;
+            if (combat.currentWeapon.thisWeaponType != weaponData.weaponType.shield)
+                aimPointer.SetActive(true);
         }
         if (context.canceled && throwStarted && combat.currentWeapon != null)
         {
             throwStarted = false;
+            aimPointer.SetActive(false);
             GetComponent<playerAnimController>().anim.SetTrigger("release");
             switch (combat.currentWeapon.thisWeaponType)
             {
