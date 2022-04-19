@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -20955,6 +20955,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pickup (Katana)
       objectReference: {fileID: 0}
+    - target: {fileID: 6290606962320247483, guid: 82ecc2b3981e71747b65237e66284e50, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 607c286beffe90f44b9deca9841d4298, type: 2}
+    - target: {fileID: 6290606962320247483, guid: 82ecc2b3981e71747b65237e66284e50, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: add4ba8efe3051547824e92daeb8d078, type: 2}
+    - target: {fileID: 6290606962320247483, guid: 82ecc2b3981e71747b65237e66284e50, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: df2b93906d0259f45bdef6f393c4cbbc, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82ecc2b3981e71747b65237e66284e50, type: 3}
 --- !u!1 &1542035188
