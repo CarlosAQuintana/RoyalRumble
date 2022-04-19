@@ -11,7 +11,7 @@ public class icicleSpikeScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        activeTime = 1f;
+        activeTime = 0.5f;
     }
 
     // Update is called once per frame
@@ -23,23 +23,43 @@ public class icicleSpikeScript : MonoBehaviour
 
         if (hM.iceLaneSet == 1)
         {
-            rb.velocity = new Vector3(-50, 0, 0);
+            rb.velocity = new Vector3(-100, 0, 0);
         }
         if (hM.iceLaneSet == 2)
         {
-            rb.velocity = new Vector3(50, 0, 0);
+            rb.velocity = new Vector3(100, 0, 0);
         }
         if (hM.iceLaneSet == 3)
         {
-            rb.velocity = new Vector3(-50, 0, 0);
+            rb.velocity = new Vector3(-100, 0, 0);
         }
         if (hM.iceLaneSet == 4)
         {
-            rb.velocity = new Vector3(50, 0, 0);
+            rb.velocity = new Vector3(100, 0, 0);
         }
         if (hM.iceLaneSet == 5)
         {
-            rb.velocity = new Vector3(0, 0, -50);
+            rb.velocity = new Vector3(-100, 0, 0);
+        }
+        if (hM.iceLaneSet == 6)
+        {
+            rb.velocity = new Vector3(100, 0, 0);
+        }
+        if (hM.iceLaneSet == 7)
+        {
+            rb.velocity = new Vector3(-100, 0, 0);
+        }
+        if (hM.iceLaneSet == 8)
+        {
+            rb.velocity = new Vector3(100, 0, 0);
+        }
+        if (hM.iceLaneSet == 9)
+        {
+            rb.velocity = new Vector3(-100, 0, 0);
+        }
+        if (hM.iceLaneSet == 10)
+        {
+            rb.velocity = new Vector3(0, 0, -100);
         }
 
         activeTime -= Time.deltaTime;

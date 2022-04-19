@@ -31,12 +31,22 @@ public class hazardManager : MonoBehaviour
     public Transform iceLane3;
     public Transform iceLane4;
     public Transform iceLane5;
+    public Transform iceLane6;
+    public Transform iceLane7;
+    public Transform iceLane8;
+    public Transform iceLane9;
+    public Transform iceLane10;
 
     public Transform iceLaunch1;
     public Transform iceLaunch2;
     public Transform iceLaunch3;
     public Transform iceLaunch4;
     public Transform iceLaunch5;
+    public Transform iceLaunch6;
+    public Transform iceLaunch7;
+    public Transform iceLaunch8;
+    public Transform iceLaunch9;
+    public Transform iceLaunch10;
 
     public GameObject sandHazard;
     public Transform sandRise1;
@@ -187,7 +197,7 @@ public class hazardManager : MonoBehaviour
             }
             else
             {
-                fireAgain = 1;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
+                fireAgain = 0.5f;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
             }
             
             if(blinkTimer < 0.26f)  //Makes lane active
@@ -230,6 +240,26 @@ public class hazardManager : MonoBehaviour
                 if(iceLaneSet == 5)
                 {
                     Instantiate(icicleSpike, iceLaunch5.position, iceLaunch5.rotation);
+                }
+                if(iceLaneSet == 6)
+                {
+                    Instantiate(icicleSpike, iceLaunch6.position, iceLaunch6.rotation);
+                }
+                if(iceLaneSet == 7)
+                {
+                    Instantiate(icicleSpike, iceLaunch7.position, iceLaunch7.rotation);
+                }
+                if(iceLaneSet == 8)
+                {
+                    Instantiate(icicleSpike, iceLaunch8.position, iceLaunch8.rotation);
+                }
+                if(iceLaneSet == 9)
+                {
+                    Instantiate(icicleSpike, iceLaunch9.position, iceLaunch9.rotation);
+                }
+                if(iceLaneSet == 10)
+                {
+                    Instantiate(icicleSpike, iceLaunch10.position, iceLaunch10.rotation);
                 }
                
 
@@ -310,7 +340,7 @@ public class hazardManager : MonoBehaviour
 
     void GenerateIceLanePos() //Functions that generates and sets where the next icicle is going to come from
     {
-        iceLaneSet = Random.Range(1, 6);
+        iceLaneSet = Random.Range(1, 11);
 
         if(iceLaneSet == 1)
         {
@@ -332,7 +362,26 @@ public class hazardManager : MonoBehaviour
         {
             iceLane.transform.position = iceLane5.transform.position;
         }
-
+        if(iceLaneSet == 6)
+        {
+            iceLane.transform.position = iceLane6.transform.position;
+        }
+        if(iceLaneSet == 7)
+        {
+            iceLane.transform.position = iceLane7.transform.position;
+        }
+        if(iceLaneSet == 8)
+        {
+            iceLane.transform.position = iceLane8.transform.position;
+        }
+        if(iceLaneSet == 9)
+        {
+            iceLane.transform.position = iceLane9.transform.position;
+        }
+        if(iceLaneSet == 10)
+        {
+            iceLane.transform.position = iceLane10.transform.position;
+        }
         Debug.Log("icicle will come from pos" + iceLaneSet);
     }
 }
