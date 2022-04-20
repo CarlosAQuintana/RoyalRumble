@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -32389,6 +32389,10 @@ MonoBehaviour:
   arrowPos2: {fileID: 1804596195}
   arrowPos3: {fileID: 1728554262}
   arrowPos4: {fileID: 1376119567}
+  firePos1: {fileID: 0}
+  firePos2: {fileID: 0}
+  firePos3: {fileID: 0}
+  firePos4: {fileID: 0}
   iceLane: {fileID: 1224371435}
   icicleSpike: {fileID: 524892397410445473, guid: 95ab0445bc2634e4db59b37e071c84c9, type: 3}
   iceLaneSet: 0
