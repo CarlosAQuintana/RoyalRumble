@@ -131,23 +131,30 @@ public class PlayerController : MonoBehaviour
     private void HandleRotationInput()
     {
         aim = playerControls.Player.Aim.ReadValue<Vector2>();
-        mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
+        //mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
     }
     public void getMouseRotVector(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            mouseAim = context.ReadValue<Vector3>();
+            //mouseAim = context.ReadValue<Vector3>();
             //Debug.Log(mouseAim);
         }
 
     }
     public void getStickRotVector(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             aim = context.ReadValue<Vector2>();
-            //Debug.Log(aim);
+        }
+        else if (context.performed)
+        {
+            aim = context.ReadValue<Vector2>();
+        }
+        else if (context.canceled)
+        {
+            aim = context.ReadValue<Vector2>();
         }
     }
 
@@ -159,12 +166,13 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
 
-            if (playerDirection.sqrMagnitude > 0.0f)
+            if (playerDirection.sqrMagnitude > 0.4f)
             {
                 Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
             }
         }
+
         // If the player is using keyboard & mouse, rotate using the mouse.
         /*else
         {
@@ -179,7 +187,6 @@ public class PlayerController : MonoBehaviour
             }
         }*/
     }
-
     // Corrects player look direction for mouse so that player doesn't look above an object if the mouse is not pointing at a flat object.
     private void LookAt(Vector3 lookPoint)
     {

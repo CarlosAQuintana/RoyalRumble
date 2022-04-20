@@ -274,6 +274,7 @@ public class roundManager : MonoBehaviour
             {
                 playerScore[score] = 0;
             }
+            currentRound = 1;
             StopCoroutine("resetRound");
             currentRoundState = roundState.gameBegin;
             roundStateController();
