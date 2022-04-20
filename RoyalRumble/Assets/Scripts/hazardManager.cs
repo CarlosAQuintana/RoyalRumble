@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class hazardManager : MonoBehaviour
 {
@@ -53,6 +54,9 @@ public class hazardManager : MonoBehaviour
     public Transform sandRise2;
     public Transform sandRise3;
     public Transform sandRise4;
+    public float shakeTimer;
+    public float reshakeTimer;
+    public bool shakeCam;
 
 
     // Start is called before the first frame update
@@ -63,6 +67,7 @@ public class hazardManager : MonoBehaviour
         blinkTimer = 0.25f;
         blinkResetTimer = 0.25f;
         fireAgain = 5f;
+        shakeTimer = 2.5f;
 
         iceLane.SetActive(false);
         
@@ -80,13 +85,8 @@ public class hazardManager : MonoBehaviour
         if(rM.RoundTimeElasped > 30)  //Gets the time since the round started, starts hazard if longer than 30 seconds
         {
             FireBlast();
-        }
-        
-        hazardTimer += Time.deltaTime;  //Uses internal hazard timer, switch to rM timer eventually
-        if(hazardTimer > 5)
-        {  
-           IcicleShot();
-           SandRising();
+            IcicleShot();
+            SandRising();
         }
     }
 
@@ -94,17 +94,20 @@ public class hazardManager : MonoBehaviour
     
     void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
     {
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
         if(arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-           if(hazardTimer < 25)
+           if(rM.RoundTimeElasped < 40)
             {
                 fireAgain = 5f;
             }
-            else if (hazardTimer < 35)
+            else if (rM.RoundTimeElasped < 50)
             {
                 fireAgain = 2.5f;
             }
-            else if (hazardTimer < 45)
+            else if (rM.RoundTimeElasped < 60)
             {
                 fireAgain = 1.15f;
             }
@@ -181,17 +184,20 @@ public class hazardManager : MonoBehaviour
 
     void IcicleShot()  //Fires the icicle from a random point on the Ice Stage
     {
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
         if(arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if(hazardTimer < 25)  //Sets the speed of the hazard based on how long the round has gone on for
+            if(rM.RoundTimeElasped < 40)  //Sets the speed of the hazard based on how long the round has gone on for
             {
                 fireAgain = 5f;
             }
-            else if (hazardTimer < 35)
+            else if (rM.RoundTimeElasped < 50)
             {
                 fireAgain = 2.5f;
             }
-            else if (hazardTimer < 45)
+            else if (rM.RoundTimeElasped < 60)
             {
                 fireAgain = 1.15f;
             }
@@ -289,20 +295,51 @@ public class hazardManager : MonoBehaviour
 
     void SandRising()
     {
-        if(hazardTimer > 15)
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
+        if(rM.RoundTimeElasped > 40)
         {
+            shakeCam = true;
+            CameraShake();
+        }
+        if(rM.RoundTimeElasped > 45)
+        {
+            shakeCam = false;
+            CameraShake();
             sandHazard.transform.position = sandRise4.transform.position;
         }
-        if(hazardTimer > 30)
+        if(rM.RoundTimeElasped > 60)
         {
+            shakeCam = true;
+            CameraShake();
+        }
+        if(rM.RoundTimeElasped > 65)
+        {
+            shakeCam = false;
+            CameraShake();
             sandHazard.transform.position = sandRise3.transform.position;
         }
-        if(hazardTimer > 40)
+        if(rM.RoundTimeElasped > 80)
         {
+            shakeCam = true;
+            CameraShake();
+        }
+        if(rM.RoundTimeElasped > 85)
+        {
+            shakeCam = false;
+            CameraShake();
             sandHazard.transform.position = sandRise2.transform.position;
         }
-        if(hazardTimer > 50)
+        if(rM.RoundTimeElasped > 100)
         {
+            shakeCam = true;
+            CameraShake();
+        }
+        if(rM.RoundTimeElasped > 105)
+        {
+            shakeCam = false;
+            CameraShake();
             sandHazard.transform.position = sandRise1.transform.position;
         }
     }
@@ -318,6 +355,7 @@ public class hazardManager : MonoBehaviour
         if(arrowPosSet == 1)
         {
             fireArrow.transform.position = arrowPos1.transform.position;
+            
         }
 
         if(arrowPosSet == 2)
@@ -384,4 +422,26 @@ public class hazardManager : MonoBehaviour
         }
         Debug.Log("icicle will come from pos" + iceLaneSet);
     }
+
+    void CameraShake()
+        {
+            GameObject DesertCam = GameObject.Find("Level 3 Camera");
+            CinemachineVirtualCamera CMVC = DesertCam.GetComponent<CinemachineVirtualCamera>();
+            CinemachineBasicMultiChannelPerlin CMBMCP = CMVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        
+            if(shakeCam == true)
+            {
+                CMBMCP.m_AmplitudeGain = 2.5f;
+                shakeTimer = 2.5f;
+                shakeTimer -= Time.deltaTime;
+                if(shakeTimer < 0)
+                {
+                    shakeCam = false;
+                }   
+            }
+            if(shakeCam == false)
+            {
+                CMBMCP.m_AmplitudeGain = 0f;
+            }
+        }
 }
