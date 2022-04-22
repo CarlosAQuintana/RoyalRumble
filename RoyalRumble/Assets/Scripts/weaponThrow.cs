@@ -78,7 +78,6 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = spearProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.owner = player;
         proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
@@ -88,7 +87,6 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = gunProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.owner = player;
         proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
@@ -98,7 +96,6 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = swordProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.owner = player;
         proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
@@ -109,7 +106,6 @@ public class weaponThrow : MonoBehaviour
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
         proj.canBounce = true;
-        proj.owner = player;
         proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
