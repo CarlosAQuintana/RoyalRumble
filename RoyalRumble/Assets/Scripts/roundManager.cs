@@ -115,6 +115,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 2 || currentRound == 6)
         {
+            slipperyControl(true);
             currentLevel = level.ice;
             debugResetAllWeapons();
             Cameras.Play("Level 2 Camera");
@@ -131,6 +132,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 3 || currentRound == 7)
         {
+            slipperyControl(false);
             currentLevel = level.jungle;
             debugResetAllWeapons();
             Cameras.Play("Level 3 Camera");
@@ -254,6 +256,24 @@ public class roundManager : MonoBehaviour
                 if (players[i] == null)
                     break;
                 players[i].canControl = true;
+            }
+    }
+
+    public void slipperyControl(bool enable) // Quick disable all player control.
+    {
+        if (enable)
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null)
+                    break;
+                players[i].smoothInputSpeed = 0.75f;
+            }
+        else if (!enable)
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null)
+                    break;
+                players[i].smoothInputSpeed = 0.2f;
             }
     }
     public void debugResetAllWeapons()

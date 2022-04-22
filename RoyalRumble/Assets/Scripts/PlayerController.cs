@@ -1,18 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     // Player float values.
     [SerializeField]
-    public float playerSpeed = 2.0f;  //Made this public so it can be accessed by the Sand Hazard
+    public float playerSpeed = 2.0f;
 
     [SerializeField]
     private float gravityValue = -9.81f;
 
-    [SerializeField]
-    private float smoothInputSpeed = 0.2f;
+    public float smoothInputSpeed = 0.2f;
 
     [SerializeField]
     private float controllerDeadzone = 0.1f;
@@ -27,15 +27,14 @@ public class PlayerController : MonoBehaviour
 
     // Player controller / input references.
     private CharacterController controller;
-    private PlayerControls playerControls;
-    public PlayerInput playerInput;
+    //private PlayerControls playerControls;
+    //public PlayerInput playerInput;
 
 
     // Player Vector3 variables.
     private Vector3 playerVelocity;
     public Vector3 startPos;
     private Vector3 move;
-    public Vector3 mouseAim;
 
 
     // Player Vector2 variables.
@@ -50,8 +49,7 @@ public class PlayerController : MonoBehaviour
     public bool isBot;
     public bool canMove = false;
     public bool canControl = false;
-
-    [SerializeField]
+    private bool hasDevice = false;
     private bool isGamepad;
 
 
@@ -60,12 +58,6 @@ public class PlayerController : MonoBehaviour
     {
         // Reference player controls.
         controller = gameObject.GetComponent<CharacterController>();
-        //playerControls = new PlayerControls();
-
-        // Enable player controls / input.
-
-        //playerControls.Enable();
-        //playerControls.Player.Enable();
 
         // Places player as spawn location.
         transform.position = startPos;
@@ -73,10 +65,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         // Reference player input and determine control scheme.
-        playerInput = gameObject.GetComponent<PlayerInput>();
-
-
-        isGamepad = playerInput.currentControlScheme.Equals("Gamepad");
+        //playerInput = gameObject.GetComponent<PlayerInput>();
     }
 
     // This function allows movement input to be accessible via 
@@ -96,21 +85,28 @@ public class PlayerController : MonoBehaviour
     // Called once between frames.
     private void FixedUpdate()
     {
-        InputSystem.Update();
-        //HandleRotationInput();
         // Gives the ability to freeze players if needed.
         if (canMove)
         {
             HandleMovement();
-            HandleRotation();
+        }
+
+        if (canControl)
+        {
+            if (isGamepad)
+            {
+                HandleGamepadRotation();
+            }
+            else
+            {
+                HandleMouseRotation();
+            }
         }
     }
 
     private void HandleMovement()
     {
-        // This code makes sure the player stays level to the ground
-        // as long as they are ground. Though this code is not too 
-        // useful currently, it could be used later for knockback effect(s).
+        // Makes sure player is level with ground.
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -127,23 +123,26 @@ public class PlayerController : MonoBehaviour
         controller.Move(new Vector2(0, playerVelocity.y) * Time.deltaTime);
     }
 
-    // Takes input to control where the player will rotate depending on control scheme.
-    private void HandleRotationInput()
-    {
-        aim = playerControls.Player.Aim.ReadValue<Vector2>();
-        //mouseAim = playerControls.Player.MouseAim.ReadValue<Vector2>();
-    }
+    // Takes input from keyboard & mouse wielding players.
     public void getMouseRotVector(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            //mouseAim = context.ReadValue<Vector3>();
-            //Debug.Log(mouseAim);
+            aim = context.ReadValue<Vector2>();
+
+            if (hasDevice == false)
+            {
+                isGamepad = false;
+                hasDevice = true;
+            }
         }
 
     }
+
+    // Takes input from gamepad wielding players.
     public void getStickRotVector(InputAction.CallbackContext context)
     {
+        
         if (context.started)
         {
             aim = context.ReadValue<Vector2>();
@@ -154,29 +153,21 @@ public class PlayerController : MonoBehaviour
         }
         else if (context.canceled)
         {
+            
             aim = context.ReadValue<Vector2>();
+        }
+
+        if (hasDevice == false)
+        {
+            isGamepad = true;
+            hasDevice = true;
         }
     }
 
-    // Rotates player depending on control scheme.
-    private void HandleRotation()
+// Rotates keyboard & mouse wielding players.
+    public void HandleMouseRotation()
     {
-        // If player is using controller, rotate with the right stick.
-        if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
-        {
-            Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
-
-            if (playerDirection.sqrMagnitude > 0.4f)
-            {
-                Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
-            }
-        }
-
-        // If the player is using keyboard & mouse, rotate using the mouse.
-        /*else
-        {
-            Ray ray = Camera.main.ScreenPointToRay(mouseAim);
+            Ray ray = Camera.main.ScreenPointToRay(aim);
             Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
             float rayDistance;
 
@@ -185,24 +176,27 @@ public class PlayerController : MonoBehaviour
                 Vector3 point = ray.GetPoint(rayDistance);
                 LookAt(point);
             }
-        }*/
     }
+
+    // Rotates gamepad wielding players.
+    private void HandleGamepadRotation()
+    {
+            if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
+            {
+                Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
+
+                if (playerDirection.sqrMagnitude > 0.0f)
+                {
+                    Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
+                }
+            }
+    }
+
     // Corrects player look direction for mouse so that player doesn't look above an object if the mouse is not pointing at a flat object.
     private void LookAt(Vector3 lookPoint)
     {
         Vector3 heightCorrectedPoint = new Vector3(lookPoint.x, transform.position.y, lookPoint.z);
         transform.LookAt(heightCorrectedPoint);
     }
-
-    // Functions to ensure players are using the correct aiming mechanic based on their control scheme.
-    public void isMouseAim()
-    {
-        isGamepad = false;
-    }
-    public void isGamepadAim()
-    {
-        isGamepad = true;
-    }
-
-
 }

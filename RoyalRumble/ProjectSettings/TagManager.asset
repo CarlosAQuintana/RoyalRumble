@@ -9,6 +9,7 @@ TagManager:
   - Environment
   - deathHole
   - gameManager
+  - cam1
   layers:
   - Default
   - TransparentFX
