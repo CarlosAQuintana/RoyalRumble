@@ -64,6 +64,23 @@ public class hazardManager : MonoBehaviour
     public float reshakeTimer;
     public bool shakeCam;
 
+    [Header("Fire Variable")]
+    public float lavaHere;
+    public Transform lavaSpot1;
+    public Transform lavaSpot2;
+    public Transform lavaSpot3;
+    public Transform lavaSpot4;
+    public Transform lavaSpot5;
+
+    public Transform lavaFire1;
+    public Transform lavaFire2;
+    public Transform lavaFire3;
+    public Transform lavaFire4;
+    public Transform lavaFire5;
+
+    public GameObject showLava;
+    public GameObject lavaBall;
+
 
     // Start is called before the first frame update
     void Start()
@@ -76,9 +93,12 @@ public class hazardManager : MonoBehaviour
         shakeTimer = 2.5f;
 
         iceLane.SetActive(false);
+        showLava.SetActive(false);
 
         GenerateFireBreathPos();
         GenerateIceLanePos();
+        GenerateLavaSpot();
+
     }
 
     // Update is called once per frame
@@ -102,6 +122,12 @@ public class hazardManager : MonoBehaviour
             {
                 SandRising();
             }
+        }
+
+        hazardTimer += Time.deltaTime;
+        if (hazardTimer > 5)
+        {
+            LavaHazard();
         }
     }
 
@@ -359,6 +385,124 @@ public class hazardManager : MonoBehaviour
         }
     }
 
+    void LavaHazard()
+    {
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
+        if (arrowBlinking == true)  //Begins the loop for the arrow blinking
+        {
+            if (hazardTimer < 45)
+            {
+                fireAgain = 5f;
+            }
+            else if (hazardTimer < 50)
+            {
+                fireAgain = 2.5f;
+            }
+            else if (hazardTimer < 60)
+            {
+                fireAgain = 1.15f;
+            }
+            else
+            {
+                fireAgain = 1;
+            }
+
+            if (blinkTimer < 0.55f)  //Makes arrow active
+            {
+                showLava.SetActive(true);  //Sets arrow to active
+                blinkTimer -= Time.deltaTime;  //Begins countdown to inactive
+            }
+
+            if (blinkTimer < 0) //Makes arrow inactive
+            {
+                showLava.SetActive(false);  //Sets arrow to inactive
+                blinkResetTimer -= Time.deltaTime;  //Begins countdown to active
+
+                if (blinkResetTimer < 0)  //Resets both timers to make arrow active again
+                {
+                    blinkTimer = 0.5f;
+                    blinkResetTimer = 0.5f;
+                    blinkCounter += 1;  //Adds one to the amount of times the arrow has blinked
+                }
+            }
+
+            if (blinkCounter == 5)  //Tracks amount of times arrow has blinked
+            {
+                if (lavaHere == 1)
+                {
+                    Instantiate(lavaBall, lavaFire1.position, lavaFire1.rotation);
+                }
+                if (lavaHere == 2)
+                {
+                    Instantiate(lavaBall, lavaFire2.position, lavaFire2.rotation);
+                }
+                if (lavaHere == 3)
+                {
+                    Instantiate(lavaBall, lavaFire3.position, lavaFire3.rotation);
+                }
+                if (lavaHere == 4)
+                {
+                    Instantiate(lavaBall, lavaFire4.position, lavaFire4.rotation);
+                }
+                if (lavaHere == 5)
+                {
+                    Instantiate(lavaBall, lavaFire5.position, lavaFire5.rotation);
+                }
+
+                blinkTimer = 0.6f;  //Stops the arrow loop from happening
+                if (blinkTimer == 0.6f)
+                {
+                    iceLane.SetActive(false);  //Keeps the arrow inactive until needed again
+                    arrowBlinking = false;
+                }
+            }
+        }
+
+        if (arrowBlinking == false)  //Gets all the timers and counters ready for the next blast
+        {
+            blinkTimer = 0.5f;
+            blinkResetTimer = 0.5f;
+            blinkCounter = 0;
+            fireAgain -= Time.deltaTime;  //Begins countdown for the break inbetween blasts
+
+            if (fireAgain < 0)
+            {
+                GenerateLavaSpot();  //Sets new arrow position
+                arrowBlinking = true;  //Begins loop cycle again
+            }
+        }
+
+        if (hazardTimer > 10)
+        {
+            GameObject floor1 = GameObject.Find("Ground1");
+            Rigidbody f1rb = floor1.GetComponent<Rigidbody>();
+            f1rb.velocity = new Vector3(0, -0.5f, 0);
+        }
+
+        if (hazardTimer > 20)
+        {
+            GameObject floor2 = GameObject.Find("Ground2");
+            Rigidbody f2rb = floor2.GetComponent<Rigidbody>();
+            f2rb.velocity = new Vector3(0, -0.5f, 0);
+        }
+
+        if (hazardTimer > 30)
+        {
+            GameObject floor3 = GameObject.Find("Ground3");
+            Rigidbody f3rb = floor3.GetComponent<Rigidbody>();
+            f3rb.velocity = new Vector3(0, -0.5f, 0);
+        }
+
+        if (hazardTimer > 40)
+        {
+            GameObject floor4 = GameObject.Find("Ground4");
+            Rigidbody f4rb = floor4.GetComponent<Rigidbody>();
+            f4rb.velocity = new Vector3(0, -0.5f, 0);
+        }
+    }
+
 
 
 
@@ -456,6 +600,32 @@ public class hazardManager : MonoBehaviour
         if (shakeCam == false)
         {
             CMBMCP.m_AmplitudeGain = 0f;
+        }
+    }
+
+    void GenerateLavaSpot()
+    {
+        lavaHere = Random.Range(1, 6);
+
+        if (lavaHere == 1)
+        {
+            showLava.transform.position = lavaSpot1.transform.position;
+        }
+        if (lavaHere == 2)
+        {
+            showLava.transform.position = lavaSpot2.transform.position;
+        }
+        if (lavaHere == 3)
+        {
+            showLava.transform.position = lavaSpot3.transform.position;
+        }
+        if (lavaHere == 4)
+        {
+            showLava.transform.position = lavaSpot4.transform.position;
+        }
+        if (lavaHere == 5)
+        {
+            showLava.transform.position = lavaSpot5.transform.position;
         }
     }
 }
