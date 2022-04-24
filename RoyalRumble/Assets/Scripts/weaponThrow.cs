@@ -26,6 +26,7 @@ public class weaponThrow : MonoBehaviour
     public float maxLength;
     private LineRenderer lRenderer;
     private Ray ray;
+    private Ray recoilRay;
     private RaycastHit hit;
 
     private void Awake()
@@ -78,7 +79,7 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = spearProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.speed = throwPower * throwScale;
+        //proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
     public void gunThrow()
@@ -87,7 +88,7 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = gunProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.speed = throwPower * throwScale;
+        //proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
     public void swordThrow()
@@ -96,7 +97,7 @@ public class weaponThrow : MonoBehaviour
         GameObject temp = swordProjectilePrefab;
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
-        proj.speed = throwPower * throwScale;
+        //proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
     public void shieldthrow()
@@ -106,7 +107,8 @@ public class weaponThrow : MonoBehaviour
         Instantiate(temp, modSpawn, transform.rotation);
         projectile proj = temp.GetComponent<projectile>();
         proj.canBounce = true;
-        proj.speed = throwPower * throwScale;
+        proj.owner = player;
+        //proj.speed = throwPower * throwScale;
         combat.unEquipWeapon();
     }
     private void shieldBounceRay()
@@ -125,6 +127,7 @@ public class weaponThrow : MonoBehaviour
                     lRenderer.SetPosition(lRenderer.positionCount - 1, hit.point);
                     remainingLength -= Vector3.Distance(ray.origin, hit.point);
                     ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
+                    recoilRay = ray;
                     if (hit.collider.tag != "Environment")
                         break;
                 }

@@ -22,10 +22,10 @@ public class hazardManager : MonoBehaviour
     [HideInInspector] public Transform arrowPos2;
     [HideInInspector] public Transform arrowPos3;
     [HideInInspector] public Transform arrowPos4;
-    [HideInInspector] public Transform firePos1;
-    [HideInInspector] public Transform firePos2;
-    [HideInInspector] public Transform firePos3;
-    [HideInInspector] public Transform firePos4;
+    public Transform firePos1;
+    public Transform firePos2;
+    public Transform firePos3;
+    public Transform firePos4;
 
     [Header("Ice Variables")]
     public GameObject iceLane;

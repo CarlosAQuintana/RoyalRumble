@@ -22,6 +22,8 @@ public class roundManager : MonoBehaviour
     public int numOfPlayersAlive;
     public bool gameOver;
     private bool trackRoundTime;
+    private bool roundInPlay;
+    public bool RoundIsInPlay { get => roundInPlay; }
     [SerializeField] private float roundTransitionDelay = 5f;
     [SerializeField] private float _roundTimeElapsed; // Time elapsed from beginning of round.
     public float RoundTimeElasped { get => _roundTimeElapsed; }
@@ -88,6 +90,11 @@ public class roundManager : MonoBehaviour
     }
     public IEnumerator resetRound()
     {
+        roundInPlay = false;
+        foreach (combatController controller in combatControllers)
+        {
+            controller.StopAllCoroutines();
+        }
         yield return new WaitForSeconds(.25f);
         controlAllMovement(false, true);
         freezeControl(true);
@@ -163,6 +170,7 @@ public class roundManager : MonoBehaviour
             freezeControl(false);
             trackRoundTime = true;
         }
+        roundInPlay = true;
     }
     public void checkForRoundWin() // Executes when player potentially won a round.
     {
@@ -283,6 +291,10 @@ public class roundManager : MonoBehaviour
         {
             userweapon.isEquippable = true;
             userweapon.enableMesh();
+            if (userweapon.itemParticle.isStopped)
+            {
+                userweapon.itemParticle.Play();
+            }
         }
     }
     public void replayGame()

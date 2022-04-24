@@ -173,11 +173,15 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
   elaspedLife: 0
   hitRadius: 1
-  speed: 3000
+  speed: 2000
   isDanger: 0
   canBounce: 1
+  delayHitCheck: 0
   maxBounces: 1
   bouncesLeft: 0
 --- !u!54 &931191535460937380
@@ -278,6 +282,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 92867dccd1890a04eba633449d529d4a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 607c286beffe90f44b9deca9841d4298, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 92867dccd1890a04eba633449d529d4a, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: add4ba8efe3051547824e92daeb8d078, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 92867dccd1890a04eba633449d529d4a, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: df2b93906d0259f45bdef6f393c4cbbc, type: 2}
     - target: {fileID: 919132149155446097, guid: 92867dccd1890a04eba633449d529d4a, type: 3}
       propertyPath: m_Name
       value: Katana

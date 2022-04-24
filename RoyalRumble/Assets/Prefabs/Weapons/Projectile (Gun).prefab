@@ -143,9 +143,12 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
   elaspedLife: 0
   hitRadius: 1
-  speed: 3000
+  speed: 2000
   isDanger: 0
   canBounce: 0
   maxBounces: 1

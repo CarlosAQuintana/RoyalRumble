@@ -150,7 +150,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &4447131271253143639
 MonoBehaviour:
@@ -172,9 +172,12 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
   elaspedLife: 0
   hitRadius: 0.75
-  speed: 0
+  speed: 2000
   isDanger: 0
   canBounce: 0
   maxBounces: 0
