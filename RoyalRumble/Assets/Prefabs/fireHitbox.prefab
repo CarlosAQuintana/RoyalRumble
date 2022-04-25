@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5776420913776671447}
   - component: {fileID: 5776420913776671446}
   - component: {fileID: 1720933225724414938}
-  - component: {fileID: 2876590765111052554}
+  - component: {fileID: -7056480006702027964}
   m_Layer: 0
   m_Name: fireHitbox
   m_TagString: Untagged
@@ -98,7 +98,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0000002, y: 1.0000002, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2876590765111052554
+--- !u!114 &-7056480006702027964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

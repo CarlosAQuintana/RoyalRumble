@@ -6,22 +6,25 @@ using UnityEngine.InputSystem;
 public class roundManager : MonoBehaviour
 {
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
+    public enum level { castle, ice, jungle, fire }
 
     [Header("Compoonent and Script Variables")]
     public PlayerInputManager playerManager;
     public gameManager manager;
-    // [Header("Game Variables")]
     public PlayerController[] players;
     public combatController[] combatControllers;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
+    public level currentLevel;
     public int currentRound = 1; // Current round.
     public int maxRounds; // Set the max number of rounds wanted for gameplay.
     public int scoreToWin = 3;
     public int numOfPlayersAlive;
     public bool gameOver;
     private bool trackRoundTime;
+    private bool roundInPlay;
+    public bool RoundIsInPlay { get => roundInPlay; }
     [SerializeField] private float roundTransitionDelay = 5f;
     [SerializeField] private float _roundTimeElapsed; // Time elapsed from beginning of round.
     public float RoundTimeElasped { get => _roundTimeElapsed; }
@@ -36,8 +39,8 @@ public class roundManager : MonoBehaviour
     // Level spawns added manually via the Unity Editor.
     public Transform[] playerSpawnsRound1;
     public Transform[] playerSpawnsRound2;
-    //public Transform[] playerSpawnsRound3;
-    //public Transform[] playerSpawnsRound4;
+    public Transform[] playerSpawnsRound3;
+    public Transform[] playerSpawnsRound4;
 
     public Animator Cameras; // Animator for the state-driven camera.
 
@@ -66,7 +69,7 @@ public class roundManager : MonoBehaviour
         switch (currentRoundState)
         {
             case roundState.gameBegin: // Only call this at the beginning of game.
-                currentRound = 1;
+                //currentRound = 1;
                 numOfPlayersAlive = playerCount;
                 StartCoroutine("resetRound");
                 break;
@@ -88,6 +91,11 @@ public class roundManager : MonoBehaviour
     }
     public IEnumerator resetRound()
     {
+        roundInPlay = false;
+        foreach (combatController controller in combatControllers)
+        {
+            controller.StopAllCoroutines();
+        }
         yield return new WaitForSeconds(.25f);
         controlAllMovement(false, true);
         freezeControl(true);
@@ -97,90 +105,78 @@ public class roundManager : MonoBehaviour
         {
             combatControllers[c].unEquipWeapon();
         }
-        debugResetAllWeapons(); // For now find each weapon and reset their equipable status.
-        Cameras.SetBool("isRoundTwo", false);
-        // Spawn players into level 1.
-        for (int p = 0; p < players.Length; p++)
+        if (currentRound == 1 || currentRound == 5)
         {
-            if (players[p] == null)
-                break;
-            players[p].transform.position = playerSpawnsRound1[p].position;
-        }
-        // Wait until spawned before giving players control & tracking time.
-        yield return new WaitForSeconds(roundTransitionDelay);
-        controlAllMovement(true, false);
-        freezeControl(false);
-        trackRoundTime = true;
-
-        /*if (currentRound == 1)
-        {
-            // Set camera to face the level 1.
-            Cameras.SetBool("isRoundTwo", false);
-
-            // Spawn players into level 1.
-            for (int p = 0; p <= players.Length; p++)
+            currentLevel = level.castle;
+            debugResetAllWeapons();
+            Cameras.Play("Level 1 Camera");
+            for (int p = 0; p < players.Length; p++)
             {
                 if (players[p] == null)
                     break;
                 players[p].transform.position = playerSpawnsRound1[p].position;
             }
-
-            // Wait until spawned before giving players control & tracking time.
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(roundTransitionDelay);
             controlAllMovement(true, false);
             freezeControl(false);
             trackRoundTime = true;
         }
-
-        // From here movement is disabled automatically in
-        // 'checkForRoundWin()' until the next round starts.
-        if (currentRound == 2)
+        else if (currentRound == 2 || currentRound == 6)
         {
-            // Set camera to face the level 2.
-            Cameras.SetBool("isRoundTwo", true);
-
-            // Disable movement until game starts.
-            controlAllMovement(false, true);
-            freezeControl(true);
-
-            // Spawn players into level 2.
-            for (int p = 0; p <= players.Length; p++)
+            slipperyControl(true);
+            currentLevel = level.ice;
+            debugResetAllWeapons();
+            Cameras.Play("Level 2 Camera");
+            for (int p = 0; p < players.Length; p++)
             {
                 if (players[p] == null)
                     break;
                 players[p].transform.position = playerSpawnsRound2[p].position;
             }
-
-            // Wait until spawned before giving players control.
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(roundTransitionDelay);
             controlAllMovement(true, false);
-
-            // Wait until players drop to start tracking time again.
-            yield return new WaitForSeconds(1.5f);
             freezeControl(false);
             trackRoundTime = true;
-        }*/
-        if (currentRound == 3)
-        {
-            // Reset camera to face level 3.
-            // Spawn players into level 3 spawn points.
-            // Unfreeze players to allow them to drop into the map.
-            // Start timer once players land on the map.
         }
-        if (currentRound == 4)
+        else if (currentRound == 3 || currentRound == 7)
         {
-            // Reset camera to face level 4.
-            // Spawn players into level 4 spawn points.
-            // Unfreeze players to allow them to drop into the map.
-            // Start timer once players land on the map.
+            slipperyControl(false);
+            currentLevel = level.jungle;
+            debugResetAllWeapons();
+            Cameras.Play("Level 3 Camera");
+            for (int p = 0; p < players.Length; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound3[p].position;
+            }
+            yield return new WaitForSeconds(roundTransitionDelay);
+            controlAllMovement(true, false);
+            freezeControl(false);
+            trackRoundTime = true;
         }
+        else if (currentRound == 4 || currentRound == 8)
+        {
+            currentLevel = level.fire;
+            debugResetAllWeapons();
+            Cameras.Play("Level 4 Camera");
+            for (int p = 0; p < players.Length; p++)
+            {
+                if (players[p] == null)
+                    break;
+                players[p].transform.position = playerSpawnsRound4[p].position;
+            }
+            yield return new WaitForSeconds(roundTransitionDelay);
+            controlAllMovement(true, false);
+            freezeControl(false);
+            trackRoundTime = true;
+        }
+        roundInPlay = true;
     }
-    // Executes when player potentially won a round.
-    public void checkForRoundWin()
+    public void checkForRoundWin() // Executes when player potentially won a round.
     {
-        // Check for winning player if there is only 1 player left.
         int winnerIndex = 0;
-        if (numOfPlayersAlive == 1)
+        if (numOfPlayersAlive == 1) // Check for winning player if there is only 1 player left.
         {
             for (int p = 0; p < playerIsDead.Length; p++)
             {
@@ -195,20 +191,13 @@ public class roundManager : MonoBehaviour
             {
                 combat.isDead = false;
             }
-            // Procede to next round and increase winning player's score.
-            Debug.Log("Player " + winnerIndex + " won the round!");
-            currentRound++;
             playerScore[winnerIndex]++;
-
-            if (currentRound > 4)
-            {
-                // Game is over; cut to win screen.
-            }
             checkGameWin();
             // Begin round and freeze player movement until players
             // spawn in and round starts.
             if (!gameOver)
             {
+                currentRound++;
                 currentRoundState = roundState.roundStart;
                 controlAllMovement(false, true);
                 roundStateController();
@@ -278,6 +267,24 @@ public class roundManager : MonoBehaviour
                 players[i].canControl = true;
             }
     }
+
+    public void slipperyControl(bool enable) // Quick disable all player control.
+    {
+        if (enable)
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null)
+                    break;
+                players[i].smoothInputSpeed = 0.75f;
+            }
+        else if (!enable)
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null)
+                    break;
+                players[i].smoothInputSpeed = 0.2f;
+            }
+    }
     public void debugResetAllWeapons()
     {
         weapon[] allActiveWeapons = FindObjectsOfType<weapon>();
@@ -285,6 +292,10 @@ public class roundManager : MonoBehaviour
         {
             userweapon.isEquippable = true;
             userweapon.enableMesh();
+            if (userweapon.itemParticle.isStopped)
+            {
+                userweapon.itemParticle.Play();
+            }
         }
     }
     public void replayGame()
@@ -296,6 +307,7 @@ public class roundManager : MonoBehaviour
             {
                 playerScore[score] = 0;
             }
+            currentRound = 1;
             StopCoroutine("resetRound");
             currentRoundState = roundState.gameBegin;
             roundStateController();

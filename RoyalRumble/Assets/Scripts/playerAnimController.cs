@@ -38,9 +38,9 @@ public class playerAnimController : MonoBehaviour
     }
     public void tossAnim(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && combat.currentWeapon != null)
         {
-            anim.Play("Throw");
+            anim.Play("Throw (Hold)");
         }
     }
     public void punchAnim(InputAction.CallbackContext context)
@@ -59,7 +59,15 @@ public class playerAnimController : MonoBehaviour
         }
         else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.spear)
         {
-            anim.SetFloat("Weapon Blend", .2f);
+            anim.SetFloat("Weapon Blend", .25f);
+        }
+        else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.shield)
+        {
+            anim.SetFloat("Weapon Blend", .5f);
+        }
+        else if (combat.currentWeapon.thisWeaponType == weaponData.weaponType.sword)
+        {
+            anim.SetFloat("Weapon Blend", .75f);
         }
     }
 }

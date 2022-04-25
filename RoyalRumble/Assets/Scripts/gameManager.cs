@@ -25,7 +25,7 @@ public class gameManager : MonoBehaviour
         {
             roundManager.combatControllers[c] = GameObject.Find("Player " + c).GetComponent<combatController>();
         }
-
+        roundManager.currentRound = 1;
         roundManager.currentRoundState = roundManager.roundState.gameBegin;
         roundManager.roundStateController();
     }
