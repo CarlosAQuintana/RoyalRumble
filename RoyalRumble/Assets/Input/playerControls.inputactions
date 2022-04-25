@@ -42,15 +42,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "21df407e-cb44-49d4-8eb1-5e5559541b9a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "mouseAim",
                     "type": "PassThrough",
                     "id": "3cb0d824-84df-4eca-bf6b-9c25fc9068df",
@@ -184,7 +175,35 @@
                 },
                 {
                     "name": "",
-                    "id": "96afccbc-a16b-49d7-8e7a-6abc572e5b8a",
+                    "id": "a317039c-d21b-4c37-8995-abbcf1342aaf",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "MouseAndKeyboard",
+                    "action": "mouseAim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "3acc2b83-be7a-4203-a908-e4c3138e4c54",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "775dbb46-b02e-4e47-b628-61d1aac84450",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3b1c6f31-2335-4ec7-915a-19f95cc68f4f",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
@@ -195,23 +214,12 @@
                 },
                 {
                     "name": "",
-                    "id": "c1de8c82-a681-47e4-ae3d-8861d0fee3c1",
+                    "id": "3d50ce27-b4a2-48c3-9906-2bc34e09df3d",
                     "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a317039c-d21b-4c37-8995-abbcf1342aaf",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "MouseAndKeyboard",
-                    "action": "mouseAim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

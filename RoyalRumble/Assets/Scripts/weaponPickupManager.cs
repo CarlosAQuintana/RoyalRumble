@@ -66,8 +66,6 @@ public class weaponPickupManager : MonoBehaviour
                 GameObject pickup4 = Instantiate(weapons[weaponToSpawn], sPointFour);
                 break;
         }
-
-
     }
     private void OnDrawGizmosSelected()
     {

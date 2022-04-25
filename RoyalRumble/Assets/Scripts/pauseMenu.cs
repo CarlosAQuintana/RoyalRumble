@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class pauseMenu : MonoBehaviour
 {
     PlayerControls controls;
     public GameObject pauseScreen;
+    public Button firstSelect;
     public bool paused;
     private void Awake()
     {
         controls = new PlayerControls();
-        controls.Player.Enable();
-        controls.Player.Pause.performed += pause;
+        controls.UI.Enable();
+        controls.UI.Pause.performed += pause;
     }
     void Start()
     {
@@ -31,11 +33,14 @@ public class pauseMenu : MonoBehaviour
         {
             if (!paused)
             {
+                Time.timeScale = 0f;
                 pauseScreen.SetActive(true);
+                firstSelect.Select();
                 paused = true;
             }
             else if (paused)
             {
+                Time.timeScale = 1f;
                 pauseScreen.SetActive(false);
                 paused = false;
             }

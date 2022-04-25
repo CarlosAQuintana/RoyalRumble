@@ -7,6 +7,7 @@ public class roundManager : MonoBehaviour
 {
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
     public enum level { castle, ice, jungle, fire }
+
     [Header("Compoonent and Script Variables")]
     public PlayerInputManager playerManager;
     public gameManager manager;
