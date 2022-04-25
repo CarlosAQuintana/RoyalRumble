@@ -43,15 +43,17 @@ public class projectile : MonoBehaviour
         if (isDanger)
         {
             RaycastHit ray;
-            if (Physics.BoxCast(hitPoint.position, new Vector3(.25f, .25f, .25f), transform.forward, out ray, transform.rotation, hitRadius + .25f, playerLayer))
+            if (Physics.BoxCast(hitPoint.position, new Vector3(.45f, .25f, .45f), transform.forward, out ray, transform.rotation, hitRadius + .25f, playerLayer))
             {
                 isDanger = false;
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
+                if (!enemyCombat.inTutorial)
+                    return;
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
                 enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
-            else if (Physics.BoxCast(hitPoint.position, new Vector3(.25f, .25f, .25f), transform.forward, out ray, transform.rotation, hitRadius + .25f, obstacleLayer))
+            else if (Physics.BoxCast(hitPoint.position, new Vector3(.45f, .25f, .45f), transform.forward, out ray, transform.rotation, hitRadius + .25f, obstacleLayer))
             {
                 Debug.Log("hit wall");
                 if (!canBounce)
@@ -63,6 +65,9 @@ public class projectile : MonoBehaviour
                 else if (canBounce && !delayHitCheck)
                 {
                     delayHitCheck = true;
+                    rb.velocity = (Vector3.Reflect(transform.forward, ray.normal) * Time.fixedDeltaTime * speed * 1.5f);
+                    Vector3 crossP = Vector3.Cross(transform.forward, Vector3.Reflect(transform.forward, ray.normal));
+                    transform.rotation = Quaternion.Euler(crossP);
                     StartCoroutine("delayCheck");
                     if (bouncesLeft == 0)
                     {

@@ -67,9 +67,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7735237656247634713, guid: a3865af771b5619498154b7913636deb, type: 3}
-  - {fileID: -1444460858095362738, guid: a3865af771b5619498154b7913636deb, type: 3}
-  - {fileID: 5134070931250785984, guid: a3865af771b5619498154b7913636deb, type: 3}
+  - {fileID: 2100000, guid: 2fbdf421b0805ea48a5402a652a1f861, type: 2}
+  - {fileID: 2100000, guid: cd45c170bf07ae642b68260019979f96, type: 2}
+  - {fileID: 2100000, guid: af247924f945bf84fa6ecca5e2f9b797, type: 2}
   - {fileID: -1134714066672644336, guid: a3865af771b5619498154b7913636deb, type: 3}
   - {fileID: 5561349426305759274, guid: a3865af771b5619498154b7913636deb, type: 3}
   m_StaticBatchInfo:
@@ -151,6 +151,7 @@ MonoBehaviour:
   speed: 2000
   isDanger: 0
   canBounce: 0
+  delayHitCheck: 0
   maxBounces: 1
   bouncesLeft: 0
 --- !u!1 &1964348981861991797

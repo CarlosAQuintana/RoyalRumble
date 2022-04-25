@@ -9,6 +9,7 @@ public class weapon : MonoBehaviour
     public ParticleSystem itemParticle;
     public bool isEquippable;
     public bool isStarterPickup;
+    public bool isTutorialWeapon;
     void Start()
     {
         isEquippable = true;
@@ -20,7 +21,7 @@ public class weapon : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && isEquippable && isStarterPickup)
+        if (other.CompareTag("Player") && isEquippable && isStarterPickup && !isTutorialWeapon)
         {
             combatController combatController = other.GetComponent<combatController>();
             if (combatController.currentWeapon == null)
@@ -37,7 +38,7 @@ public class weapon : MonoBehaviour
                 }
             }
         }
-        else if (other.CompareTag("Player") && isEquippable && !isStarterPickup)
+        else if (other.CompareTag("Player") && isEquippable && !isStarterPickup && !isTutorialWeapon)
         {
             combatController combatController = other.GetComponent<combatController>();
             if (combatController.currentWeapon == null)
@@ -49,6 +50,24 @@ public class weapon : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+        else if (other.CompareTag("Player") && isEquippable && isTutorialWeapon)
+        {
+            combatController combatController = other.GetComponent<combatController>();
+            if (combatController.currentWeapon == null)
+            {
+                disableMesh();
+                isEquippable = false;
+                combatController.currentWeaponUsable = true;
+                combatController.currentWeapon = weaponData;
+                combatController.weaponEquipped = true;
+                combatController.equipWeapon();
+                StartCoroutine("reenable");
+                if (itemParticle.isPlaying)
+                {
+                    itemParticle.Stop();
+                }
+            }
+        }
     }
     public void enableMesh()
     {
@@ -57,5 +76,16 @@ public class weapon : MonoBehaviour
     public void disableMesh()
     {
         mRenderer.enabled = false;
+    }
+    public IEnumerator reenable()
+    {
+        yield return new WaitForSeconds(0.25f);
+        enableMesh();
+        isEquippable = true;
+        itemParticle.Play();
+        if (itemParticle.isStopped)
+        {
+            itemParticle.Play();
+        }
     }
 }

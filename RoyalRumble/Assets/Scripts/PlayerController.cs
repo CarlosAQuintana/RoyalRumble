@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
 
     // Player boolean variables.
+
     private bool groundedPlayer;
     public bool isBot;
     public bool canMove = false;
@@ -142,7 +143,7 @@ public class PlayerController : MonoBehaviour
     // Takes input from gamepad wielding players.
     public void getStickRotVector(InputAction.CallbackContext context)
     {
-        
+
         if (context.started)
         {
             aim = context.ReadValue<Vector2>();
@@ -153,7 +154,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (context.canceled)
         {
-            
+
             aim = context.ReadValue<Vector2>();
         }
 
@@ -164,33 +165,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-// Rotates keyboard & mouse wielding players.
+    // Rotates keyboard & mouse wielding players.
     public void HandleMouseRotation()
     {
-            Ray ray = Camera.main.ScreenPointToRay(aim);
-            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-            float rayDistance;
+        Ray ray = Camera.main.ScreenPointToRay(aim);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        float rayDistance;
 
-            if (groundPlane.Raycast(ray, out rayDistance))
-            {
-                Vector3 point = ray.GetPoint(rayDistance);
-                LookAt(point);
-            }
+        if (groundPlane.Raycast(ray, out rayDistance))
+        {
+            Vector3 point = ray.GetPoint(rayDistance);
+            LookAt(point);
+        }
     }
 
     // Rotates gamepad wielding players.
     private void HandleGamepadRotation()
     {
-            if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
-            {
-                Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
+        if (Mathf.Abs(aim.x) > controllerDeadzone || Mathf.Abs(aim.y) > controllerDeadzone)
+        {
+            Vector3 playerDirection = Vector3.right * aim.x + Vector3.forward * aim.y;
 
-                if (playerDirection.sqrMagnitude > 0.0f)
-                {
-                    Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
-                }
+            if (playerDirection.sqrMagnitude > 0.0f)
+            {
+                Quaternion newrotation = Quaternion.LookRotation(playerDirection, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, newrotation, gamepadRotateSmoothing * Time.deltaTime);
             }
+        }
     }
 
     // Corrects player look direction for mouse so that player doesn't look above an object if the mouse is not pointing at a flat object.

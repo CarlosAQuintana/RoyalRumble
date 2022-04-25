@@ -19,6 +19,7 @@ public class combatController : MonoBehaviour
     [SerializeField] LayerMask playerLayer;
     public bool isDead;
     public bool isKillable;
+    public bool inTutorial;
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
     public Transform leftHand;
@@ -105,7 +106,7 @@ public class combatController : MonoBehaviour
     public void rayCastHitBox(Transform hitPointTransform, float hitDist)
     {
         RaycastHit ray;
-        if (Physics.Raycast(hitPointTransform.position, transform.forward, out ray, hitDist, playerLayer))
+        if (Physics.BoxCast(hitPointTransform.position, new Vector3(.75f, .45f, .75f), transform.forward, out ray, transform.rotation, hitDist, playerLayer))
         {
             goShieldBlitz = false;
             goSwordSlash = false;
