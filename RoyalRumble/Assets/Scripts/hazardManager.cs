@@ -18,10 +18,10 @@ public class hazardManager : MonoBehaviour
     public bool arrowBlinking;
 
     public float arrowPosSet;
-    [HideInInspector] public Transform arrowPos1;
-    [HideInInspector] public Transform arrowPos2;
-    [HideInInspector] public Transform arrowPos3;
-    [HideInInspector] public Transform arrowPos4;
+    public Transform arrowPos1;
+    public Transform arrowPos2;
+    public Transform arrowPos3;
+    public Transform arrowPos4;
     public Transform firePos1;
     public Transform firePos2;
     public Transform firePos3;
@@ -122,12 +122,19 @@ public class hazardManager : MonoBehaviour
             {
                 SandRising();
             }
+            if (rM.currentLevel == roundManager.level.fire)
+            {
+                LavaHazard();
+            }
+
+
+
         }
 
         hazardTimer += Time.deltaTime;
         if (hazardTimer > 5)
         {
-            LavaHazard();
+
         }
     }
 
@@ -140,17 +147,17 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            if (hazardTimer < 45)
+            if (rM.RoundTimeElasped < 40)
             {
                 fireAgain = 5f;
             }
-            else if (hazardTimer < 50)
+            else if (rM.RoundTimeElasped < 60)
             {
                 fireAgain = 2.5f;
             }
-            else if (hazardTimer < 60)
+            else if (rM.RoundTimeElasped > 60)
             {
-                fireAgain = 1.15f;
+                fireAgain = 1f;
             }
             else
             {
@@ -230,15 +237,15 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (rM.RoundTimeElasped < 30)  //Sets the speed of the hazard based on how long the round has gone on for
+            if (hazardTimer < 30)  //Sets the speed of the hazard based on how long the round has gone on for
             {
                 fireAgain = 5f;
             }
-            else if (rM.RoundTimeElasped < 40)
+            else if (hazardTimer < 40)
             {
                 fireAgain = 2.5f;
             }
-            else if (rM.RoundTimeElasped < 50)
+            else if (hazardTimer < 50)
             {
                 fireAgain = 1.15f;
             }
@@ -308,7 +315,6 @@ public class hazardManager : MonoBehaviour
                 {
                     Instantiate(icicleSpike, iceLaunch10.position, iceLaunch10.rotation);
                 }
-
 
                 blinkTimer = 0.6f;  //Stops the arrow loop from happening
                 if (blinkTimer == 0.6f)
@@ -392,17 +398,17 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            if (hazardTimer < 45)
+            if (rM.RoundTimeElasped < 40)
             {
                 fireAgain = 5f;
             }
-            else if (hazardTimer < 50)
+            else if (rM.RoundTimeElasped < 60)
             {
                 fireAgain = 2.5f;
             }
-            else if (hazardTimer < 60)
+            else if (rM.RoundTimeElasped > 60)
             {
-                fireAgain = 1.15f;
+                fireAgain = 1f;
             }
             else
             {
@@ -474,32 +480,25 @@ public class hazardManager : MonoBehaviour
             }
         }
 
-        if (hazardTimer > 10)
+        if (rM.RoundTimeElasped > 40)
         {
             GameObject floor1 = GameObject.Find("Ground1");
             Rigidbody f1rb = floor1.GetComponent<Rigidbody>();
             f1rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (hazardTimer > 20)
+        if (rM.RoundTimeElasped > 60)
         {
             GameObject floor2 = GameObject.Find("Ground2");
             Rigidbody f2rb = floor2.GetComponent<Rigidbody>();
             f2rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (hazardTimer > 30)
+        if (rM.RoundTimeElasped > 80)
         {
             GameObject floor3 = GameObject.Find("Ground3");
             Rigidbody f3rb = floor3.GetComponent<Rigidbody>();
             f3rb.velocity = new Vector3(0, -0.5f, 0);
-        }
-
-        if (hazardTimer > 40)
-        {
-            GameObject floor4 = GameObject.Find("Ground4");
-            Rigidbody f4rb = floor4.GetComponent<Rigidbody>();
-            f4rb.velocity = new Vector3(0, -0.5f, 0);
         }
     }
 
@@ -514,21 +513,25 @@ public class hazardManager : MonoBehaviour
         if (arrowPosSet == 1)
         {
             fireArrow.transform.position = arrowPos1.transform.position;
+            fireArrow.transform.rotation = arrowPos1.transform.rotation;
         }
 
         if (arrowPosSet == 2)
         {
             fireArrow.transform.position = arrowPos2.transform.position;
+            fireArrow.transform.rotation = arrowPos2.transform.rotation;
         }
 
         if (arrowPosSet == 3)
         {
             fireArrow.transform.position = arrowPos3.transform.position;
+            fireArrow.transform.rotation = arrowPos3.transform.rotation;
         }
 
         if (arrowPosSet == 4)
         {
             fireArrow.transform.position = arrowPos4.transform.position;
+            fireArrow.transform.rotation = arrowPos4.transform.rotation;
         }
 
         Debug.Log("arrow is at position" + arrowPosSet);
