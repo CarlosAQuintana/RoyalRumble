@@ -12,6 +12,9 @@ public class projectile : MonoBehaviour
     public Transform hitPointThree;
     public LayerMask playerLayer;
     public LayerMask obstacleLayer;
+    public AudioClip playerHitSound;
+    public AudioClip wallHitSound;
+    public ParticleSystem speedParticle;
 
     [Header("Variables")]
     private float lifetime = 10f;
@@ -47,9 +50,10 @@ public class projectile : MonoBehaviour
             {
                 isDanger = false;
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
-                if (!enemyCombat.inTutorial)
+                if (enemyCombat.inTutorial)
                     return;
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+                AudioSource.PlayClipAtPoint(playerHitSound, transform.position, 2.5f);
                 enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
@@ -61,6 +65,8 @@ public class projectile : MonoBehaviour
                     isDanger = false;
                     rb.velocity = (Vector3.zero);
                     rb.isKinematic = true;
+                    speedParticle.Stop();
+                    AudioSource.PlayClipAtPoint(wallHitSound, transform.position, 2.5f);
                 }
                 else if (canBounce && !delayHitCheck)
                 {
@@ -78,35 +84,6 @@ public class projectile : MonoBehaviour
                     bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
                 }
             }
-            if (Physics.Raycast(hitPoint.position, transform.forward, out ray, hitRadius, playerLayer))
-            {
-                /*isDanger = false;
-                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
-                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                enemyCombat.killPlayer(enemyCombat, enemyControl);
-                Destroy(this.gameObject);*/
-            }
-            else if (Physics.Raycast(hitPoint.position, transform.forward, out ray, hitRadius, obstacleLayer))
-            {
-                /*if (!canBounce)
-                {
-                    isDanger = false;
-                    rb.velocity = (Vector3.zero);
-                    rb.isKinematic = true;
-                }
-                else if (canBounce && !delayHitCheck)
-                {
-                    delayHitCheck = true;
-                    StartCoroutine("delayCheck");
-                    if (bouncesLeft == 0)
-                    {
-                        rb.velocity = (Vector3.zero);
-                        isDanger = false;
-                        rb.isKinematic = true;
-                    }
-                    bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
-                }*/
-            }
         }
     }
     public IEnumerator delayCheck()
@@ -118,24 +95,12 @@ public class projectile : MonoBehaviour
     {
         if (other.tag == "Environment" && !canBounce)
         {
-            /*
-            isDanger = false;
-            rb.velocity = (Vector3.zero);
-            rb.isKinematic = true;*/
         }
-
     }
     private void OnCollisionEnter(Collision other)
     {
         if (other.collider.CompareTag("Environment") && canBounce)
         {
-            /* if (bouncesLeft == 0)
-             {
-                 rb.velocity = (Vector3.zero);
-                 isDanger = false;
-                 rb.isKinematic = true;
-             }
-             bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);*/
         }
     }
     public void liveLife()

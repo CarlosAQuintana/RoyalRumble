@@ -48,22 +48,22 @@ public class weaponPickupManager : MonoBehaviour
             case roundManager.level.castle:
                 spawnPointToUse = Random.Range(0, levelOneSpawns.Length - 1);
                 Transform sPointOne = levelOneSpawns[spawnPointToUse];
-                GameObject pickup1 = Instantiate(weapons[weaponToSpawn], sPointOne);
+                GameObject pickup1 = Instantiate(weapons[weaponToSpawn], sPointOne.position, Quaternion.identity);
                 break;
             case roundManager.level.ice:
                 spawnPointToUse = Random.Range(0, levelTwoSpawns.Length - 1);
                 Transform sPointTwo = levelTwoSpawns[spawnPointToUse];
-                GameObject pickup2 = Instantiate(weapons[weaponToSpawn], sPointTwo);
+                GameObject pickup2 = Instantiate(weapons[weaponToSpawn], sPointTwo.position, Quaternion.identity);
                 break;
             case roundManager.level.jungle:
                 spawnPointToUse = Random.Range(0, levelThreeSpawns.Length - 1);
                 Transform sPointThree = levelThreeSpawns[spawnPointToUse];
-                GameObject pickup3 = Instantiate(weapons[weaponToSpawn], sPointThree);
+                GameObject pickup3 = Instantiate(weapons[weaponToSpawn], sPointThree.position, Quaternion.identity);
                 break;
             case roundManager.level.fire:
                 spawnPointToUse = Random.Range(0, levelFourSpawns.Length - 1);
                 Transform sPointFour = levelFourSpawns[spawnPointToUse];
-                GameObject pickup4 = Instantiate(weapons[weaponToSpawn], sPointFour);
+                GameObject pickup4 = Instantiate(weapons[weaponToSpawn], sPointFour.position, Quaternion.identity);
                 break;
         }
     }

@@ -14,6 +14,10 @@ public class roundManager : MonoBehaviour
     public PlayerController[] players;
     public combatController[] combatControllers;
 
+    [Header("Sound Effects")]
+    public AudioClip spawnSound;
+
+
     [Header("Round Variables")]
     public roundState currentRoundState;
     public level currentLevel;
@@ -172,6 +176,10 @@ public class roundManager : MonoBehaviour
             trackRoundTime = true;
         }
         roundInPlay = true;
+        foreach (combatController controller in combatControllers)
+        {
+            controller.canAttack = true;
+        }
     }
     public void checkForRoundWin() // Executes when player potentially won a round.
     {
@@ -234,6 +242,7 @@ public class roundManager : MonoBehaviour
             winnerIndex = 3;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            manager.enablePlayButton();
         }
     }
     public void controlAllMovement(bool enable, bool disable) // Quick disable all player movement.
@@ -267,7 +276,6 @@ public class roundManager : MonoBehaviour
                 players[i].canControl = true;
             }
     }
-
     public void slipperyControl(bool enable) // Quick disable all player control.
     {
         if (enable)
@@ -313,20 +321,16 @@ public class roundManager : MonoBehaviour
             roundStateController();
         }
     }
-    void OnPlayerJoined(PlayerInput playerInput) // Called whenever a new player joins.
+    void OnPlayerJoined(PlayerInput playerInput)
     {
-        // Give each player a unique ID based on the order in 
-        // which they joined.
+        // Give each player a unique ID based on the order in which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().playerID = playerInput.playerIndex;
-        // Players spawn in unique spawn points depending on 
-        // the order in which they joined.
+        // Players spawn in unique spawn points depending on the order in which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawnsRound1[playerInput.playerIndex].position;
-        // Update the current player count based on
-        // how many players have joined (+ 1 due to array index starting at 0).
+        // Update the current player count based on how many players have joined (+ 1 due to array index starting at 0).
         playerCount = playerInput.playerIndex + 1;
-
-        // Name GameObject based on player index.
-        playerInput.gameObject.name = ("Player " + playerInput.playerIndex);
+        playerInput.gameObject.name = ("Player " + playerInput.playerIndex);  // Name GameObject based on player index.
+        AudioSource.PlayClipAtPoint(spawnSound, transform.position, 2f);
     }
     public void addDummy()
     {
@@ -338,9 +342,6 @@ public class roundManager : MonoBehaviour
             pController.playerID = pInput.playerIndex;
             pController.startPos = playerSpawnsRound1[pInput.playerIndex].position;
             playerCount = pInput.playerIndex + 1;
-
-            //players[pInput.playerIndex] = pController;
-            //combatControllers[pInput.playerIndex] = dummyPlayer.GetComponent<combatController>();
         }
     }
 }

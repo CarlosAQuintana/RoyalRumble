@@ -17,12 +17,14 @@ public class combatController : MonoBehaviour
 
     [Header("Combat Variables")]
     [SerializeField] LayerMask playerLayer;
+    public bool canAttack;
     public bool isDead;
     public bool isKillable;
     public bool inTutorial;
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
     public Transform leftHand;
+    private bool punching;
 
     public bool weaponEquipped;
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
@@ -81,6 +83,7 @@ public class combatController : MonoBehaviour
         spearDash();
         shieldBlitz();
         swordAction();
+        punchMotion();
         if (currentWeapon != null && currentWeapon.thisWeaponType == weaponData.weaponType.gun)
         {
             reloadTimeElapsed = reloadTimeElapsed += Time.deltaTime;
@@ -97,6 +100,7 @@ public class combatController : MonoBehaviour
             targetCombat.isDead = true;
             targetCombat.StopAllCoroutines();
             targetCombat.player.canMove = false; // and disable their movement.
+            targetCombat.canAttack = false;
             roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
             rManager.numOfPlayersAlive--;
             rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
@@ -111,12 +115,10 @@ public class combatController : MonoBehaviour
             goShieldBlitz = false;
             goSwordSlash = false;
             goSpearDash = false;
-
-            // Stop any coroutine related to this function.
+            punching = false;
             StopCoroutine("swordAttack");
             StopCoroutine("shieldAttack");
             StopCoroutine("spearAttack");
-
             player.canMove = true;
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
@@ -127,7 +129,7 @@ public class combatController : MonoBehaviour
     }
     public void attack(InputAction.CallbackContext context)
     {
-        if (!player.canMove) // Prevent atacking if movement is disabled.
+        if (!player.canMove || !canAttack) // Prevent atacking if movement is disabled.
         {
             return;
         }
@@ -160,10 +162,18 @@ public class combatController : MonoBehaviour
     public IEnumerator punch()
     {
         player.canMove = false;
-        rayCastHitBox(attackPointTwo, .5f);
-        Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, spearHitRadius);
+        punching = true;
         yield return new WaitForSeconds(.5f);
+        punching = false;
         player.canMove = true;
+    }
+    private void punchMotion()
+    {
+        if (punching)
+        {
+            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 8f);
+            rayCastHitBox(attackPointOne, spearHitRadius);
+        }
     }
     #endregion
     #region Spear Combat
@@ -173,8 +183,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
             rayCastHitBox(attackPointOne, spearHitRadius);
-            rayCastHitBox(attackPointThree, spearHitRadius);
-            rayCastHitBox(attackPointFour, spearHitRadius);
         }
     }
     public IEnumerator spearAttack()
