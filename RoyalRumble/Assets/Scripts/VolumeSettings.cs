@@ -12,6 +12,8 @@ public class VolumeSettings : MonoBehaviour
 
     const string mixerBGM = "BGMVolume";
     const string mixerSFX = "SFXVolume";
+
+
     private void Awake()
     {
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
@@ -21,13 +23,13 @@ public class VolumeSettings : MonoBehaviour
 
     void SetMusicVolume(float value)
     {
-        mixer.SetFloat(mixerBGM, Mathf.Log10(value) * 20);
+        mixer.SetFloat(mixerBGM, Mathf.Log10(value) * 10);
 
     }
 
     void SetSFXVolume(float value)
     {
-        mixer.SetFloat(mixerSFX, Mathf.Log10(value) * 20);
+        mixer.SetFloat(mixerSFX, Mathf.Log10(value) * 10);
 
     }
 }
