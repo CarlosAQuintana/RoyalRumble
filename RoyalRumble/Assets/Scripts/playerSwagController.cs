@@ -17,6 +17,7 @@ public class playerSwagController : MonoBehaviour
     public GameObject itemOne;
     public GameObject itemTwo;
     public GameObject itemThree;
+    public GameObject crown;
 
     [Header("Misc")]
     public GameObject ring;
@@ -64,5 +65,9 @@ public class playerSwagController : MonoBehaviour
                 itemThree.SetActive(true);
                 break;
         }
+    }
+    public void equipCrown()
+    {
+        crown.SetActive(true);
     }
 }

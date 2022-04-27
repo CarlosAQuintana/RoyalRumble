@@ -8,8 +8,14 @@ using UnityEngine.UI;
 public class pauseMenu : MonoBehaviour
 {
     PlayerControls controls;
+
+    roundManager rm;
+    gameManager gm;
+
     public GameObject pauseScreen;
     public Button firstSelect;
+    public Button playButton;
+    public Button replayButton;
     public bool paused;
     private void Awake()
     {
@@ -19,6 +25,9 @@ public class pauseMenu : MonoBehaviour
     }
     void Start()
     {
+        gm = GetComponent<gameManager>();
+        rm = GetComponent<roundManager>();
+
         Time.timeScale = 1f;
         pauseScreen.SetActive(false);
         paused = false;
@@ -43,6 +52,14 @@ public class pauseMenu : MonoBehaviour
                 Time.timeScale = 1f;
                 pauseScreen.SetActive(false);
                 paused = false;
+                if (!gm.playGame)
+                {
+                    playButton.Select();
+                }
+                else if (rm.gameOver)
+                {
+                    replayButton.Select();
+                }
             }
         }
     }
@@ -50,8 +67,17 @@ public class pauseMenu : MonoBehaviour
     {
         if (paused)
         {
+            Time.timeScale = 1f;
             pauseScreen.SetActive(false);
             paused = false;
+            if (!gm.playGame)
+            {
+                playButton.Select();
+            }
+            else if (rm.gameOver)
+            {
+                replayButton.Select();
+            }
         }
     }
     public void quitToMenu(InputAction.CallbackContext context)

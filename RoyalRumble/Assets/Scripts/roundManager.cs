@@ -13,6 +13,7 @@ public class roundManager : MonoBehaviour
     public gameManager manager;
     public PlayerController[] players;
     public combatController[] combatControllers;
+    public playerSwagController[] swagControllers;
 
     [Header("Sound Effects")]
     public AudioClip spawnSound;
@@ -220,12 +221,16 @@ public class roundManager : MonoBehaviour
             winnerIndex = 0;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
         }
         if (playerScore[1] == scoreToWin)
         {
             winnerIndex = 1;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
         }
         if (playerScore.Length == 2)
             return;
@@ -234,6 +239,8 @@ public class roundManager : MonoBehaviour
             winnerIndex = 2;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
         }
         if (playerScore.Length == 3)
             return;
@@ -242,6 +249,7 @@ public class roundManager : MonoBehaviour
             winnerIndex = 3;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
             manager.enablePlayButton();
         }
     }
@@ -310,10 +318,15 @@ public class roundManager : MonoBehaviour
     {
         if (gameOver)
         {
+            manager.disablePlayButton();
             gameOver = false;
             for (int score = 0; score < playerScore.Length; score++)
             {
                 playerScore[score] = 0;
+            }
+            foreach (playerSwagController swag in swagControllers)
+            {
+                swag.crown.SetActive(false);
             }
             currentRound = 1;
             StopCoroutine("resetRound");

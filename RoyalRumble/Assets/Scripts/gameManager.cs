@@ -43,6 +43,11 @@ public class gameManager : MonoBehaviour
         {
             roundManager.combatControllers[c] = GameObject.Find("Player " + c).GetComponent<combatController>();
         }
+        roundManager.swagControllers = new playerSwagController[roundManager.playerCount];
+        for (int s = 0; s < roundManager.swagControllers.Length; s++)
+        {
+            roundManager.swagControllers[s] = GameObject.Find("Player " + s).GetComponent<playerSwagController>();
+        }
         roundManager.currentRound = 1;
         roundManager.currentRoundState = roundManager.roundState.gameBegin;
         roundManager.roundStateController();
@@ -51,6 +56,7 @@ public class gameManager : MonoBehaviour
     public void disablePlayButton()
     {
         playButton.SetActive(false);
+        replayButton.SetActive(false);
         joinText.SetActive(false);
     }
     public void enablePlayButton()

@@ -31,9 +31,6 @@ public class combatController : MonoBehaviour
 
     [Header("Attack Points")]
     public Transform attackPointOne; // Attack point.
-    public Transform attackPointTwo;
-    public Transform attackPointThree;
-    public Transform attackPointFour;
 
     [Header("Spear Variables")]
     [SerializeField] private float thrustPower;
@@ -73,9 +70,6 @@ public class combatController : MonoBehaviour
         leftHand = transform.Find("Left Hand");
         player = GetComponent<PlayerController>();
         attackPointOne = transform.Find("AttackPoint01");
-        attackPointTwo = transform.Find("AttackPoint02");
-        attackPointThree = transform.Find("AttackPoint03");
-        attackPointFour = transform.Find("AttackPoint04");
         reloadTimeElapsed = 99f;
     }
     void Update()
@@ -110,7 +104,7 @@ public class combatController : MonoBehaviour
     public void rayCastHitBox(Transform hitPointTransform, float hitDist)
     {
         RaycastHit ray;
-        if (Physics.BoxCast(hitPointTransform.position, new Vector3(.75f, .45f, .75f), transform.forward, out ray, transform.rotation, hitDist, playerLayer))
+        if (Physics.BoxCast(hitPointTransform.position, new Vector3(.75f, .45f, .2f), transform.forward, out ray, transform.rotation, hitDist, playerLayer))
         {
             goShieldBlitz = false;
             goSwordSlash = false;
@@ -119,6 +113,7 @@ public class combatController : MonoBehaviour
             StopCoroutine("swordAttack");
             StopCoroutine("shieldAttack");
             StopCoroutine("spearAttack");
+            StopCoroutine("punch");
             player.canMove = true;
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
@@ -163,7 +158,7 @@ public class combatController : MonoBehaviour
     {
         player.canMove = false;
         punching = true;
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.25f);
         punching = false;
         player.canMove = true;
     }
@@ -171,7 +166,7 @@ public class combatController : MonoBehaviour
     {
         if (punching)
         {
-            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 8f);
+            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 4f);
             rayCastHitBox(attackPointOne, spearHitRadius);
         }
     }
@@ -202,8 +197,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * blitzPower);
             rayCastHitBox(attackPointOne, spearHitRadius);
-            rayCastHitBox(attackPointThree, spearHitRadius);
-            rayCastHitBox(attackPointFour, spearHitRadius);
         }
     }
     public IEnumerator shieldAttack()
@@ -223,8 +216,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * swordStepPower);
             rayCastHitBox(attackPointOne, slashDuration);
-            rayCastHitBox(attackPointThree, slashDuration);
-            rayCastHitBox(attackPointFour, slashDuration);
         }
     }
     public IEnumerator swordAttack()
@@ -296,8 +287,8 @@ public class combatController : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(attackPointOne.position, spearHitRadius);
+        //Gizmos.DrawWireSphere(attackPointOne.position, spearHitRadius);
+        Gizmos.DrawLine(attackPointOne.position, new Vector3(attackPointOne.position.x, attackPointOne.position.y, attackPointOne.position.z + spearHitRadius));
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPointTwo.position, spearHitRadius / 2f);
     }
 }

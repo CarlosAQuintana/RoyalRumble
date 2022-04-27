@@ -53,7 +53,7 @@ public class projectile : MonoBehaviour
                 if (enemyCombat.inTutorial)
                     return;
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                AudioSource.PlayClipAtPoint(playerHitSound, transform.position, 2.5f);
+                AudioSource.PlayClipAtPoint(playerHitSound, transform.position, 4f);
                 enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
@@ -66,7 +66,7 @@ public class projectile : MonoBehaviour
                     rb.velocity = (Vector3.zero);
                     rb.isKinematic = true;
                     speedParticle.Stop();
-                    AudioSource.PlayClipAtPoint(wallHitSound, transform.position, 2.5f);
+                    AudioSource.PlayClipAtPoint(wallHitSound, transform.position, 4f);
                 }
                 else if (canBounce && !delayHitCheck)
                 {
