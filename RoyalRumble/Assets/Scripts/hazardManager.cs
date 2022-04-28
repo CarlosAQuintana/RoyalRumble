@@ -15,7 +15,13 @@ public class hazardManager : MonoBehaviour
     public float blinkCounter;
     public float fireAgain;
 
+    public float vertblinkResetTimer;
+    public float vertblinkTimer;
+    public float vertblinkCounter;
+    public float vertfireAgain;
+
     public bool arrowBlinking;
+    public bool vertarrowBlinking;
 
     public float arrowPosSet;
     public Transform arrowPos1;
@@ -29,7 +35,9 @@ public class hazardManager : MonoBehaviour
 
     [Header("Ice Variables")]
     public GameObject iceLane;
+    public GameObject iceLaneVert;
     public GameObject icicleSpike;
+    public GameObject vertIcicleSpike;
 
     public float iceLaneSet;
     public Transform iceLane1;
@@ -41,7 +49,19 @@ public class hazardManager : MonoBehaviour
     public Transform iceLane7;
     public Transform iceLane8;
     public Transform iceLane9;
-    public Transform iceLane10;
+
+    public float vertIceLaneSet;
+    public Transform iceLane1v;
+    public Transform iceLane2v;
+    public Transform iceLane3v;
+    public Transform iceLane4v;
+    public Transform iceLane5v;
+
+    public Transform iceLaunch1v;
+    public Transform iceLaunch2v;
+    public Transform iceLaunch3v;
+    public Transform iceLaunch4v;
+    public Transform iceLaunch5v;
 
     public Transform iceLaunch1;
     public Transform iceLaunch2;
@@ -52,7 +72,6 @@ public class hazardManager : MonoBehaviour
     public Transform iceLaunch7;
     public Transform iceLaunch8;
     public Transform iceLaunch9;
-    public Transform iceLaunch10;
 
     [Header("Sand Variables")]
     public GameObject sandHazard;
@@ -92,11 +111,18 @@ public class hazardManager : MonoBehaviour
         fireAgain = 5f;
         shakeTimer = 2.5f;
 
+        vertblinkTimer = 0.25f;
+        vertblinkResetTimer = 0.25f;
+        vertfireAgain = 5f;
+        vertarrowBlinking = true;
+
         iceLane.SetActive(false);
+        iceLaneVert.SetActive(false);
         showLava.SetActive(false);
 
         GenerateFireBreathPos();
         GenerateIceLanePos();
+        GenerateVertIceLanePos();
         GenerateLavaSpot();
 
     }
@@ -134,7 +160,11 @@ public class hazardManager : MonoBehaviour
         hazardTimer += Time.deltaTime;
         if (hazardTimer > 5)
         {
-
+            IcicleShot();
+        }
+        if (hazardTimer > 30)
+        {
+            VerticalIcicleShot();
         }
     }
 
@@ -311,10 +341,6 @@ public class hazardManager : MonoBehaviour
                 {
                     Instantiate(icicleSpike, iceLaunch9.position, iceLaunch9.rotation);
                 }
-                if (iceLaneSet == 10)
-                {
-                    Instantiate(icicleSpike, iceLaunch10.position, iceLaunch10.rotation);
-                }
 
                 blinkTimer = 0.6f;  //Stops the arrow loop from happening
                 if (blinkTimer == 0.6f)
@@ -336,6 +362,97 @@ public class hazardManager : MonoBehaviour
             {
                 GenerateIceLanePos();  //Sets new arrow position
                 arrowBlinking = true;  //Begins loop cycle again
+            }
+        }
+    }
+
+    void VerticalIcicleShot()
+    {
+        GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
+        hazardManager hM = gameManager.GetComponent<hazardManager>();
+        roundManager rM = gameManager.GetComponent<roundManager>();
+        if (vertarrowBlinking == true)  //Begins the loop for the lane blinking
+        {
+            if (hazardTimer < 30)  //Sets the speed of the hazard based on how long the round has gone on for
+            {
+                vertfireAgain = 5f;
+            }
+            else if (hazardTimer < 40)
+            {
+                vertfireAgain = 2.5f;
+            }
+            else if (hazardTimer < 50)
+            {
+                vertfireAgain = 1.15f;
+            }
+            else
+            {
+                vertfireAgain = 0.5f;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
+            }
+
+            if (vertblinkTimer < 0.26f)  //Makes lane active
+            {
+                iceLaneVert.SetActive(true);  //Sets lane to active
+                vertblinkTimer -= Time.deltaTime;  //Begins countdown to inactive
+            }
+
+            if (vertblinkTimer < 0) //Makes arrow inactive
+            {
+                iceLaneVert.SetActive(false);  //Sets lane to inactive
+                vertblinkResetTimer -= Time.deltaTime;  //Begins countdown to active
+
+                if (vertblinkResetTimer < 0)  //Resets both timers to make arrow active again
+                {
+                    vertblinkTimer = 0.25f;
+                    vertblinkResetTimer = 0.25f;
+                    vertblinkCounter += 1;  //Adds one to the amount of times the lane has blinked
+                }
+            }
+
+            if (vertblinkCounter == 5)  //Tracks amount of times lane has blinked
+            {
+                if (vertIceLaneSet == 1)
+                {
+                    Instantiate(vertIcicleSpike, iceLaunch1v.position, iceLaunch1v.rotation);
+                }
+                if (vertIceLaneSet == 2)
+                {
+                    Instantiate(vertIcicleSpike, iceLaunch2v.position, iceLaunch2v.rotation);
+                }
+                if (vertIceLaneSet == 3)
+                {
+                    Instantiate(vertIcicleSpike, iceLaunch3v.position, iceLaunch3v.rotation);
+                }
+                if (vertIceLaneSet == 4)
+                {
+                    Instantiate(vertIcicleSpike, iceLaunch4v.position, iceLaunch4v.rotation);
+                }
+                if (vertIceLaneSet == 5)
+                {
+                    Instantiate(vertIcicleSpike, iceLaunch5v.position, iceLaunch5v.rotation);
+                }
+
+
+                vertblinkTimer = 0.6f;  //Stops the arrow loop from happening
+                if (vertblinkTimer == 0.6f)
+                {
+                    iceLaneVert.SetActive(false);  //Keeps the arrow inactive until needed again
+                    vertarrowBlinking = false;
+                }
+            }
+        }
+
+        if (vertarrowBlinking == false)  //Gets all the timers and counters ready for the next blast
+        {
+            vertblinkTimer = 0.25f;
+            vertblinkResetTimer = 0.25f;
+            vertblinkCounter = 0;
+            vertfireAgain -= Time.deltaTime;  //Begins countdown for the break inbetween blasts
+
+            if (vertfireAgain < 0)
+            {
+                GenerateVertIceLanePos();  //Sets new arrow position
+                vertarrowBlinking = true;  //Begins loop cycle again
             }
         }
     }
@@ -539,7 +656,7 @@ public class hazardManager : MonoBehaviour
 
     void GenerateIceLanePos() //Functions that generates and sets where the next icicle is going to come from
     {
-        iceLaneSet = Random.Range(1, 11);
+        iceLaneSet = Random.Range(1, 10);
 
         if (iceLaneSet == 1)
         {
@@ -577,11 +694,34 @@ public class hazardManager : MonoBehaviour
         {
             iceLane.transform.position = iceLane9.transform.position;
         }
-        if (iceLaneSet == 10)
-        {
-            iceLane.transform.position = iceLane10.transform.position;
-        }
         Debug.Log("icicle will come from pos" + iceLaneSet);
+    }
+
+    void GenerateVertIceLanePos()
+    {
+        vertIceLaneSet = Random.Range(1, 6);
+
+        if (vertIceLaneSet == 1)
+        {
+            iceLaneVert.transform.position = iceLane1v.transform.position;
+        }
+        if (vertIceLaneSet == 2)
+        {
+            iceLaneVert.transform.position = iceLane2v.transform.position;
+        }
+        if (vertIceLaneSet == 3)
+        {
+            iceLaneVert.transform.position = iceLane3v.transform.position;
+        }
+        if (vertIceLaneSet == 4)
+        {
+            iceLaneVert.transform.position = iceLane4v.transform.position;
+        }
+        if (vertIceLaneSet == 5)
+        {
+            iceLaneVert.transform.position = iceLane5v.transform.position;
+        }
+
     }
 
     void CameraShake()
