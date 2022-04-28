@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static AudioManager instance;
     void Start()
     {
         
@@ -14,5 +14,16 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void Awake()
+    {
+        
+        if(instance == null)
+        {
+            instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }

@@ -1100,10 +1100,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 251785899}
   m_HandleRect: {fileID: 972272370}
   m_Direction: 0
-  m_MinValue: 0.00000001
+  m_MinValue: 0.000000001
   m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: 5
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1950,6 +1950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mixer: {fileID: 24100000, guid: f9d58a879608d2f4bb61d1b43b85fa48, type: 2}
+  masterSlider: {fileID: 1190010580}
   musicSlider: {fileID: 179532723}
   sfxSlider: {fileID: 677255548}
 --- !u!1 &438806486
@@ -2586,9 +2587,9 @@ MonoBehaviour:
   m_FillRect: {fileID: 1742317552}
   m_HandleRect: {fileID: 1399933248}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.000000001
   m_MaxValue: 5
-  m_WholeNumbers: 1
+  m_WholeNumbers: 0
   m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3148,7 +3149,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 1619511595}
   m_HandleRect: {fileID: 1588496489}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.000000001
   m_MaxValue: 5
   m_WholeNumbers: 0
   m_Value: 3
@@ -3872,10 +3873,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1059626988}
   m_HandleRect: {fileID: 845325765}
   m_Direction: 0
-  m_MinValue: -1
+  m_MinValue: 0.000000001
   m_MaxValue: 5
-  m_WholeNumbers: 1
-  m_Value: 0
+  m_WholeNumbers: 0
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
