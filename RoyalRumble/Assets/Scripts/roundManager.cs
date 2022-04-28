@@ -117,6 +117,7 @@ public class roundManager : MonoBehaviour
         }
         if (currentRound == 1 || currentRound == 5)
         {
+            changeYValue(0f);
             currentLevel = level.castle;
             debugResetAllWeapons();
             Cameras.Play("Level 1 Camera");
@@ -133,6 +134,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 2 || currentRound == 6)
         {
+            changeYValue(-65f);
             slipperyControl(true);
             currentLevel = level.ice;
             debugResetAllWeapons();
@@ -150,6 +152,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 3 || currentRound == 7)
         {
+            changeYValue(-120f);
             slipperyControl(false);
             currentLevel = level.jungle;
             debugResetAllWeapons();
@@ -167,6 +170,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 4 || currentRound == 8)
         {
+            changeYValue(-180f);
             currentLevel = level.fire;
             debugResetAllWeapons();
             Cameras.Play("Level 4 Camera");
@@ -263,6 +267,14 @@ public class roundManager : MonoBehaviour
             playWinSound(gameWinSound[winnerIndex]);
         }
     }
+    // Changes Y-Value in player controller script so that look rotation works.
+    public void changeYValue(float yValue)
+{
+    for (int i = 0; i < players.Length; i++)
+    {
+        players[i].yValue = yValue;
+    }
+}
     public void controlAllMovement(bool enable, bool disable) // Quick disable all player movement.
     {
         if (enable)

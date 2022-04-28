@@ -53,6 +53,9 @@ public class PlayerController : MonoBehaviour
     private bool hasDevice = false;
     private bool isGamepad;
 
+    // Level position for ground plane.
+    public float yValue;
+
 
     // Called once at the beginning of the game.
     private void Start()
@@ -169,7 +172,7 @@ public class PlayerController : MonoBehaviour
     public void HandleMouseRotation()
     {
         Ray ray = Camera.main.ScreenPointToRay(aim);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0, yValue, 0));
         float rayDistance;
 
         if (groundPlane.Raycast(ray, out rayDistance))
