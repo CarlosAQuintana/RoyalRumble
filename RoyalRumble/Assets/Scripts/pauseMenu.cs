@@ -17,6 +17,7 @@ public class pauseMenu : MonoBehaviour
     public Button playButton;
     public Button replayButton;
     public bool paused;
+    public bool inTutorial;
     private void Awake()
     {
         controls = new PlayerControls();
@@ -52,6 +53,12 @@ public class pauseMenu : MonoBehaviour
                 Time.timeScale = 1f;
                 pauseScreen.SetActive(false);
                 paused = false;
+                if (inTutorial)
+                {
+                    GetComponent<tutorialManager>().yesButton.Select();
+                }
+                if (gm == null)
+                    return;
                 if (!gm.playGame)
                 {
                     playButton.Select();
@@ -70,6 +77,12 @@ public class pauseMenu : MonoBehaviour
             Time.timeScale = 1f;
             pauseScreen.SetActive(false);
             paused = false;
+            if (inTutorial)
+            {
+                GetComponent<tutorialManager>().yesButton.Select();
+            }
+            if (gm == null)
+                return;
             if (!gm.playGame)
             {
                 playButton.Select();

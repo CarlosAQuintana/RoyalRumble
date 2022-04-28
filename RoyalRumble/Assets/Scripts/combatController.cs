@@ -8,6 +8,7 @@ public class combatController : MonoBehaviour
     [SerializeField] public PlayerController player;
     [SerializeField] CharacterController controller;
 
+    public playerAudioManager audioManager;
 
     [Header("Weapons")] // Each weapon GameObject.
     public GameObject spear;
@@ -95,6 +96,7 @@ public class combatController : MonoBehaviour
             targetCombat.StopAllCoroutines();
             targetCombat.player.canMove = false; // and disable their movement.
             targetCombat.canAttack = false;
+            targetCombat.audioManager.playDeathSound();
             roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
             rManager.numOfPlayersAlive--;
             rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
@@ -130,7 +132,7 @@ public class combatController : MonoBehaviour
         }
         if (context.performed && currentWeaponUsable && currentWeapon != null) // Do a weapon attack when a weapon is equipped.
         {
-            Debug.Log("Attack!");
+            audioManager.plaAttackSound();
             switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapon equipped.
             {
                 case weaponData.weaponType.spear:
@@ -151,6 +153,7 @@ public class combatController : MonoBehaviour
         else if (context.performed && currentWeapon == null) // Do a punch attack when a weapon is not equipped.
         {
             StartCoroutine("punch");
+            audioManager.plaAttackSound();
         }
     }
     #region unarmed Combat
@@ -166,7 +169,7 @@ public class combatController : MonoBehaviour
     {
         if (punching)
         {
-            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 4f);
+            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 6f);
             rayCastHitBox(attackPointOne, spearHitRadius);
         }
     }

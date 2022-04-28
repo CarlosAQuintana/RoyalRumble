@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(AudioSource))]
 public class projectile : MonoBehaviour
 {
     [Header("References")]
     public PlayerController owner;
     public Rigidbody rb;
     public Transform hitPoint;
-    public Transform hitPointTwo;
-    public Transform hitPointThree;
     public LayerMask playerLayer;
     public LayerMask obstacleLayer;
     public AudioClip playerHitSound;
     public AudioClip wallHitSound;
     public ParticleSystem speedParticle;
-
+    public AudioSource source;
     [Header("Variables")]
     private float lifetime = 10f;
     public float elaspedLife;
@@ -53,7 +51,7 @@ public class projectile : MonoBehaviour
                 if (enemyCombat.inTutorial)
                     return;
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                AudioSource.PlayClipAtPoint(playerHitSound, transform.position, 4f);
+                pHitSound(playerHitSound);
                 enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
@@ -66,7 +64,7 @@ public class projectile : MonoBehaviour
                     rb.velocity = (Vector3.zero);
                     rb.isKinematic = true;
                     speedParticle.Stop();
-                    AudioSource.PlayClipAtPoint(wallHitSound, transform.position, 4f);
+                    pHitSound(wallHitSound);
                 }
                 else if (canBounce && !delayHitCheck)
                 {
@@ -80,6 +78,8 @@ public class projectile : MonoBehaviour
                         rb.velocity = (Vector3.zero);
                         isDanger = false;
                         rb.isKinematic = true;
+                        speedParticle.Stop();
+                        pHitSound(wallHitSound);
                     }
                     bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
                 }
@@ -108,5 +108,11 @@ public class projectile : MonoBehaviour
         elaspedLife += Time.deltaTime;
         if (elaspedLife > lifetime)
             Destroy(this.gameObject);
+    }
+    private void pHitSound(AudioClip sound)
+    {
+        source.Stop();
+        source.clip = sound;
+        source.Play();
     }
 }
