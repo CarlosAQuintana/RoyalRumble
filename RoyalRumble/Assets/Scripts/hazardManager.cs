@@ -166,7 +166,7 @@ public class hazardManager : MonoBehaviour
         hazardTimer += Time.deltaTime;
         if (hazardTimer > 5)
         {
-
+            LavaHazard();
         }
     }
     void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
@@ -532,11 +532,11 @@ public class hazardManager : MonoBehaviour
         {
             if (rM.RoundTimeElasped < 40)
             {
-                fireAgain = 5f;
+                fireAgain = 3f;
             }
             else if (rM.RoundTimeElasped < 60)
             {
-                fireAgain = 2.5f;
+                fireAgain = 2f;
             }
             else if (rM.RoundTimeElasped > 60)
             {
@@ -612,23 +612,23 @@ public class hazardManager : MonoBehaviour
             }
         }
 
-        if (rM.RoundTimeElasped > 40)
+        if (hazardTimer > 20)
         {
-            GameObject floor1 = GameObject.Find("Ground1");
+            GameObject floor1 = GameObject.Find("moveGround1");
             Rigidbody f1rb = floor1.GetComponent<Rigidbody>();
             f1rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (rM.RoundTimeElasped > 60)
+        if (hazardTimer > 40)
         {
-            GameObject floor2 = GameObject.Find("Ground2");
+            GameObject floor2 = GameObject.Find("moveGround2");
             Rigidbody f2rb = floor2.GetComponent<Rigidbody>();
             f2rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (rM.RoundTimeElasped > 80)
+        if (hazardTimer > 60)
         {
-            GameObject floor3 = GameObject.Find("Ground3");
+            GameObject floor3 = GameObject.Find("moveGround3");
             Rigidbody f3rb = floor3.GetComponent<Rigidbody>();
             f3rb.velocity = new Vector3(0, -0.5f, 0);
         }
