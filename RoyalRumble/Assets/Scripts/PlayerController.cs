@@ -7,12 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     // Player float values.
     [SerializeField]
-    public float playerSpeed = 2.0f;
+    public float playerSpeed = 0.05f;
 
     [SerializeField]
-    private float gravityValue = -9.81f;
+    private float gravityValue = -20.00f;
 
-    public float smoothInputSpeed = 0.2f;
+    public float smoothInputSpeed = 0.1f;
 
     [SerializeField]
     private float controllerDeadzone = 0.1f;
@@ -27,8 +27,6 @@ public class PlayerController : MonoBehaviour
 
     // Player controller / input references.
     private CharacterController controller;
-    //private PlayerControls playerControls;
-    //public PlayerInput playerInput;
 
 
     // Player Vector3 variables.
@@ -65,11 +63,6 @@ public class PlayerController : MonoBehaviour
 
         // Places player as spawn location.
         transform.position = startPos;
-    }
-    private void Awake()
-    {
-        // Reference player input and determine control scheme.
-        //playerInput = gameObject.GetComponent<PlayerInput>();
     }
 
     // This function allows movement input to be accessible via 

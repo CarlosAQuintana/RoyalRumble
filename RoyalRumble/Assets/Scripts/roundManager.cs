@@ -320,7 +320,7 @@ public class roundManager : MonoBehaviour
             {
                 if (players[i] == null)
                     break;
-                players[i].smoothInputSpeed = 0.2f;
+                players[i].smoothInputSpeed = 0.1f;
             }
     }
     public void debugResetAllWeapons()
