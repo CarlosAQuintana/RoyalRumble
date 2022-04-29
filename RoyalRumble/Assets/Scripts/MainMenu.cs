@@ -13,6 +13,12 @@ public class MainMenu : MonoBehaviour
     {
 
     }
+
+    void Awake()
+    {
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
+    }
+    
     void Update()
     {
 

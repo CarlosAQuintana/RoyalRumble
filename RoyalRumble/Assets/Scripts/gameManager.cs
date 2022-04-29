@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class gameManager : MonoBehaviour
     private void Start()
     {
         play.Select();
+    }
+
+    void Awake()
+    {
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
     }
 
     public void beginPlay() // Initiated when "Play" button is pressed.

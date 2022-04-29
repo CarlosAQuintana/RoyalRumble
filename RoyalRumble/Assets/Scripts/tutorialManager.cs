@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class tutorialManager : MonoBehaviour
 {
@@ -26,6 +27,11 @@ public class tutorialManager : MonoBehaviour
         InputManager = GetComponent<PlayerInputManager>();
         yesButton.Select();
         tutorialText.text = ("");
+    }
+
+    void Awake()
+    {
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
     }
     void Update()
     {
