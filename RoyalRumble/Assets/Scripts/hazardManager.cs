@@ -152,11 +152,7 @@ public class hazardManager : MonoBehaviour
             {
                 LavaHazard();
             }
-
-
-
         }
-
         hazardTimer += Time.deltaTime;
         if (hazardTimer > 5)
         {
@@ -167,9 +163,6 @@ public class hazardManager : MonoBehaviour
             VerticalIcicleShot();
         }
     }
-
-
-
     void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
     {
         GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts

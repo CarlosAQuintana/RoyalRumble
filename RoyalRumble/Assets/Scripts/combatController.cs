@@ -90,18 +90,18 @@ public class combatController : MonoBehaviour
     }
     public void killPlayer(combatController targetCombat, PlayerController targetController)
     {
-        if (!targetCombat.isDead)
-        {
-            targetCombat.isDead = true;
-            targetCombat.StopAllCoroutines();
-            targetCombat.player.canMove = false; // and disable their movement.
-            targetCombat.canAttack = false;
-            targetCombat.audioManager.playDeathSound();
-            roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-            rManager.numOfPlayersAlive--;
-            rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
-            rManager.checkForRoundWin();
-        }
+        if (targetCombat.isDead)
+            return;
+        targetCombat.isDead = true;
+        targetCombat.StopAllCoroutines();
+        targetCombat.player.canMove = false; // and disable their movement.
+        targetCombat.canAttack = false;
+        targetCombat.audioManager.playDeathSound();
+        roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+        rManager.numOfPlayersAlive -= 1;
+        rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
+        rManager.checkForRoundWin();
+
     }
     public void rayCastHitBox(Transform hitPointTransform, float hitDist)
     {

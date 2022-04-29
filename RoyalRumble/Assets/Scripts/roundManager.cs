@@ -31,6 +31,7 @@ public class roundManager : MonoBehaviour
     public int numOfPlayersAlive;
     public bool gameOver;
     private bool trackRoundTime;
+    public bool TrackRound { get => trackRoundTime; }
     private bool roundInPlay;
     public bool RoundIsInPlay { get => roundInPlay; }
     [SerializeField] private float roundTransitionDelay = 5f;
@@ -269,12 +270,12 @@ public class roundManager : MonoBehaviour
     }
     // Changes Y-Value in player controller script so that look rotation works.
     public void changeYValue(float yValue)
-{
-    for (int i = 0; i < players.Length; i++)
     {
-        players[i].yValue = yValue;
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].yValue = yValue;
+        }
     }
-}
     public void controlAllMovement(bool enable, bool disable) // Quick disable all player movement.
     {
         if (enable)
