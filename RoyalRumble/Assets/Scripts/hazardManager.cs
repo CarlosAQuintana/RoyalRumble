@@ -81,7 +81,7 @@ public class hazardManager : MonoBehaviour
     public Transform sandRise4;
     public float shakeTimer;
     public float reshakeTimer;
-    public bool shakeCam;
+    private bool cancamshake;
 
     [Header("Fire Variable")]
     public float lavaHere;
@@ -109,7 +109,8 @@ public class hazardManager : MonoBehaviour
         blinkTimer = 0.25f;
         blinkResetTimer = 0.25f;
         fireAgain = 5f;
-        shakeTimer = 2.5f;
+        shakeTimer = 4f;
+        reshakeTimer = 5f;
 
         vertblinkTimer = 0.25f;
         vertblinkResetTimer = 0.25f;
@@ -153,14 +154,19 @@ public class hazardManager : MonoBehaviour
                 LavaHazard();
             }
         }
+
+        if (rM.RoundTimeElasped > 60)
+        {
+            if (rM.currentLevel == roundManager.level.ice)
+            {
+                VerticalIcicleShot();
+            }
+        }
+
         hazardTimer += Time.deltaTime;
         if (hazardTimer > 5)
         {
-            IcicleShot();
-        }
-        if (hazardTimer > 30)
-        {
-            VerticalIcicleShot();
+
         }
     }
     void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
@@ -260,15 +266,15 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (hazardTimer < 30)  //Sets the speed of the hazard based on how long the round has gone on for
+            if (rM.RoundTimeElasped < 30)  //Sets the speed of the hazard based on how long the round has gone on for
             {
                 fireAgain = 5f;
             }
-            else if (hazardTimer < 40)
+            else if (rM.RoundTimeElasped < 40)
             {
                 fireAgain = 2.5f;
             }
-            else if (hazardTimer < 50)
+            else if (rM.RoundTimeElasped < 50)
             {
                 fireAgain = 1.15f;
             }
@@ -366,15 +372,15 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (vertarrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (hazardTimer < 30)  //Sets the speed of the hazard based on how long the round has gone on for
+            if (rM.RoundTimeElasped < 30)  //Sets the speed of the hazard based on how long the round has gone on for
             {
                 vertfireAgain = 5f;
             }
-            else if (hazardTimer < 40)
+            else if (rM.RoundTimeElasped < 40)
             {
                 vertfireAgain = 2.5f;
             }
-            else if (hazardTimer < 50)
+            else if (rM.RoundTimeElasped < 50)
             {
                 vertfireAgain = 1.15f;
             }
@@ -455,48 +461,64 @@ public class hazardManager : MonoBehaviour
         GameObject gameManager = GameObject.FindWithTag("gameManager");  //Gets the hazard and round manager scripts
         hazardManager hM = gameManager.GetComponent<hazardManager>();
         roundManager rM = gameManager.GetComponent<roundManager>();
-        if (rM.RoundTimeElasped > 30)
+
+        GameObject DesertCam = GameObject.Find("Level 3 Camera");
+        CinemachineVirtualCamera CMVC = DesertCam.GetComponent<CinemachineVirtualCamera>();
+        CinemachineBasicMultiChannelPerlin CMBMCP = CMVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        if (rM.RoundTimeElasped > 20)
         {
-            shakeCam = true;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 1f;
         }
-        if (rM.RoundTimeElasped > 35)
+        if (rM.RoundTimeElasped > 24)
         {
-            shakeCam = false;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 0f;
+        }
+
+        if (rM.RoundTimeElasped > 25)
+        {
             sandHazard.transform.position = sandRise4.transform.position;
         }
-        if (rM.RoundTimeElasped > 50)
+
+        if (rM.RoundTimeElasped > 40)
         {
-            shakeCam = true;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 1f;
         }
-        if (rM.RoundTimeElasped > 55)
+        if (rM.RoundTimeElasped > 44)
         {
-            shakeCam = false;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 0f;
+        }
+
+        if (rM.RoundTimeElasped > 45)
+        {
             sandHazard.transform.position = sandRise3.transform.position;
         }
-        if (rM.RoundTimeElasped > 70)
+
+        if (rM.RoundTimeElasped > 50)
         {
-            shakeCam = true;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 1f;
         }
-        if (rM.RoundTimeElasped > 75)
+        if (rM.RoundTimeElasped > 54)
         {
-            shakeCam = false;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 0f;
+        }
+
+        if (rM.RoundTimeElasped > 55)
+        {
             sandHazard.transform.position = sandRise2.transform.position;
         }
-        if (rM.RoundTimeElasped > 90)
+
+        if (rM.RoundTimeElasped > 60)
         {
-            shakeCam = true;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 1f;
         }
-        if (rM.RoundTimeElasped > 95)
+        if (rM.RoundTimeElasped > 64)
         {
-            shakeCam = false;
-            CameraShake();
+            CMBMCP.m_AmplitudeGain = 0f;
+        }
+
+        if (rM.RoundTimeElasped > 65)
+        {
             sandHazard.transform.position = sandRise1.transform.position;
         }
     }
@@ -717,27 +739,6 @@ public class hazardManager : MonoBehaviour
 
     }
 
-    void CameraShake()
-    {
-        GameObject DesertCam = GameObject.Find("Level 3 Camera");
-        CinemachineVirtualCamera CMVC = DesertCam.GetComponent<CinemachineVirtualCamera>();
-        CinemachineBasicMultiChannelPerlin CMBMCP = CMVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-
-        if (shakeCam == true)
-        {
-            CMBMCP.m_AmplitudeGain = 2.5f;
-            shakeTimer = 2.5f;
-            shakeTimer -= Time.deltaTime;
-            if (shakeTimer < 0)
-            {
-                shakeCam = false;
-            }
-        }
-        if (shakeCam == false)
-        {
-            CMBMCP.m_AmplitudeGain = 0f;
-        }
-    }
 
     void GenerateLavaSpot()
     {
