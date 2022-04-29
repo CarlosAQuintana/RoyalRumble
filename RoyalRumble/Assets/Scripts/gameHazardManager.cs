@@ -8,9 +8,22 @@ public class gameHazardManager : MonoBehaviour
     public gameManager game;
 
     [Header("Castle Hazards")]
-    public bool sweeperSpawned;
+    public GameObject warningMarkerLeft;
+    public GameObject warningMarkerRight;
+    public bool warningLeftActivated;
+    public bool warningRightActivated;
+    public bool doubleActivation;
+    public bool sweeperOneSpawned;
+    public bool sweeperTwoSpawned;
+    public bool sweeperThreeSpawned;
     public GameObject leftFireSweeper;
     public GameObject rightFireSweeper;
+
+    [Header("Jungle Hazards")]
+    public GameObject sand;
+    public Transform sandEndPoint;
+    public bool rise;
+
     void Start()
     {
         game = GetComponent<gameManager>();
@@ -39,11 +52,53 @@ public class gameHazardManager : MonoBehaviour
     {
         if (round.RoundTimeElasped == 0)
             return;
-        if (round.RoundTimeElasped >= 5)
+        if (round.RoundTimeElasped >= 15)
         {
-            if (!sweeperSpawned)
+            if (!warningLeftActivated)
             {
-                sweeperSpawned = true;
+                warningLeftActivated = true;
+                warningMarkerLeft.SetActive(true);
+            }
+        }
+        if (round.RoundTimeElasped >= 20)
+        {
+            if (!sweeperOneSpawned)
+            {
+                sweeperOneSpawned = true;
+                GameObject sweeper = Instantiate(leftFireSweeper, Vector3.zero, Quaternion.identity);
+            }
+        }
+        if (round.RoundTimeElasped >= 35)
+        {
+            if (!warningRightActivated)
+            {
+                warningRightActivated = true;
+                warningMarkerRight.SetActive(true);
+            }
+        }
+        if (round.RoundTimeElasped >= 40)
+        {
+            if (!sweeperOneSpawned)
+            {
+                sweeperOneSpawned = true;
+                GameObject sweeper = Instantiate(rightFireSweeper, Vector3.zero, Quaternion.identity);
+            }
+        }
+
+        if (round.RoundTimeElasped >= 55)
+        {
+            if (!doubleActivation)
+            {
+                doubleActivation = true;
+                warningMarkerLeft.SetActive(true);
+                warningMarkerRight.SetActive(true);
+            }
+        }
+        if (round.RoundTimeElasped >= 60)
+        {
+            if (!sweeperOneSpawned)
+            {
+                sweeperOneSpawned = true;
                 GameObject sweeper = Instantiate(leftFireSweeper, Vector3.zero, Quaternion.identity);
             }
         }
@@ -67,7 +122,18 @@ public class gameHazardManager : MonoBehaviour
     {
         if (!round.TrackRound)
         {
-            sweeperSpawned = false;
+            // Reset Castle Hazards.
+            sweeperOneSpawned = false;
+            sweeperTwoSpawned = false;
+            sweeperThreeSpawned = false;
+            warningLeftActivated = false;
+            warningRightActivated = false;
+            doubleActivation = false;
+            warningMarkerLeft.SetActive(false);
+            warningMarkerRight.SetActive(false);
+            // Reset Ice Hazards.
+            // Reset Jungle Hazards.
+            // Reset Fire Hazards.
         }
     }
 }

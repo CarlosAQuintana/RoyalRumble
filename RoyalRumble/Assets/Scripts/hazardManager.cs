@@ -138,7 +138,7 @@ public class hazardManager : MonoBehaviour
         {
             if (rM.currentLevel == roundManager.level.castle)
             {
-                FireBlast();
+                //FireBlast();
             }
             if (rM.currentLevel == roundManager.level.ice)
             {

@@ -82,14 +82,9 @@ public class roundManager : MonoBehaviour
                 //currentRound = 1;
                 numOfPlayersAlive = playerCount;
                 StartCoroutine("resetRound");
-
                 break;
             case roundState.roundStart: // Set each player to be alive then start the round.
                 numOfPlayersAlive = playerCount;
-                for (int p = 0; p < playerIsDead.Length; p++)
-                {
-                    playerIsDead[p] = false;
-                }
                 StartCoroutine("resetRound");
                 currentRoundState = roundState.roundPlay;
                 break;
@@ -190,6 +185,10 @@ public class roundManager : MonoBehaviour
         foreach (combatController controller in combatControllers)
         {
             controller.canAttack = true;
+        }
+        for (int p = 0; p < playerIsDead.Length; p++)
+        {
+            playerIsDead[p] = false;
         }
     }
     public void checkForRoundWin() // Executes when player potentially won a round.

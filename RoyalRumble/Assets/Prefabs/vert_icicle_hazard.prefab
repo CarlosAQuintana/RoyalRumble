@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 250822451343251551}
   - component: {fileID: 4891301313934970493}
   - component: {fileID: -5993529770186757126}
+  - component: {fileID: 1462452081512157434}
   m_Layer: 0
   m_Name: vert_icicle_hazard
   m_TagString: Untagged
@@ -113,3 +114,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1462452081512157434
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764256296081455498}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.80498, y: 1.4168222, z: 4.236532}
+  m_Center: {x: 0, y: 0, z: -0.109181285}

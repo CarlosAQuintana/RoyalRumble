@@ -15,12 +15,17 @@ public class flameSweeper : MonoBehaviour
         travelPoints[0] = GameObject.Find("Transform Spot One").transform;
         travelPoints[1] = GameObject.Find("Transform Spot Two").transform;
         travelPoints[2] = GameObject.Find("Transform Spot Three").transform;
+
+        if (goLeft)
+            FindObjectOfType<gameHazardManager>().warningMarkerLeft.SetActive(false);
+        if (!goLeft)
+            FindObjectOfType<gameHazardManager>().warningMarkerRight.SetActive(false);
     }
     void Update()
     {
-        lerpAlpha += Time.deltaTime * .15f;
+        lerpAlpha += Time.deltaTime * 2f;
         move(goLeft);
-        sprayFire(goLeft);
+        //sprayFire(goLeft);
         if (Vector3.Distance(transform.position, travelPoints[0].position) > 15f)
         {
             Destroy(this.gameObject);
@@ -48,11 +53,9 @@ public class flameSweeper : MonoBehaviour
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
                 roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                if (!enemyCombat.isDead)
-                {
-                    enemyCombat.killPlayer(enemyCombat, enemyControl);
-                    rManager.checkForRoundWin();
-                }
+                enemyCombat.killPlayer(enemyCombat, enemyControl);
+                rManager.checkForRoundWin();
+                Destroy(this.gameObject);
             }
         }
         else if (goLeft)
@@ -63,12 +66,20 @@ public class flameSweeper : MonoBehaviour
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
                 roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-                if (!enemyCombat.isDead)
-                {
-                    enemyCombat.killPlayer(enemyCombat, enemyControl);
-                    rManager.checkForRoundWin();
-                }
+                enemyCombat.killPlayer(enemyCombat, enemyControl);
+                rManager.checkForRoundWin();
             }
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            combatController enemyCombat = other.GetComponent<combatController>(); // Fetch the enemy's combatController,
+            PlayerController enemyControl = other.GetComponent<PlayerController>(); // enemy's PlayerController,
+            roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+            enemyCombat.killPlayer(enemyCombat, enemyControl);
+            rManager.checkForRoundWin();
         }
     }
 }
