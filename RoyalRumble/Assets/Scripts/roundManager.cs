@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+[RequireComponent(typeof(AudioSource))]
 public class roundManager : MonoBehaviour
 {
     public enum roundState { gameBegin, roundStart, roundPlay, roundEnd } // Each state a round can be in.
@@ -13,6 +13,14 @@ public class roundManager : MonoBehaviour
     public gameManager manager;
     public PlayerController[] players;
     public combatController[] combatControllers;
+    public playerSwagController[] swagControllers;
+
+    [Header("Sound Effects")]
+    public AudioSource source;
+    public AudioClip spawnSound;
+    public AudioClip startSound;
+    public AudioClip[] roundWinSound;
+    public AudioClip[] gameWinSound;
 
     [Header("Round Variables")]
     public roundState currentRoundState;
@@ -23,6 +31,7 @@ public class roundManager : MonoBehaviour
     public int numOfPlayersAlive;
     public bool gameOver;
     private bool trackRoundTime;
+    public bool TrackRound { get => trackRoundTime; }
     private bool roundInPlay;
     public bool RoundIsInPlay { get => roundInPlay; }
     [SerializeField] private float roundTransitionDelay = 5f;
@@ -51,6 +60,7 @@ public class roundManager : MonoBehaviour
         //players = new PlayerController[4];
         //combatControllers = new combatController[4];
         gameOver = false;
+        playSound(startSound);
     }
     void Update()
     {
@@ -72,6 +82,7 @@ public class roundManager : MonoBehaviour
                 //currentRound = 1;
                 numOfPlayersAlive = playerCount;
                 StartCoroutine("resetRound");
+
                 break;
             case roundState.roundStart: // Set each player to be alive then start the round.
                 numOfPlayersAlive = playerCount;
@@ -107,6 +118,7 @@ public class roundManager : MonoBehaviour
         }
         if (currentRound == 1 || currentRound == 5)
         {
+            changeYValue(0f);
             currentLevel = level.castle;
             debugResetAllWeapons();
             Cameras.Play("Level 1 Camera");
@@ -123,6 +135,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 2 || currentRound == 6)
         {
+            changeYValue(-65f);
             slipperyControl(true);
             currentLevel = level.ice;
             debugResetAllWeapons();
@@ -140,6 +153,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 3 || currentRound == 7)
         {
+            changeYValue(-120f);
             slipperyControl(false);
             currentLevel = level.jungle;
             debugResetAllWeapons();
@@ -157,6 +171,7 @@ public class roundManager : MonoBehaviour
         }
         else if (currentRound == 4 || currentRound == 8)
         {
+            changeYValue(-180f);
             currentLevel = level.fire;
             debugResetAllWeapons();
             Cameras.Play("Level 4 Camera");
@@ -172,6 +187,10 @@ public class roundManager : MonoBehaviour
             trackRoundTime = true;
         }
         roundInPlay = true;
+        foreach (combatController controller in combatControllers)
+        {
+            controller.canAttack = true;
+        }
     }
     public void checkForRoundWin() // Executes when player potentially won a round.
     {
@@ -199,6 +218,7 @@ public class roundManager : MonoBehaviour
             {
                 currentRound++;
                 currentRoundState = roundState.roundStart;
+                playWinSound(roundWinSound[winnerIndex]);
                 controlAllMovement(false, true);
                 roundStateController();
             }
@@ -212,12 +232,18 @@ public class roundManager : MonoBehaviour
             winnerIndex = 0;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
+            playWinSound(gameWinSound[winnerIndex]);
         }
         if (playerScore[1] == scoreToWin)
         {
             winnerIndex = 1;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
+            playWinSound(gameWinSound[winnerIndex]);
         }
         if (playerScore.Length == 2)
             return;
@@ -226,6 +252,9 @@ public class roundManager : MonoBehaviour
             winnerIndex = 2;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
+            playWinSound(gameWinSound[winnerIndex]);
         }
         if (playerScore.Length == 3)
             return;
@@ -234,6 +263,17 @@ public class roundManager : MonoBehaviour
             winnerIndex = 3;
             Debug.Log("Player " + winnerIndex + " won the game!");
             gameOver = true;
+            swagControllers[winnerIndex].equipCrown();
+            manager.enablePlayButton();
+            playWinSound(gameWinSound[winnerIndex]);
+        }
+    }
+    // Changes Y-Value in player controller script so that look rotation works.
+    public void changeYValue(float yValue)
+    {
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].yValue = yValue;
         }
     }
     public void controlAllMovement(bool enable, bool disable) // Quick disable all player movement.
@@ -267,7 +307,6 @@ public class roundManager : MonoBehaviour
                 players[i].canControl = true;
             }
     }
-
     public void slipperyControl(bool enable) // Quick disable all player control.
     {
         if (enable)
@@ -302,10 +341,15 @@ public class roundManager : MonoBehaviour
     {
         if (gameOver)
         {
+            manager.disablePlayButton();
             gameOver = false;
             for (int score = 0; score < playerScore.Length; score++)
             {
                 playerScore[score] = 0;
+            }
+            foreach (playerSwagController swag in swagControllers)
+            {
+                swag.crown.SetActive(false);
             }
             currentRound = 1;
             StopCoroutine("resetRound");
@@ -313,20 +357,16 @@ public class roundManager : MonoBehaviour
             roundStateController();
         }
     }
-    void OnPlayerJoined(PlayerInput playerInput) // Called whenever a new player joins.
+    void OnPlayerJoined(PlayerInput playerInput)
     {
-        // Give each player a unique ID based on the order in 
-        // which they joined.
+        // Give each player a unique ID based on the order in which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().playerID = playerInput.playerIndex;
-        // Players spawn in unique spawn points depending on 
-        // the order in which they joined.
+        // Players spawn in unique spawn points depending on the order in which they joined.
         playerInput.gameObject.GetComponent<PlayerController>().startPos = playerSpawnsRound1[playerInput.playerIndex].position;
-        // Update the current player count based on
-        // how many players have joined (+ 1 due to array index starting at 0).
+        // Update the current player count based on how many players have joined (+ 1 due to array index starting at 0).
         playerCount = playerInput.playerIndex + 1;
-
-        // Name GameObject based on player index.
-        playerInput.gameObject.name = ("Player " + playerInput.playerIndex);
+        playerInput.gameObject.name = ("Player " + playerInput.playerIndex);  // Name GameObject based on player index.
+        playWinSound(spawnSound);
     }
     public void addDummy()
     {
@@ -338,9 +378,18 @@ public class roundManager : MonoBehaviour
             pController.playerID = pInput.playerIndex;
             pController.startPos = playerSpawnsRound1[pInput.playerIndex].position;
             playerCount = pInput.playerIndex + 1;
-
-            //players[pInput.playerIndex] = pController;
-            //combatControllers[pInput.playerIndex] = dummyPlayer.GetComponent<combatController>();
         }
+    }
+    public void playWinSound(AudioClip clipSound)
+    {
+        source.Stop();
+        source.clip = clipSound;
+        source.Play();
+    }
+    public void playSound(AudioClip clipSound)
+    {
+        source.Stop();
+        source.clip = clipSound;
+        source.Play();
     }
 }

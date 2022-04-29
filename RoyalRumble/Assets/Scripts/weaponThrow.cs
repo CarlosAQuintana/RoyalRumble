@@ -8,6 +8,7 @@ public class weaponThrow : MonoBehaviour
     [Header("Script and Component References")]
     [SerializeField] private PlayerController player;
     [SerializeField] private combatController combat;
+    public playerAudioManager audioManager;
     public GameObject aimPointer;
 
     [Header("Prefabs")]
@@ -48,6 +49,7 @@ public class weaponThrow : MonoBehaviour
         if (context.started && combat.currentWeapon != null)
         {
             throwStarted = true;
+            audioManager.playGruntSound();
             if (combat.currentWeapon.thisWeaponType != weaponData.weaponType.shield)
                 aimPointer.SetActive(true);
         }
@@ -56,6 +58,7 @@ public class weaponThrow : MonoBehaviour
             throwStarted = false;
             aimPointer.SetActive(false);
             GetComponent<playerAnimController>().anim.SetTrigger("release");
+            audioManager.playThrowSound();
             switch (combat.currentWeapon.thisWeaponType)
             {
                 case weaponData.weaponType.spear:

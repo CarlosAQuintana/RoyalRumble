@@ -8,6 +8,7 @@ public class combatController : MonoBehaviour
     [SerializeField] public PlayerController player;
     [SerializeField] CharacterController controller;
 
+    public playerAudioManager audioManager;
 
     [Header("Weapons")] // Each weapon GameObject.
     public GameObject spear;
@@ -17,21 +18,20 @@ public class combatController : MonoBehaviour
 
     [Header("Combat Variables")]
     [SerializeField] LayerMask playerLayer;
+    public bool canAttack;
     public bool isDead;
     public bool isKillable;
     public bool inTutorial;
     public weaponData currentWeapon; // Data for current weapon.
     public Transform hand; // Player hand location.
     public Transform leftHand;
+    private bool punching;
 
     public bool weaponEquipped;
     public bool currentWeaponUsable; // Has the weapons' use been exhausted?
 
     [Header("Attack Points")]
     public Transform attackPointOne; // Attack point.
-    public Transform attackPointTwo;
-    public Transform attackPointThree;
-    public Transform attackPointFour;
 
     [Header("Spear Variables")]
     [SerializeField] private float thrustPower;
@@ -71,9 +71,6 @@ public class combatController : MonoBehaviour
         leftHand = transform.Find("Left Hand");
         player = GetComponent<PlayerController>();
         attackPointOne = transform.Find("AttackPoint01");
-        attackPointTwo = transform.Find("AttackPoint02");
-        attackPointThree = transform.Find("AttackPoint03");
-        attackPointFour = transform.Find("AttackPoint04");
         reloadTimeElapsed = 99f;
     }
     void Update()
@@ -81,6 +78,7 @@ public class combatController : MonoBehaviour
         spearDash();
         shieldBlitz();
         swordAction();
+        punchMotion();
         if (currentWeapon != null && currentWeapon.thisWeaponType == weaponData.weaponType.gun)
         {
             reloadTimeElapsed = reloadTimeElapsed += Time.deltaTime;
@@ -92,31 +90,32 @@ public class combatController : MonoBehaviour
     }
     public void killPlayer(combatController targetCombat, PlayerController targetController)
     {
-        if (!targetCombat.isDead)
-        {
-            targetCombat.isDead = true;
-            targetCombat.StopAllCoroutines();
-            targetCombat.player.canMove = false; // and disable their movement.
-            roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
-            rManager.numOfPlayersAlive--;
-            rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
-            rManager.checkForRoundWin();
-        }
+        if (targetCombat.isDead)
+            return;
+        targetCombat.isDead = true;
+        targetCombat.StopAllCoroutines();
+        targetCombat.player.canMove = false; // and disable their movement.
+        targetCombat.canAttack = false;
+        targetCombat.audioManager.playDeathSound();
+        roundManager rManager = FindObjectOfType<roundManager>(); // and the roundManager.
+        rManager.numOfPlayersAlive -= 1;
+        rManager.playerIsDead[targetController.playerID] = true; // Set any player hit as dead...
+        rManager.checkForRoundWin();
+
     }
     public void rayCastHitBox(Transform hitPointTransform, float hitDist)
     {
         RaycastHit ray;
-        if (Physics.BoxCast(hitPointTransform.position, new Vector3(.75f, .45f, .75f), transform.forward, out ray, transform.rotation, hitDist, playerLayer))
+        if (Physics.BoxCast(hitPointTransform.position, new Vector3(.75f, .45f, .2f), transform.forward, out ray, transform.rotation, hitDist, playerLayer))
         {
             goShieldBlitz = false;
             goSwordSlash = false;
             goSpearDash = false;
-
-            // Stop any coroutine related to this function.
+            punching = false;
             StopCoroutine("swordAttack");
             StopCoroutine("shieldAttack");
             StopCoroutine("spearAttack");
-
+            StopCoroutine("punch");
             player.canMove = true;
             combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
             PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
@@ -127,13 +126,13 @@ public class combatController : MonoBehaviour
     }
     public void attack(InputAction.CallbackContext context)
     {
-        if (!player.canMove) // Prevent atacking if movement is disabled.
+        if (!player.canMove || !canAttack) // Prevent atacking if movement is disabled.
         {
             return;
         }
         if (context.performed && currentWeaponUsable && currentWeapon != null) // Do a weapon attack when a weapon is equipped.
         {
-            Debug.Log("Attack!");
+            audioManager.plaAttackSound();
             switch (currentWeapon.thisWeaponType) // Execute a specific attack based on weapon equipped.
             {
                 case weaponData.weaponType.spear:
@@ -154,16 +153,25 @@ public class combatController : MonoBehaviour
         else if (context.performed && currentWeapon == null) // Do a punch attack when a weapon is not equipped.
         {
             StartCoroutine("punch");
+            audioManager.plaAttackSound();
         }
     }
     #region unarmed Combat
     public IEnumerator punch()
     {
         player.canMove = false;
-        rayCastHitBox(attackPointTwo, .5f);
-        Debug.DrawRay(attackPointTwo.position, transform.forward, Color.yellow, spearHitRadius);
-        yield return new WaitForSeconds(.5f);
+        punching = true;
+        yield return new WaitForSeconds(.25f);
+        punching = false;
         player.canMove = true;
+    }
+    private void punchMotion()
+    {
+        if (punching)
+        {
+            controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower / 6f);
+            rayCastHitBox(attackPointOne, spearHitRadius);
+        }
     }
     #endregion
     #region Spear Combat
@@ -173,8 +181,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * thrustPower);
             rayCastHitBox(attackPointOne, spearHitRadius);
-            rayCastHitBox(attackPointThree, spearHitRadius);
-            rayCastHitBox(attackPointFour, spearHitRadius);
         }
     }
     public IEnumerator spearAttack()
@@ -194,8 +200,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * blitzPower);
             rayCastHitBox(attackPointOne, spearHitRadius);
-            rayCastHitBox(attackPointThree, spearHitRadius);
-            rayCastHitBox(attackPointFour, spearHitRadius);
         }
     }
     public IEnumerator shieldAttack()
@@ -215,8 +219,6 @@ public class combatController : MonoBehaviour
         {
             controller.Move(transform.forward * Time.fixedDeltaTime * swordStepPower);
             rayCastHitBox(attackPointOne, slashDuration);
-            rayCastHitBox(attackPointThree, slashDuration);
-            rayCastHitBox(attackPointFour, slashDuration);
         }
     }
     public IEnumerator swordAttack()
@@ -288,8 +290,8 @@ public class combatController : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(attackPointOne.position, spearHitRadius);
+        //Gizmos.DrawWireSphere(attackPointOne.position, spearHitRadius);
+        Gizmos.DrawLine(attackPointOne.position, new Vector3(attackPointOne.position.x, attackPointOne.position.y, attackPointOne.position.z + spearHitRadius));
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPointTwo.position, spearHitRadius / 2f);
     }
 }

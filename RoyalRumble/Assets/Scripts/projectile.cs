@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(AudioSource))]
 public class projectile : MonoBehaviour
 {
     [Header("References")]
     public PlayerController owner;
     public Rigidbody rb;
     public Transform hitPoint;
-    public Transform hitPointTwo;
-    public Transform hitPointThree;
     public LayerMask playerLayer;
     public LayerMask obstacleLayer;
-
+    public AudioClip playerHitSound;
+    public AudioClip wallHitSound;
+    public ParticleSystem speedParticle;
+    public AudioSource source;
     [Header("Variables")]
     private float lifetime = 10f;
     public float elaspedLife;
@@ -47,9 +48,10 @@ public class projectile : MonoBehaviour
             {
                 isDanger = false;
                 combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
-                if (!enemyCombat.inTutorial)
+                if (enemyCombat.inTutorial)
                     return;
                 PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
+                pHitSound(playerHitSound);
                 enemyCombat.killPlayer(enemyCombat, enemyControl);
                 Destroy(this.gameObject);
             }
@@ -61,6 +63,8 @@ public class projectile : MonoBehaviour
                     isDanger = false;
                     rb.velocity = (Vector3.zero);
                     rb.isKinematic = true;
+                    speedParticle.Stop();
+                    pHitSound(wallHitSound);
                 }
                 else if (canBounce && !delayHitCheck)
                 {
@@ -74,38 +78,11 @@ public class projectile : MonoBehaviour
                         rb.velocity = (Vector3.zero);
                         isDanger = false;
                         rb.isKinematic = true;
+                        speedParticle.Stop();
+                        pHitSound(wallHitSound);
                     }
                     bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
                 }
-            }
-            if (Physics.Raycast(hitPoint.position, transform.forward, out ray, hitRadius, playerLayer))
-            {
-                /*isDanger = false;
-                combatController enemyCombat = ray.collider.GetComponent<combatController>(); // Fetch the enemy's combatController,
-                PlayerController enemyControl = ray.collider.GetComponent<PlayerController>(); // enemy's PlayerController,
-                enemyCombat.killPlayer(enemyCombat, enemyControl);
-                Destroy(this.gameObject);*/
-            }
-            else if (Physics.Raycast(hitPoint.position, transform.forward, out ray, hitRadius, obstacleLayer))
-            {
-                /*if (!canBounce)
-                {
-                    isDanger = false;
-                    rb.velocity = (Vector3.zero);
-                    rb.isKinematic = true;
-                }
-                else if (canBounce && !delayHitCheck)
-                {
-                    delayHitCheck = true;
-                    StartCoroutine("delayCheck");
-                    if (bouncesLeft == 0)
-                    {
-                        rb.velocity = (Vector3.zero);
-                        isDanger = false;
-                        rb.isKinematic = true;
-                    }
-                    bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);
-                }*/
             }
         }
     }
@@ -118,24 +95,12 @@ public class projectile : MonoBehaviour
     {
         if (other.tag == "Environment" && !canBounce)
         {
-            /*
-            isDanger = false;
-            rb.velocity = (Vector3.zero);
-            rb.isKinematic = true;*/
         }
-
     }
     private void OnCollisionEnter(Collision other)
     {
         if (other.collider.CompareTag("Environment") && canBounce)
         {
-            /* if (bouncesLeft == 0)
-             {
-                 rb.velocity = (Vector3.zero);
-                 isDanger = false;
-                 rb.isKinematic = true;
-             }
-             bouncesLeft = Mathf.Clamp(bouncesLeft -= 1, 0, maxBounces);*/
         }
     }
     public void liveLife()
@@ -143,5 +108,11 @@ public class projectile : MonoBehaviour
         elaspedLife += Time.deltaTime;
         if (elaspedLife > lifetime)
             Destroy(this.gameObject);
+    }
+    private void pHitSound(AudioClip sound)
+    {
+        source.Stop();
+        source.clip = sound;
+        source.Play();
     }
 }
