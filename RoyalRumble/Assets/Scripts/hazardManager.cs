@@ -100,6 +100,12 @@ public class hazardManager : MonoBehaviour
     public GameObject showLava;
     public GameObject lavaBall;
 
+    [Header("UI Stuff")]
+    public GameObject exclam1;
+    public GameObject exclam2;
+    public GameObject exclam3;
+    public Transform hazardnotifPos;
+
 
     // Start is called before the first frame update
     void Start()
@@ -108,7 +114,7 @@ public class hazardManager : MonoBehaviour
         arrowBlinking = true;
         blinkTimer = 0.25f;
         blinkResetTimer = 0.25f;
-        fireAgain = 5f;
+        fireAgain = 3f;
         shakeTimer = 4f;
         reshakeTimer = 5f;
 
@@ -125,6 +131,10 @@ public class hazardManager : MonoBehaviour
         GenerateIceLanePos();
         GenerateVertIceLanePos();
         GenerateLavaSpot();
+
+        exclam1.SetActive(false);
+        exclam2.SetActive(false);
+        exclam3.SetActive(false);
 
     }
 
@@ -164,10 +174,34 @@ public class hazardManager : MonoBehaviour
         }
 
         hazardTimer += Time.deltaTime;
-        if (hazardTimer > 5)
+        if (rM.RoundTimeElasped > 16)
         {
-            LavaHazard();
+            exclam1.SetActive(true);
         }
+        if (rM.RoundTimeElasped > 19)
+        {
+            exclam1.SetActive(false);
+        }
+
+        if (rM.RoundTimeElasped > 36)
+        {
+            exclam2.SetActive(true);
+        }
+        if (rM.RoundTimeElasped > 39)
+        {
+            exclam2.SetActive(false);
+        }
+
+        if (rM.RoundTimeElasped > 56)
+        {
+            exclam3.SetActive(true);
+        }
+        if (rM.RoundTimeElasped > 59)
+        {
+            exclam3.SetActive(false);
+        }
+
+
     }
     void FireBlast()  //Function that makes the arrow indicator before the fire blast blink
     {
@@ -176,21 +210,13 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            if (rM.RoundTimeElasped < 40)
-            {
-                fireAgain = 5f;
-            }
-            else if (rM.RoundTimeElasped < 60)
+            if (rM.RoundTimeElasped > 40)
             {
                 fireAgain = 2.5f;
             }
-            else if (rM.RoundTimeElasped > 60)
+            if (rM.RoundTimeElasped > 60)
             {
                 fireAgain = 1f;
-            }
-            else
-            {
-                fireAgain = 1;
             }
 
             if (blinkTimer < 0.55f)  //Makes arrow active
@@ -266,21 +292,13 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (rM.RoundTimeElasped < 30)  //Sets the speed of the hazard based on how long the round has gone on for
-            {
-                fireAgain = 5f;
-            }
-            else if (rM.RoundTimeElasped < 40)
+            if (rM.RoundTimeElasped > 40)
             {
                 fireAgain = 2.5f;
             }
-            else if (rM.RoundTimeElasped < 50)
+            if (rM.RoundTimeElasped > 60)
             {
-                fireAgain = 1.15f;
-            }
-            else
-            {
-                fireAgain = 0.5f;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
+                fireAgain = 1f;
             }
 
             if (blinkTimer < 0.26f)  //Makes lane active
@@ -372,22 +390,16 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (vertarrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (rM.RoundTimeElasped < 30)  //Sets the speed of the hazard based on how long the round has gone on for
-            {
-                vertfireAgain = 5f;
-            }
-            else if (rM.RoundTimeElasped < 40)
+
+            if (rM.RoundTimeElasped > 40)
             {
                 vertfireAgain = 2.5f;
             }
-            else if (rM.RoundTimeElasped < 50)
+            if (rM.RoundTimeElasped > 60)
             {
-                vertfireAgain = 1.15f;
+                vertfireAgain = 1f;
             }
-            else
-            {
-                vertfireAgain = 0.5f;  //After 45 seconds, the speed of the hazard caps out and just keeps firing
-            }
+
 
             if (vertblinkTimer < 0.26f)  //Makes lane active
             {
@@ -530,21 +542,13 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the arrow blinking
         {
-            if (rM.RoundTimeElasped < 40)
+            if (rM.RoundTimeElasped > 40)
             {
-                fireAgain = 3f;
+                fireAgain = 2.5f;
             }
-            else if (rM.RoundTimeElasped < 60)
-            {
-                fireAgain = 2f;
-            }
-            else if (rM.RoundTimeElasped > 60)
+            if (rM.RoundTimeElasped > 60)
             {
                 fireAgain = 1f;
-            }
-            else
-            {
-                fireAgain = 1;
             }
 
             if (blinkTimer < 0.55f)  //Makes arrow active
@@ -612,21 +616,21 @@ public class hazardManager : MonoBehaviour
             }
         }
 
-        if (hazardTimer > 20)
+        if (rM.RoundTimeElasped > 20)
         {
             GameObject floor1 = GameObject.Find("moveGround1");
             Rigidbody f1rb = floor1.GetComponent<Rigidbody>();
             f1rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (hazardTimer > 40)
+        if (rM.RoundTimeElasped > 40)
         {
             GameObject floor2 = GameObject.Find("moveGround2");
             Rigidbody f2rb = floor2.GetComponent<Rigidbody>();
             f2rb.velocity = new Vector3(0, -0.5f, 0);
         }
 
-        if (hazardTimer > 60)
+        if (rM.RoundTimeElasped > 60)
         {
             GameObject floor3 = GameObject.Find("moveGround3");
             Rigidbody f3rb = floor3.GetComponent<Rigidbody>();
