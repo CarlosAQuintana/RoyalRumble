@@ -8,18 +8,20 @@ public class MainMenu : MonoBehaviour
 {
     public Button PlayButton;
     public Button multiplayerButton;
+    public Button creditsbackbutton;
     public Slider MasterVolume;
+    public AudioSource bgmSource;
     void Start()
     {
-
+        //bgmSource.Play();
     }
 
     void Awake()
     {
-      
-        
+
+
     }
-    
+
     void Update()
     {
 
@@ -28,6 +30,7 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Game Scene");
         SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
+        // bgmSource.Stop();
     }
     public void loadTutorialScene()
     {
@@ -48,5 +51,9 @@ public class MainMenu : MonoBehaviour
     public void SelectSlider()
     {
         MasterVolume.Select();
+    }
+    public void selectBackButton()
+    {
+        creditsbackbutton.Select();
     }
 }

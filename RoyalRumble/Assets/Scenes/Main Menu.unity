@@ -190,7 +190,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278949329
+    rgba: 4278235903
   m_fontColor: {r: 1, g: 0.69803923, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -547,7 +547,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playQuitClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -633,7 +633,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playReturnClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -943,7 +943,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayButton: {fileID: 309140784}
   multiplayerButton: {fileID: 438806488}
+  creditsbackbutton: {fileID: 109367380}
   MasterVolume: {fileID: 1190010580}
+  bgmSource: {fileID: 1534195764}
 --- !u!4 &127079865
 Transform:
   m_ObjectHideFlags: 0
@@ -1377,7 +1379,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playBGMClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1654,7 +1656,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playSettingsClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2069,7 +2071,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playReturnClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2273,7 +2275,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playPlayButtonClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2578,7 +2580,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playMultiplayerClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2658,7 +2660,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayButton: {fileID: 0}
   multiplayerButton: {fileID: 0}
+  creditsbackbutton: {fileID: 0}
   MasterVolume: {fileID: 0}
+  bgmSource: {fileID: 0}
 --- !u!1 &472573478
 GameObject:
   m_ObjectHideFlags: 0
@@ -3266,7 +3270,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playSFXClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3872,7 +3876,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playBrightnessClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4521,7 +4525,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playTutClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4658,7 +4662,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playMasterClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5227,11 +5231,11 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534195763}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1889034796570706026, guid: f9d58a879608d2f4bb61d1b43b85fa48, type: 2}
   m_audioClip: {fileID: 8300000, guid: d2ba13f1db5db454c98579df5a18a382, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -5548,6 +5552,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 127079864}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: selectBackButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 880329420}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -5617,7 +5633,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playCreditsClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5973,7 +5989,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1865167493}
           m_TargetAssemblyTypeName: uiSounds, Assembly-CSharp
-          m_MethodName: playHoverSound
+          m_MethodName: playReturnClip
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6474,6 +6490,17 @@ MonoBehaviour:
   source: {fileID: 0}
   hover: {fileID: 8300000, guid: 2688940efb50b644d890c5c583b7443e, type: 3}
   select: {fileID: 8300000, guid: cb12f855678cee347a6754b9fbd224c6, type: 3}
+  bgmClip: {fileID: 8300000, guid: 7f4a22302622c4d42bdd31fec89acd59, type: 3}
+  brightClip: {fileID: 8300000, guid: 82babd4581de3fd408d4cb399d27bc0f, type: 3}
+  creditsClip: {fileID: 8300000, guid: 4ee578e32c9c52443afcb7a4c67bbffe, type: 3}
+  MasterVolClip: {fileID: 8300000, guid: 17baf6fa3dcfb8a48ae4214f72cb7c00, type: 3}
+  multiPlayerClip: {fileID: 8300000, guid: 4281f4198a44d5d40a20a134a958977a, type: 3}
+  PlaybuttonClip: {fileID: 8300000, guid: 6032243f10c64f544afecea2627174fe, type: 3}
+  quitClip: {fileID: 8300000, guid: 0727f06c95546444f86629e2c0c21f18, type: 3}
+  settingsClip: {fileID: 8300000, guid: 56ee8e47decc9814daff4d035048aff5, type: 3}
+  sfxClip: {fileID: 8300000, guid: 8642ba0eba9924541b55eca05fd5ce17, type: 3}
+  tutClip: {fileID: 8300000, guid: f7b3f4b93bc94314ca6b57e03f341fd1, type: 3}
+  returnClip: {fileID: 8300000, guid: 48eabe6c869e90b4f80f3e0010196e70, type: 3}
 --- !u!82 &1865167494
 AudioSource:
   m_ObjectHideFlags: 0
