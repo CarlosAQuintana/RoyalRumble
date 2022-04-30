@@ -57,10 +57,6 @@ public class icicleSpikeScript : MonoBehaviour
         {
             rb.velocity = new Vector3(-100, 0, 0);
         }
-        if (hM.iceLaneSet == 10)
-        {
-            rb.velocity = new Vector3(0, 0, -100);
-        }
 
         activeTime -= Time.deltaTime;
         if (activeTime < 0)
