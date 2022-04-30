@@ -945,6 +945,7 @@ MonoBehaviour:
   multiplayerButton: {fileID: 438806488}
   creditsbackbutton: {fileID: 109367380}
   MasterVolume: {fileID: 1190010580}
+  brightness: {fileID: 936723609}
   bgmSource: {fileID: 1534195764}
 --- !u!4 &127079865
 Transform:
@@ -2662,6 +2663,7 @@ MonoBehaviour:
   multiplayerButton: {fileID: 0}
   creditsbackbutton: {fileID: 0}
   MasterVolume: {fileID: 0}
+  brightness: {fileID: 0}
   bgmSource: {fileID: 0}
 --- !u!1 &472573478
 GameObject:
@@ -3842,7 +3844,19 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 127079864}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: changeBrightness
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &936723610
 MonoBehaviour:
   m_ObjectHideFlags: 0

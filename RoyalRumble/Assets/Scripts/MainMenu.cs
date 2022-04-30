@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     public Button multiplayerButton;
     public Button creditsbackbutton;
     public Slider MasterVolume;
+    public Slider brightness;
     public AudioSource bgmSource;
     void Start()
     {
@@ -24,7 +25,12 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-
+        //Screen.brightness = brightness.value;
+        Debug.Log(Screen.brightness);
+    }
+    public void changeBrightness()
+    {
+        Screen.brightness = brightness.value;
     }
     public void loadGameScene()
     {
