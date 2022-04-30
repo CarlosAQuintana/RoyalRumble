@@ -26,7 +26,6 @@ public class gameManager : MonoBehaviour
 
     void Awake()
     {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
     }
 
     public void beginPlay() // Initiated when "Play" button is pressed.
