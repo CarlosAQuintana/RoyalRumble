@@ -17,6 +17,7 @@ public class tutorialManager : MonoBehaviour
     public GameObject tutorialBG;
     public Button yesButton;
     public AudioSource audioPlayer;
+    public GameObject joinInstructions;
     [Header("Audio Clips")]
     public AudioClip tut01;
     public AudioClip tut02;
@@ -31,7 +32,7 @@ public class tutorialManager : MonoBehaviour
 
     void Awake()
     {
-        
+
     }
     void Update()
     {
@@ -49,6 +50,8 @@ public class tutorialManager : MonoBehaviour
         tutorialPlayer = spawnedPLayer;
         playerInput.gameObject.name = ("Player " + playerInput.playerIndex);
         StartCoroutine("quickEnableControl");
+        joinInstructions.SetActive(false);
+        InputManager.DisableJoining();
     }
     public IEnumerator quickEnableControl()
     {

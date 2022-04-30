@@ -13,9 +13,12 @@ public class pauseMenu : MonoBehaviour
     gameManager gm;
 
     public GameObject pauseScreen;
+    public GameObject pauseButtons;
+    public GameObject controlsScreen;
     public Button firstSelect;
     public Button playButton;
     public Button replayButton;
+    public Button controlsBackButton;
     public bool paused;
     public bool inTutorial;
     private void Awake()
@@ -92,6 +95,18 @@ public class pauseMenu : MonoBehaviour
                 replayButton.Select();
             }
         }
+    }
+    public void showControls()
+    {
+        controlsScreen.SetActive(true);
+        pauseButtons.SetActive(false);
+        controlsBackButton.Select();
+    }
+    public void hideControls()
+    {
+        controlsScreen.SetActive(false);
+        pauseButtons.SetActive(true);
+        firstSelect.Select();
     }
     public void quitToMenu(InputAction.CallbackContext context)
     {
