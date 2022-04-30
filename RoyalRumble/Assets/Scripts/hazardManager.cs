@@ -174,13 +174,13 @@ public class hazardManager : MonoBehaviour
         }
 
         hazardTimer += Time.deltaTime;
-        if (hazardTimer > 20)
+        //if (hazardTimer > 20)
         {
-            IcicleShot();
+            //IcicleShot();
         }
-        if (hazardTimer > 60)
+        //if (hazardTimer > 60)
         {
-            VerticalIcicleShot();
+            //VerticalIcicleShot();
         }
 
         if (rM.RoundTimeElasped > 16)
@@ -301,11 +301,11 @@ public class hazardManager : MonoBehaviour
         roundManager rM = gameManager.GetComponent<roundManager>();
         if (arrowBlinking == true)  //Begins the loop for the lane blinking
         {
-            if (hazardTimer > 40)
+            if (rM.RoundTimeElasped > 40)
             {
                 fireAgain = 3f;
             }
-            if (hazardTimer > 60)
+            if (rM.RoundTimeElasped > 60)
             {
                 fireAgain = 1f;
             }
@@ -400,11 +400,11 @@ public class hazardManager : MonoBehaviour
         if (vertarrowBlinking == true)  //Begins the loop for the lane blinking
         {
 
-            if (hazardTimer > 40)
+            if (rM.RoundTimeElasped > 40)
             {
                 vertfireAgain = 3f;
             }
-            if (hazardTimer > 60)
+            if (rM.RoundTimeElasped > 60)
             {
                 vertfireAgain = 1f;
             }
