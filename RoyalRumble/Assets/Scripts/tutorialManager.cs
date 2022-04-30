@@ -31,7 +31,7 @@ public class tutorialManager : MonoBehaviour
 
     void Awake()
     {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
+        
     }
     void Update()
     {

@@ -16,7 +16,8 @@ public class MainMenu : MonoBehaviour
 
     void Awake()
     {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
+      
+        
     }
     
     void Update()
@@ -26,6 +27,7 @@ public class MainMenu : MonoBehaviour
     public void loadGameScene()
     {
         SceneManager.LoadScene("Game Scene");
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(0));
     }
     public void loadTutorialScene()
     {
