@@ -135,6 +135,7 @@ MonoBehaviour:
   isBot: 0
   canMove: 0
   canControl: 0
+  yValue: 0
 --- !u!114 &5115828099214224361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,12 +231,12 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 845019baded824840b9be201434ac9de, type: 2}
   - {fileID: 2100000, guid: e8524313edfecc043aac60b8e853710d, type: 2}
   - {fileID: 2100000, guid: cf6e3059414dc7d4d82bca15e3413954, type: 2}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: ad8c6f6ed3564e24bbcd31a05b202b69, type: 2}
   playerRingMaterials:
   - {fileID: 2100000, guid: e4a9d9374cffeb04e8bcf21cf7a0a0ee, type: 2}
   - {fileID: 2100000, guid: 9b61fb8713ddb9041afa79f2e27fe264, type: 2}
   - {fileID: 2100000, guid: dbdc89563b323ca4e9cfe2956f059512, type: 2}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: b03a60e8f8c232842b1c7fffd15d97e5, type: 2}
   itemZero: {fileID: 4339981426861119853}
   itemOne: {fileID: 8572491944524773059}
   itemTwo: {fileID: 1972527606332142153}
@@ -410,22 +411,6 @@ MonoBehaviour:
     m_ActionName: Player/Aim[/DualShock4GamepadHID/rightStick,/DualShock4GamepadHID1/rightStick]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 031d735aba3dd8944847563fdde2d34f, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 21df407e-cb44-49d4-8eb1-5e5559541b9a
-    m_ActionName: Player/Pause[/Keyboard/tab,/DualShock4GamepadHID/select]
-  - m_PersistentCalls:
-      m_Calls:
       - m_Target: {fileID: 7164256037502983404}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: getMouseRotVector
@@ -440,6 +425,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3cb0d824-84df-4eca-bf6b-9c25fc9068df
     m_ActionName: Player/mouseAim[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 775dbb46-b02e-4e47-b628-61d1aac84450
+    m_ActionName: UI/Pause[/Keyboard/tab,/DualShock4GamepadHID/select]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

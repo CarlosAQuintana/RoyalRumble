@@ -60,8 +60,8 @@ public class playerSwagController : MonoBehaviour
                 break;
 
             case 3:
-                /*pRenderer.material = charMaterials[3];
-                ringRenderer.material = playerRingMaterials[3];*/
+                pRenderer.material = charMaterials[3];
+                ringRenderer.material = playerRingMaterials[3];
                 itemThree.SetActive(true);
                 break;
         }
